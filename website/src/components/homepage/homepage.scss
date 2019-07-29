@@ -1,0 +1,19 @@
+$gray200: #eee;
+
+div.homepage {
+    margin: 64px;
+
+    .hero {
+        margin-bottom: 64pt;
+    }
+
+    .cardHeader {
+        background-color: $gray200;
+        padding: 8pt;
+    }
+    
+    .cardActions {
+        background: $gray200;
+        padding: 14pt;
+    }
+}
