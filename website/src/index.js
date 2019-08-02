@@ -1,11 +1,12 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Helmet } from "react-helmet";
-import Homepage from '../components/homepage/Homepage';
-import CreateQuiz from "../components/CreateQuiz";
-import GameBoard from "../components/GameBoard";
+import Homepage from './homepage/Homepage';
+import CreateQuiz from "./CreateQuiz";
+import HostGame from "./hostgame/HostGame";
 
 const IndexPage = (props) => (
     <Container>
@@ -21,10 +22,10 @@ const IndexPage = (props) => (
             <Switch>
                 <Route path="/" exact component={Homepage} />
                 <Route path="/createquiz" component={CreateQuiz} />
-                <Route path="/gameboard" component={GameBoard} />
+                <Route path="/hostgame/:gameid" component={HostGame} />
             </Switch>
         </BrowserRouter>
     </Container>
 );
 
-export default IndexPage;
+ReactDOM.render(<IndexPage />, document.getElementById('root'));
