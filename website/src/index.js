@@ -5,7 +5,8 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Helmet } from "react-helmet";
 import Homepage from './homepage/Homepage';
-import CreateQuiz from "./CreateQuiz";
+import GameAdmin from "./GameAdmin";
+import CreateGame from "./CreateGame";
 import HostGame from "./hostgame/HostGame";
 
 const IndexPage = (props) => (
@@ -20,9 +21,10 @@ const IndexPage = (props) => (
         <CssBaseline />
         <BrowserRouter>
             <Switch>
-                <Route path="/" exact component={Homepage} />
-                <Route path="/createquiz" component={CreateQuiz} />
-                <Route path="/hostgame/:gameid" component={HostGame} />
+                <Route exact path="/"           component={Homepage} />
+                <Route exact path="/creategame" component={CreateGame} />
+                <Route exact path="/gameadmin"  component={GameAdmin} />
+                <Route exact path="/hostgame"   component={HostGame} />
             </Switch>
         </BrowserRouter>
     </Container>

@@ -1,0 +1,25 @@
+EC2,100,Name a burstable instance type,T2 T3 T3a
+EC2,200,What does C in C5.XL stand for?,Compute
+EC2,300,What is a Placement Group?,All instances in same AZ/DC
+EC2,400,Which is not monitored by default: CPUUtilization MemoryUtilization NetworkOut EbsReadOps,MemoryUtilization
+EC2,500,IP address of meta-data service?,169.254.169.254
+S3,100,"Bucket names are global, regional, zonal, or account-specific?",global
+S3,200,What happens when you delete an object from a versioned bucket?,It adds a delet emarker and keeps the previous versions.
+S3,300,Durability SLA in "9s" parlance?,11 9s (99.99999999999)
+S3,400,What feature will automatically move objects to Glacier after a set nnumber of days?,Lifecycle Policy
+S3,500,Where is the MD5 hash of each object stored?,Object's meta-data
+DynamoDB,100,True/false: DDB Streams are always FIFO per table,true
+DynamoDB,200,How many read capacity units for 4 consistent reads per second?,4
+DynamoDB,300,What feature allows table restore to any time in last 35 days?,Point-in-time Recovery
+DynamoDB,400,Max number of global secondary indexes per table?,20
+DynamoDB,500,What are all 4 scaler Attribute types (other than "null")?,"Number, string, binary, boolean"
+Obscure Products,100,What does WAF stand for?,Web Application Firewall
+Obscure Products,200,What product identifies objects and people from images and videos?,Rekognition
+Obscure Products,300,Greengrass allows you to execute what on physical IoT devices?,Lambda functions
+Obscure Products,400,What physical device backs-up on-prem disks to the cloud?,Storage Gateway
+Obscure Products,500,AWS Artifact allows users to download what types of documents?,Security and compliance
+Amazon Building Names,100,Apollo is named for what deployment software?,Apollo :-)
+Amazon Building Names,200,What building is named after a penguin / EC2 networking device?,Blackfoot
+Amazon Building Names,300,Is Low Flying Hawk named after an animal, person, or software product?Person (vocal early AWS customer)
+Amazon Building Names,400,Doppler is an early product nick-name for what physical device?,Echo/Alexa
+Amazon Building Names,500,Rufus is what dog breed used to launch many early products in the 90s?,Welsh Corgi

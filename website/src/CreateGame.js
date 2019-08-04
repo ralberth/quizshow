@@ -1,17 +1,21 @@
-import React from 'react';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import {DropzoneArea} from 'material-ui-dropzone'
+import { DropzoneArea } from 'material-ui-dropzone';
+import React from 'react';
+import ClosableDialog from "./util/ClosableDialog";
 
-class CreateQuiz extends React.Component {
+class CreateGame extends React.Component {
 
     state = {
         title: "",
-        contents: ""
+        contents: "",
+        code: "",
+        modalOpen: false,
+        gameId: ""
     }
-
+    
     handleName = (event) => this.setState({ title: event.target.value });
 
     handleFileUpload = (arry) => {
@@ -25,20 +29,16 @@ class CreateQuiz extends React.Component {
             this.setState({ contents: "" });        
     }
 
-    createGame = () => {
-        console.log(this.state);
-    }
+    createGame = () => this.setState({ modalOpen: true, gameId: "QS-1234" });
+
+    handleLaunch = () => this.props.history.push(`/gameadmin/${this.state.gameId}`);
+    
+    handleClose = () => this.props.history.push("/gameadmin");
 
     render() {
         return (
             <Container>
-                <h1>Games You Own</h1>
-
-                [none]
-
-
                 <h1>Create a New Game</h1>
-
                 <Grid
                     container
                     alignContent="flex-start"
@@ -50,13 +50,15 @@ class CreateQuiz extends React.Component {
                         <TextField
                             label="Quiz game title"
                             margin="normal"
+                            fullWidth={true}
+                            required={true}
                             onChange={this.handleName}
                         />
                     </Grid>
                     <Grid item>
                         <DropzoneArea
                             dropzoneText="Drop game files here to upload"
-                            acceptedFiles={[ 'text/plain' ]}
+                            acceptedFiles={[ 'text/csv' ]}
                             filesLimit={1}
                             onChange={this.handleFileUpload}
                         />
@@ -71,9 +73,19 @@ class CreateQuiz extends React.Component {
                         </Button>
                     </Grid>
                 </Grid>
+
+                <ClosableDialog
+                    open={this.state.modalOpen}
+                    title="New Game Created"
+                    buttonLabel="Launch game!"
+                    onClick={this.handleLaunch}
+                    onClose={this.handleClose}
+                >
+                    Your game with ID {this.state.gameId} is ready to go.
+                </ClosableDialog>
             </Container>
         );
     }
 }
 
-export default CreateQuiz;
+export default CreateGame;
