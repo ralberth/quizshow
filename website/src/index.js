@@ -8,6 +8,7 @@ import Homepage from './homepage/Homepage';
 import GameAdmin from "./GameAdmin";
 import CreateGame from "./CreateGame";
 import HostGame from "./hostgame/HostGame";
+import Masthead from './Masthead';
 
 const IndexPage = (props) => (
     <Container>
@@ -18,8 +19,9 @@ const IndexPage = (props) => (
                 content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
             />
         </Helmet>
-        <CssBaseline />
         <BrowserRouter>
+            <Masthead/>
+            <CssBaseline />
             <Switch>
                 <Route exact path="/"           component={Homepage} />
                 <Route exact path="/creategame" component={CreateGame} />
