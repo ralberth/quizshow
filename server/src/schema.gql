@@ -1,0 +1,26 @@
+type Question {
+    prize: Int!
+    prompt: String!
+    answer: String!
+}
+
+type Category {
+    name: String!
+    questions: [Question]
+}
+
+type QuizGame {
+    id: ID!
+    owner: String!
+    title: String!
+    categories: [Category]
+}
+
+type Query {
+    listQuizByOwner(owner: String!): [QuizGame]
+    getQuizById(id: ID!): QuizGame
+}
+
+schema {
+    query: Query
+}

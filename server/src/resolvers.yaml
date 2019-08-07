@@ -1,0 +1,29 @@
+---
+- type: Query
+  field: getQuizById
+  dataSource: quiz
+  requestMapping: |
+    {
+      "version": "2017-02-28",
+      "operation": "GetItem",
+      "key": {
+        "id": { "S": "${ctx.args.id}" }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+# - 
+#   type: Query
+#   field: listServiceRegionStatuses
+#   dataSource: serviceregionstatuses
+#   requestMapping: |
+#     {
+#         "version": "2017-02-28",
+#         "operation": "Query",
+#         "query": {
+#           "expression": "service_id = :service_id",
+#             "expressionValues": {
+#               ":service_id": { "S": "${ctx.args.service_id}" }
+#             }
+#         }
+#     }
+#   responseMapping: $util.toJson($ctx.result)
