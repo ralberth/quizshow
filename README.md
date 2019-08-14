@@ -1,5 +1,84 @@
+# How To Build
+
 1. Install Node.JS
 1. `cd website && npm start` to startup a dev server that auto-refreshes your browser.
+
+# How To Install
+
+This uses AWS as the server (AppSync specifically) and stores data in Dynamo DB.  This means you'll need an AWS account and have basic knowledge on how to administer cloud resources.  It's a good skill to have, cloud computing is the new normal.  This assumes you're familiar with Dynamo DB, AppSync, CloudFormation, CloudWatch, S3, CloudFront, and so on.
+
+## Install the Dynamo tables, AppSync stuff, AWS resources
+
+```bash
+% cd server && cdk deploy
+```
+
+
+# How to Prepare for Production
+
+* Clear out the Cognito User Pool
+* Change IOPS on the Dynamo tables to support a bunch of users at once
+* Clear out the Dynamo tables
+
+
+# Dynamo Table Structure
+
+An easy way to understand what's happening with the AppSync GraphQL API and how the clients work is to envision what data looks like in the Dynamo tables.  Overall, the tables match the GraphQL schema directly, nearly 1:1 for convenience sake.  Warning: this isn't a good model for using Dynamo DB with large data!  Dynamo is a NOSQL data store, which means you don't model your data into tables like this.  Dynamo DB isn't SQL and it doesn't support joins.  This is a good thing.  This is a tiny "play" database, so we're cheating here and mis-using Dynamo because it makes AppSync and the whole Quiz Show product simpler.
+
+**A note on names:** *The* actual *names of the tables are inconsequential as long as the names match the AppSync resolvers.  This is a neat feature of how CloudFormation works: you can install 5 instances of QuizShow in the same AWS account if you wanted to, since CFN will just create "duplicate" Dynamo tables with different suffixes and wire-up the generated names to the AppSync Resolvers.  This also gives CFN flexibility to trash existing tables and recreate them when needed, based on source code changes for the developers.  In short, don't worry about it.  Also, all names are prefixed with "Quiz" just to make it simpler, and so all tables sort together on the AWS console :-)*
+
+**A note on AppSync structure:**  *A better way of designing this for a production system is to have everything in a single table, or at least look for places to combine things, such as including all categories in the QuizGames table, instead of breaking them out separately.  The purpose of this demo program is to show how a bunch of Resolvers for different tables work together to assemble return structures for clients, and not necessarily how to design efficient data storage.*
+
+
+## QuizGames
+
+Holds one Item for each game.  A Game has an owner, tied to the ID from Cognito.  Items contain all the meta-data about a game and the key in QuizGame is used as a "foreign key" in the other tables where needed.
+
+| gameId | owner    | title              |
+|-------:|----------|--------------------|
+|     56 | joeuser  | Spelling Bee       |
+|    109 | hchen    | Networking         |
+|   7006 | asultan  | Driver's Test Prep |
+
+Indexes:
+
+* **Primary:** gameId (HASH), *used as typical, artificial key for assembling URLs, and for others to reach a QuizGame from another device*
+* **GSI OwnerByGameId:** owner (HASH) + gameId (RANGE), *search by owner and get a list of IDs*
+
+
+## QuizCategories
+
+Separate table with just Category names.  This also has a separate, unique ID for every Category, which you'll need to match-up questions from QuizQuestions below.
+
+| gameId  | catgId | categoryName     |
+|--------:|-------:|------------------|
+|     109 |     10 | OSI Stack        |
+|     109 |     11 | "Be The Packet"  |
+|     109 |     12 | Unix Commands    |
+|    7006 |     77 | Street Signs     |
+|    7006 |     78 | Road Safety      |
+
+Indexes:
+
+* **Primary:** gameId (HASH) + catgId (RANGE), *usual way in is to start from a QuizGames Item and use it's ID to find all categories here*
+
+
+## QuizQuestions
+
+Each Item is a single question for a QuizGame.  Foreign Key to QuizCategories for the category name.
+
+| gameId | catgId | quesId | prize | question             | answer    |
+|-------:|-------:|-------:|------:|----------------------|-----------|
+|    109 |     12 |      1 |    50 | Show net interfaces? | ifconfig  |
+|    109 |     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  |
+|    109 |     12 |      3 |   325 | Open sockets?        | netstat   |
+|   7006 |     77 |      4 |   200 | Red octagon?         | Stop sign |
+|   7006 |     78 |      5 |   300 | Safe distance?       | 2 seconds |
+
+Indexes:
+
+* **Primary:** gameId (HASH) + quesId (RANGE), *to get all question Items for a gameId*
+* **GSI QuesId:** quesId (HASH), *during game play for people to retrieve individual questions*
 
 
 # TO DO

@@ -1,0 +1,21 @@
+category,prize,question,answer
+Forces in Flight,100,Force that pulls you down?,Gravity
+Forces in Flight,200,Force that pulls you up?,Lift
+Forces in Flight,300,Organized air flow over a wing,Laminar flow
+Forces in Flight,400,Force that keeps and airplane flying?,Money
+Forces in Flight,500,Force that you can't control?,Weather
+Cockpit instrumentation,100,Measures height above ground?,Altimeter
+Cockpit instrumentation,200,Measures engine speed?,Tachometer
+Cockpit instrumentation,300,Measures nose pitch relative to ground?,Attitude
+Cockpit instrumentation,400,Measures hours of engine use?,Hobbs
+Cockpit instrumentation,500,Measures coordinated flight?,Turn & Slip
+Airspace,100,Lower-bound of class G airspace?,Ground
+Airspace,200,Type of transponder req'd for Class A?,Mode-C
+Airspace,300,Zone abbrev. at end of national airspace?,ADIZ
+Airspace,400,Right-of-way: helicopter vs. airplane,airplane
+Airspace,500,Ground equip. used to define Victor airways?,VORs
+Reading Charts,100,Concentric circle colors for Class B airspace?,blue
+Reading Charts,200,"Type of airport with ""H"" in circle?",Heliport
+Reading Charts,300,"Meaning of ""MOA"" area?",Military Operations Area
+Reading Charts,400,How often are sectionals published?,Every 6 months
+Reading Charts,500,Meaning of a boxed number on a victor airway?,Miles between VORs
