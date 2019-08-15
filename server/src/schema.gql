@@ -1,26 +1,49 @@
 type Question {
+    quesId: ID!
+    gameId: ID!
+    catgId: ID!
+    prize: Int!
+    question: String!
+    answer: String!
+}
+
+type Category {
+    gameId: Int!
+    catgId: ID!
+    catgName: String!
+    questions: [Question!]
+}
+
+type Game {
+    gameId: ID!
+    emcee: String!
+    title: String!
+    categories: [Category!]
+}
+
+type Query {
+    listGamesByEmcee(emcee: String!): [Game!]
+    getGameById(gameId: Int!): Game
+    # listCatgsByGameId(gameId: Int!): [Category!]
+    # getQuestion(quesId: Int!)
+}
+
+input NewQuestion {
     prize: Int!
     prompt: String!
     answer: String!
 }
 
-type Category {
+input NewCategory {
     name: String!
-    questions: [Question]
+    questions: [NewQuestion!]!
 }
 
-type QuizGame {
-    id: ID!
-    owner: String!
-    title: String!
-    categories: [Category]
-}
-
-type Query {
-    listQuizByOwner(owner: String!): [QuizGame]
-    getQuizById(id: ID!): QuizGame
+type Mutation {
+    createQuiz(title: String!, catgs: [NewCategory!]!): Game
 }
 
 schema {
     query: Query
+    mutation: Mutation
 }

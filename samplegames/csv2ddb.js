@@ -28,7 +28,7 @@ fs.readdir(".", (err, items) => {
                 "PutRequest": {
                     "Item": {
                         gameId: { "N": `${gameId}` },
-                        owner: { "S": process.env.USER },
+                        emcee: { "S": process.env.USER },
                         title: { "S": basename }
                     }
                 }

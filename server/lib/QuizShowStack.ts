@@ -5,10 +5,12 @@ import cognito = require('@aws-cdk/aws-cognito');
 import dynamo = require('@aws-cdk/aws-dynamodb');
 import { AuthFlow } from '@aws-cdk/aws-cognito';
 import { ServicePrincipal } from '@aws-cdk/aws-iam';
-import { Duration } from '@aws-cdk/core';
+import { Duration, RemovalPolicy } from '@aws-cdk/core';
 import { AttributeType, ProjectionType } from '@aws-cdk/aws-dynamodb';
 var fs = require('fs');
 var yaml = require('js-yaml');
+
+const DDB_IOPS = 20;
 
 export class QuizShowStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -26,7 +28,7 @@ export class QuizShowStack extends cdk.Stack {
         role.addToPolicy(statement);
 
         const userPool = new cognito.UserPool(this, 'QuizShowPool');
-        new cognito.UserPoolClient(this, 'QuizShowUserPoolClient', {
+        const userPoolClient = new cognito.UserPoolClient(this, 'QuizShowUserPoolClient', {
             userPoolClientName: 'QuizShowUserPoolClient',
             userPool: userPool,
             enabledAuthFlows: [ AuthFlow.USER_PASSWORD ]
@@ -47,44 +49,89 @@ export class QuizShowStack extends cdk.Stack {
             definition: fs.readFileSync('src/schema.gql', 'utf8')
         });
 
-        const ddbQuiz = new dynamo.Table(this, 'quiz', {
-            tableName: 'quiz',
-            partitionKey: { name: 'id', type: AttributeType.NUMBER },
-            readCapacity: 5,
-            writeCapacity: 5
+        const ddbGame = new dynamo.Table(this, 'QuizGames', {
+            tableName: 'QuizGames',
+            partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
+            removalPolicy: RemovalPolicy.DESTROY
         });
-        ddbQuiz.addGlobalSecondaryIndex({
-            indexName: 'userQuiz',
-            partitionKey: { name: 'owner', type: AttributeType.STRING },
-            sortKey: { name: 'id', type: AttributeType.NUMBER },
-            projectionType: ProjectionType.INCLUDE,
-            nonKeyAttributes: [ 'title' ]
-      });
+        ddbGame.addGlobalSecondaryIndex({
+            indexName: 'EmceeByGameId',
+            partitionKey: { name: 'emcee', type: AttributeType.STRING },
+            sortKey: { name: 'gameId', type: AttributeType.NUMBER },
+            projectionType: ProjectionType.ALL
+        });
 
-      const quizDataSource = new appsync.CfnDataSource(this, 'quiz_table', {
-          apiId: mySync.attrApiId,
-          name: 'quiz',
-          serviceRoleArn: role.roleArn,
-          type: 'AMAZON_DYNAMODB',
-          dynamoDbConfig: {
-            awsRegion: 'us-east-1',
-            tableName: 'quiz'
-          }
-      });
-      
-      const resolvers = yaml.safeLoad(fs.readFileSync('src/resolvers.yaml', 'utf8'));
-      resolvers.forEach((resolver:any)=> {
-          const r = new appsync.CfnResolver(this, `${resolver.type}_${resolver.field}`, {
-             apiId: mySync.attrApiId,
-             kind: 'UNIT',
-             typeName: resolver.type,
-             fieldName: resolver.field,
-             dataSourceName: resolver.dataSource,
-             requestMappingTemplate: resolver.requestMapping,
-             responseMappingTemplate: resolver.responseMapping
-          });
-          r.addDependsOn(quizDataSource);
-          r.addDependsOn(graphql)
-      });
-  }
+        const gameDataSource = new appsync.CfnDataSource(this, 'games_table', {
+            apiId: mySync.attrApiId,
+            name: 'games',
+            serviceRoleArn: role.roleArn,
+            type: 'AMAZON_DYNAMODB',
+            dynamoDbConfig: {
+                awsRegion: 'us-east-1',
+                tableName: ddbGame.tableName
+            }
+        });
+
+        const ddbCatg = new dynamo.Table(this, 'QuizCategories', {
+            tableName: 'QuizCategories',
+            partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
+            sortKey: { name: 'catgId', type: AttributeType.NUMBER },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
+            removalPolicy: RemovalPolicy.DESTROY
+        });
+
+        const catgDataSource = new appsync.CfnDataSource(this, 'catgs_table', {
+            apiId: mySync.attrApiId,
+            name: 'categories',
+            serviceRoleArn: role.roleArn,
+            type: 'AMAZON_DYNAMODB',
+            dynamoDbConfig: {
+                awsRegion: 'us-east-1',
+                tableName: ddbCatg.tableName
+            }
+        });
+
+        const ddbQues = new dynamo.Table(this, 'QuizQuestions', {
+            tableName: 'QuizQuestions',
+            partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
+            sortKey: { name: 'quesId', type: AttributeType.NUMBER },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
+            removalPolicy: RemovalPolicy.DESTROY
+        });
+        ddbQues.addGlobalSecondaryIndex({
+            indexName: 'QuesId',
+            partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
+            projectionType: ProjectionType.ALL
+        });
+
+        const quesDataSource = new appsync.CfnDataSource(this, 'ques_table', {
+            apiId: mySync.attrApiId,
+            name: 'questions',
+            serviceRoleArn: role.roleArn,
+            type: 'AMAZON_DYNAMODB',
+            dynamoDbConfig: {
+                awsRegion: 'us-east-1',
+                tableName: ddbQues.tableName
+            }
+        });
+
+        const resolvers = yaml.safeLoad(fs.readFileSync('src/resolvers.yaml', 'utf8'));
+        resolvers.forEach((resolver:any)=> {
+            const r = new appsync.CfnResolver(this, `${resolver.type}_${resolver.field}`, {
+                apiId: mySync.attrApiId,
+                kind: 'UNIT',
+                typeName: resolver.type,
+                fieldName: resolver.field,
+                dataSourceName: resolver.dataSource,
+                requestMappingTemplate: resolver.requestMapping,
+                responseMappingTemplate: resolver.responseMapping
+            });
+            r.addDependsOn(gameDataSource);
+            r.addDependsOn(graphql)
+        });
+    }
 }
