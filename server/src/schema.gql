@@ -10,8 +10,7 @@ type Question {
 type Category {
     gameId: Int!
     catgId: ID!
-    catgName: String!
-    questions: [Question!]
+    categoryName: String!
 }
 
 type Game {
@@ -19,13 +18,12 @@ type Game {
     emcee: String!
     title: String!
     categories: [Category!]
+    questions: [Question!]
 }
 
 type Query {
     listGamesByEmcee(emcee: String!): [Game!]
     getGameById(gameId: Int!): Game
-    # listCatgsByGameId(gameId: Int!): [Category!]
-    # getQuestion(quesId: Int!)
 }
 
 input NewQuestion {

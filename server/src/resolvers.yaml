@@ -7,7 +7,7 @@
       "version": "2017-02-28",
       "operation": "GetItem",
       "key": {
-          "gameId": "${ctx.args.gameId}"
+          "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId)
       }
     }
   responseMapping: $util.toJson($ctx.result)
@@ -24,6 +24,40 @@
         "expressionValues" : {
           ":emcee" : {
             "S" : "${ctx.args.emcee}"
+          }
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result.items)
+- type: Game
+  field: categories
+  dataSource: categories
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "Query",
+      "query" : {
+        "expression": "gameId = :gameId",
+        "expressionValues" : {
+          ":gameId" : {
+            "N" : "${ctx.source.gameId}"
+          }
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result.items)
+- type: Game
+  field: questions
+  dataSource: questions
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "Query",
+      "query" : {
+        "expression": "gameId = :gameId",
+        "expressionValues" : {
+          ":gameId" : {
+            "N" : "${ctx.source.gameId}"
           }
         }
       }
