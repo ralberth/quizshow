@@ -1,0 +1,15 @@
+{
+  "name": "quizshowsampledata",
+  "private": true,
+  "description": "blah",
+  "version": "1.0.0",
+  "author": "Rich Alberth <richalberth@gmail.com>",
+  "dependencies": {
+    "csv-parse": "^4.4.5"
+  },
+  "scripts": {
+    "convert": "node ./csv2ddb.js convert",
+    "load": "node ./csv2ddb.js load",
+    "clean": "rm -rf node_modules Quiz*.json"
+  }
+}
