@@ -23,42 +23,41 @@ const styles = (theme) => ({
     },
 });
 
+const noop = () => {};
+
 const MyDialogTitle = withStyles(styles)(props => {
-    const { children, classes, onClose } = props;
+    const { children, classes, closable, onClose } = props;
+
+    const closeButton = closable
+        ?  (<IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                <CloseIcon />
+            </IconButton>)
+        : '';
+
     return (
         <MuiDialogTitle disableTypography className={classes.root}>
             <Typography variant="h6">
                 {children}
             </Typography>
-            <IconButton
-                aria-label="close"
-                className={classes.closeButton}
-                onClick={onClose}
-            >
-                <CloseIcon />
-            </IconButton>
+            {closeButton}
         </MuiDialogTitle>
     );
 });
 
 
-const ClosableDialog = (props) => (
+const QuizDialog = (props) => (
     <Dialog
         open={props.open}
-        onClose={props.onClose}
+        onClose={props.onClose || noop}
     >
         <MyDialogTitle
-            onClose={props.onClose}
+            onClose={props.onClose || noop}
         >
             {props.title}
         </MyDialogTitle>
 
-        <DialogContent>
-            <DialogContentText>
-                {props.children}
-            </DialogContentText>
-        </DialogContent>
-        
+        <DialogContent>{props.children}</DialogContent>
+
         <DialogActions>
             <Button
                 onClick={props.onClick}
@@ -70,4 +69,4 @@ const ClosableDialog = (props) => (
     </Dialog>
 );
 
-export default ClosableDialog;
+export default QuizDialog;

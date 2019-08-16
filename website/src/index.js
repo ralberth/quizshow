@@ -9,6 +9,10 @@ import GameAdmin from "./GameAdmin";
 import CreateGame from "./CreateGame";
 import HostGame from "./hostgame/HostGame";
 import Masthead from './Masthead';
+import { withAuthenticator } from 'aws-amplify-react'; // or 'aws-amplify-react-native';
+import configureAmplify from "./config/configureAmplify";
+
+configureAmplify();
 
 const IndexPage = (props) => (
     <Container>
@@ -32,4 +36,6 @@ const IndexPage = (props) => (
     </Container>
 );
 
-ReactDOM.render(<IndexPage />, document.getElementById('root'));
+const RootPage = withAuthenticator(IndexPage);
+
+ReactDOM.render(<RootPage />, document.getElementById('root'));

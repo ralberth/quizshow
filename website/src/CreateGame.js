@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { DropzoneArea } from 'material-ui-dropzone';
 import React from 'react';
-import ClosableDialog from "./util/ClosableDialog";
+import ClosableDialog from "./util/QuizDialog";
 
 class CreateGame extends React.Component {
 
@@ -15,7 +15,7 @@ class CreateGame extends React.Component {
         modalOpen: false,
         gameId: ""
     }
-    
+
     handleName = (event) => this.setState({ title: event.target.value });
 
     handleFileUpload = (arry) => {
@@ -26,13 +26,13 @@ class CreateGame extends React.Component {
             reader.onload = () => this.setState({ contents: reader.result });
             reader.readAsText(arry[0]);
         } else
-            this.setState({ contents: "" });        
+            this.setState({ contents: "" });
     }
 
     createGame = () => this.setState({ modalOpen: true, gameId: "QS-1234" });
 
     handleLaunch = () => this.props.history.push(`/gameadmin/${this.state.gameId}`);
-    
+
     handleClose = () => this.props.history.push("/gameadmin");
 
     render() {

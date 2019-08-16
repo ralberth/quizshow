@@ -22,6 +22,7 @@ type Game {
 }
 
 type Query {
+    listGames: [Game!]
     listGamesByEmcee(emcee: String!): [Game!]
     getGameById(gameId: Int!): Game
 }

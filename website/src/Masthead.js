@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
+import Auth from "@aws-amplify/auth"
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,6 +29,10 @@ const Masthead = (props) => {
     const [ anchorElement, setAnchorElement ] = useState(null);
     const [ open, setOpen ] = useState(false);
     const [ nav, setNav ] = useState("");
+    const [ username, setUsername ] = useState("");
+
+    Auth.currentAuthenticatedUser()
+        .then((userObj) => setUsername(userObj.username));
 
     const menuOpen = (event) => {
         setAnchorElement(event.currentTarget);
@@ -38,26 +43,26 @@ const Masthead = (props) => {
 
     if (nav.length > 0)
         return <Redirect to={nav}/>
-    else
+    else {
         return (
             <div className={classes.root}>
                 <AppBar position="static">
                     <Toolbar>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        className={classes.menuButton}
-                        onClick={menuOpen}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" 
-                        className={classes.title}
-                    >
-                        Quiz Show
-                    </Typography>
-                    <Button color="inherit">Login</Button>
+                        <IconButton
+                            edge="start"
+                            color="inherit"
+                            aria-label="menu"
+                            className={classes.menuButton}
+                            onClick={menuOpen}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant="h6"
+                            className={classes.title}
+                        >
+                            Quiz Show
+                        </Typography>
+                        <Typography variant="h6">{username}</Typography>
                     </Toolbar>
                 </AppBar>
 
@@ -68,6 +73,7 @@ const Masthead = (props) => {
                     open={open}
                     onClose={menuClose}
                 >
+
                     <MenuItem onClick={() => setNav("/")}>Homepage</MenuItem>
                     <MenuItem onClick={() => setNav("/creategame")}>Create a new quiz show</MenuItem>
                     <MenuItem onClick={() => setNav("gameadmin")}>Admin your quiz shows</MenuItem>
@@ -78,6 +84,7 @@ const Masthead = (props) => {
                 </Menu>
             </div>
         );
+    }
 }
 
 export default Masthead;
