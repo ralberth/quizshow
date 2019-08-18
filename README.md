@@ -10,8 +10,12 @@ This uses AWS as the server (AppSync specifically) and stores data in Dynamo DB.
 ## Install the Dynamo tables, AppSync stuff, AWS resources
 
 ```bash
-% cd server && cdk deploy
+% cd server
+npm install
+cdk deploy
 ```
+
+__Note__: If you run into other issues, make sure you have followed the [CDK getting started guide][1].
 
 ## Install sample data to play with
 
@@ -135,3 +139,6 @@ Indexes:
 ## Way in the future
 
 1. "Final Jeopardy": asks a question, people write their answer on their screens, emcee steps through each once they are all submitted.  Awards money based on their wager.
+
+
+[1]: https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html
