@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { DropzoneArea } from 'material-ui-dropzone';
 import React from 'react';
-import ClosableDialog from "./util/QuizDialog";
+import QuizDialog from "./common/QuizDialog";
 
 class CreateGame extends React.Component {
 
@@ -74,7 +74,7 @@ class CreateGame extends React.Component {
                     </Grid>
                 </Grid>
 
-                <ClosableDialog
+                <QuizDialog
                     open={this.state.modalOpen}
                     title="New Game Created"
                     buttonLabel="Launch game!"
@@ -82,7 +82,7 @@ class CreateGame extends React.Component {
                     onClose={this.handleClose}
                 >
                     Your game with ID {this.state.gameId} is ready to go.
-                </ClosableDialog>
+                </QuizDialog>
             </Container>
         );
     }
