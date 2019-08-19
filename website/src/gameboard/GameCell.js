@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 const activeStyle = {
     padding: 24,
     borderRadius: 10,
-    backgroundColor: 'orange'
+    backgroundColor: 'lightblue'
 };
 
 const closedStyle = {

@@ -45,7 +45,7 @@ An easy way to understand what's happening with the AppSync GraphQL API and how 
 
 Holds one Item for each game.  A Game has an owner, tied to the ID from Cognito.  Items contain all the meta-data about a game and the key in QuizGame is used as a "foreign key" in the other tables where needed.
 
-| gameId | owner    | title              |
+| gameId | emcee    | title              |
 |-------:|----------|--------------------|
 |     56 | joeuser  | Spelling Bee       |
 |    109 | hchen    | Networking         |
@@ -54,7 +54,7 @@ Holds one Item for each game.  A Game has an owner, tied to the ID from Cognito.
 Indexes:
 
 * **Primary:** gameId (HASH), *used as typical, artificial key for assembling URLs, and for others to reach a QuizGame from another device*
-* **GSI OwnerByGameId:** owner (HASH) + gameId (RANGE), *search by owner and get a list of IDs*
+* **GSI OwnerByGameId:** emcee (HASH) + gameId (RANGE), *search by owner and get a list of IDs*
 
 
 ## QuizCategories
