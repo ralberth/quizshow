@@ -10,6 +10,7 @@
   "scripts": {
     "convert": "node ./csv2ddb.js convert",
     "load": "node ./csv2ddb.js load",
-    "clean": "rm -rf node_modules Quiz*.json"
+    "clean": "rm -rf Quiz*.json",
+    "clobber": "rm -rf node_modules Quiz*.json"
   }
 }

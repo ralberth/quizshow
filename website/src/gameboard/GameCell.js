@@ -1,30 +1,33 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-const activeStyle = {
-    padding: 24,
-    borderRadius: 10,
-    backgroundColor: 'lightblue'
-};
+const useStyles = makeStyles(theme => ({
+    active: {
+        padding: 18,
+        borderRadius: 10,
+        backgroundColor: 'lightblue'
+    },
+    closed: {
+        padding: 18,
+        borderRadius: 10,
+        backgroundColor: '#fafafa'
+    }
+}));
 
-const closedStyle = {
-    padding: 24,
-    borderRadius: 10,
-    backgroundColor: 'gray'
-};
-
-const GameCell = (props) => (
-    <Paper style={{ borderRadius: 6 }}>
-        <Typography
-            align="center"
-            variant="h5"
-            color={ props.closed ? "disabled" : "primary" }
-            style={ props.closed ? closedStyle : activeStyle }
+const GameCell = ({ prize, state }) => {
+    const classes = useStyles();
+    return (
+        <Paper
+            className={ state === "closed" ? classes.closed : classes.active }
+            elevation={ state === "closed" ? 0 : 5 }
         >
-            ${props.prize}
-        </Typography>
-    </Paper>
-);
+            <Typography align="center" variant="h5">
+                ${prize}
+            </Typography>
+        </Paper>
+    );
+};
 
 export default GameCell;

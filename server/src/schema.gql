@@ -5,6 +5,7 @@ type Question {
     prize: Int!
     question: String!
     answer: String!
+    state: String
 }
 
 type Category {
@@ -21,25 +22,18 @@ type Game {
     questions: [Question!]
 }
 
+enum StateEnum {
+    closed
+}
+
 type Query {
     listGames: [Game!]
     listGamesByEmcee(emcee: String!): [Game!]
     getGameById(gameId: Int!): Game
 }
 
-input NewQuestion {
-    prize: Int!
-    prompt: String!
-    answer: String!
-}
-
-input NewCategory {
-    name: String!
-    questions: [NewQuestion!]!
-}
-
 type Mutation {
-    createQuiz(title: String!, catgs: [NewCategory!]!): Game
+    setQuestionState(quesId: Int!, state: StateEnum!): Question
 }
 
 schema {

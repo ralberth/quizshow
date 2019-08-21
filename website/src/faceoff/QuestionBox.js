@@ -1,6 +1,5 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-// import { styled } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -9,9 +8,9 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(5, 3),
     },
     catgAndPrize: {
-        typeface: "italic", // ???
-        color: "blue",
-        padding: theme.spacing(6, 6)
+        fontStyle: "italic",
+        color: "slateblue",
+        paddingBottom: theme.spacing(6)
     }
 }));
 
@@ -22,7 +21,7 @@ const QuestionBox = ({ category, prize, question }) => {
             className={classes.root}
             elevation={3}
         >
-            <Typography variant="h3" className={classes.catgAndPrize}>
+            <Typography variant="h4" className={classes.catgAndPrize}>
                 {category} for ${prize}
             </Typography>
             <Typography variant="h2">

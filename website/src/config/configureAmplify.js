@@ -4,12 +4,12 @@ import API from "@aws-amplify/api"
 
 const amplifyConfig = {
   aws_appsync_region: "us-east-1",
-  aws_appsync_graphqlEndpoint: "https://gv7jv76umvb5tddzk7zuxb6spe.appsync-api.us-east-1.amazonaws.com/graphql",
+  aws_appsync_graphqlEndpoint: "https://bq6p3k3bnndszaycjrja2jz3cu.appsync-api.us-east-1.amazonaws.com/graphql",
   aws_appsync_authenticationType: "AMAZON_COGNITO_USER_POOLS",
   Auth: {
     region: "us-east-1",
-    userPoolId: "us-east-1_RNv6rD9se",
-    userPoolWebClientId: "7pe0fnglfsp17ofh3mo2u3eskk",
+    userPoolId: "us-east-1_zoVhdOyF0",
+    userPoolWebClientId: "6o0ar5ehp6anues4p7k4pbfb2",
     mandatorySignIn: true,
     authenticationFlowType: 'USER_PASSWORD_AUTH'
   }

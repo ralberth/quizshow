@@ -62,6 +62,7 @@
     {
       "version" : "2017-02-28",
       "operation" : "Query",
+      "index": "GameIdQuesId",
       "query" : {
         "expression": "gameId = :gameId",
         "expressionValues" : {
@@ -72,18 +73,24 @@
       }
     }
   responseMapping: $util.toJson($ctx.result.items)
-# -
-#   type: Mutation
-#   field: createQuiz
-#   dataSource: quiz
-#   requestMapping: |
-#     {
-#       "version" : "2017-02-28",
-#       "operation" : "PutItem",
-#       "key" : {
-#         ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
-#         "id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-#       },
-#       "attributeValues" : $util.dynamodb.toMapValuesJson($ctx.args)
-#     }
-#   responseMapping: $util.toJson($ctx.result)
+- type: Mutation
+  field: setQuestionState
+  dataSource: questions
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "UpdateItem",
+      "key" : {
+        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
+      },
+      "update" : {
+        "expression" : "SET #state :state",
+        "expressionNames" : {
+          "#state" : "state"
+        },
+        "expressionValues" : {
+          ":state" : { "S" : $util.dynamodb.toDynamoDBJson($ctx.args.state) }
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)

@@ -1,13 +1,19 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import { Modal } from '@material-ui/core';
 import QuestionBox from './QuestionBox';
-// import { styled } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import NominationGrid from './NominationGrid';
+
+const useStyles = makeStyles(theme => ({
+    container: {
+      padding: theme.spacing(8)
+    }
+}));
 
 const Faceoff = ({ isOpen, category, prize, question, answer }) => {
+    const classes = useStyles();
 
     return (
         <Modal
@@ -15,22 +21,23 @@ const Faceoff = ({ isOpen, category, prize, question, answer }) => {
             disableBackdropClick={true}
             disableEscapeKeyDown={true}
         >
-            <Container>
+            <Container className={classes.container}>
                 <Grid
                     container
-                    spacing={1}
+                    direction="row"
                     justify="space-evenly"
                     alignItems="flex-start"
+                    spacing={8}
                 >
-                    <Grid item xs="9">
+                    <Grid item xs={8}>
                         <QuestionBox
                             category={category}
                             prize={prize}
                             question={question}
                             answer={answer} />
                     </Grid>
-                    <Grid item>
-                        <Paper>place where each pop-up player goes</Paper>
+                    <Grid item xs={4}>
+                        <NominationGrid />
                     </Grid>
                 </Grid>
             </Container>

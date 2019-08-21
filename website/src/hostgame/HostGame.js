@@ -24,6 +24,7 @@ const GET_GAME_GQL = gql(`
                 prize
                 question
                 answer
+                state
             }
         }
     }

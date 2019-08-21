@@ -78,10 +78,10 @@ Indexes:
 
 Each Item is a single question for a QuizGame.  Foreign Key to QuizCategories for the category name.
 
-| gameId | catgId | quesId | prize | question             | answer    |
-|-------:|-------:|-------:|------:|----------------------|-----------|
-|    109 |     12 |      1 |    50 | Show net interfaces? | ifconfig  |
-|    109 |     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  |
+| gameId | catgId | quesId | prize | question             | answer    | state
+|-------:|-------:|-------:|------:|----------------------|-----------|-------------
+|    109 |     12 |      1 |    50 | Show net interfaces? | ifconfig  | closed
+|    109 |     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  | closed
 |    109 |     12 |      3 |   325 | Open sockets?        | netstat   |
 |   7006 |     77 |      4 |   200 | Red octagon?         | Stop sign |
 |   7006 |     78 |      5 |   300 | Safe distance?       | 2 seconds |
