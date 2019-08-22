@@ -4,6 +4,7 @@ import { styled } from '@material-ui/styles';
 import GameBoard from "../gameboard/GameBoard";
 import API, { graphqlOperation } from "@aws-amplify/api"
 import gql from "graphql-tag"
+import MessageBus from "../common/MessageBus";
 
 const GameTitle = styled(Typography)({
     margin: "40px",
@@ -30,11 +31,13 @@ const GET_GAME_GQL = gql(`
     }
 `);
 
+
 class HostGame extends React.Component {
 
     constructor(props) {
         super();
         this.props = props;
+        this.bus = new MessageBus();
     }
 
     state = {
@@ -46,7 +49,7 @@ class HostGame extends React.Component {
         let me = this;
         API.graphql(graphqlOperation(GET_GAME_GQL, { id: gameId }))
             .then(game => me.setState({ game: game.data.getGameById }))
-            .catch(err => console.log(`catch:`, err));
+            .catch(err => me.bus.flashMessage(err));
     }
 
     render() {

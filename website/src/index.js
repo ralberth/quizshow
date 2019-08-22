@@ -12,10 +12,11 @@ import Masthead from './Masthead';
 import { withAuthenticator } from 'aws-amplify-react';
 import configureAmplify from "./config/configureAmplify";
 import ChooseGameToHost from "./hostgame/ChooseGameToHost";
+import FlashMessage from "./FlashMessage";
 
 configureAmplify();
 
-const IndexPage = (props) => (
+const IndexPage = () => (
     <Container>
         <Helmet>
             <title>Quiz Show</title>
@@ -25,8 +26,9 @@ const IndexPage = (props) => (
             />
         </Helmet>
         <BrowserRouter>
-            <Masthead/>
+            <Masthead />
             <CssBaseline />
+            <FlashMessage />
             <Switch>
                 <Route exact path="/"                         component={Homepage} />
                 <Route exact path="/creategame"               component={CreateGame} />

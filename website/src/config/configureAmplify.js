@@ -1,6 +1,6 @@
 import Amplify from "@aws-amplify/core"
-import Auth from "@aws-amplify/auth"
-import API from "@aws-amplify/api"
+
+require('@aws-amplify/pubsub')  // MUST be here or pubsub doesn't work.
 
 const amplifyConfig = {
   aws_appsync_region: "us-east-1",
@@ -24,6 +24,4 @@ export default () => {
     },
   })
   Amplify.configure(amplifyConfig)
-  API.configure(amplifyConfig)
-  Auth.configure(amplifyConfig)
 }

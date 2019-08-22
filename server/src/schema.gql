@@ -36,7 +36,13 @@ type Mutation {
     setQuestionState(quesId: Int!, state: StateEnum!): Question
 }
 
+type Subscription {
+    questionStateChange: Question
+	@aws_subscribe(mutations: [ "setQuestionState" ])
+}
+
 schema {
     query: Query
     mutation: Mutation
+	subscription: Subscription
 }
