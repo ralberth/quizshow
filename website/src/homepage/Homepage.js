@@ -1,64 +1,57 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import HomepageCard from './HomepageCard';
-import './homepage.scss';
+import HeroText from "../common/HeroText";
 
-class Homepage extends React.Component {
+const Homepage = (props) => {
+    const [ redirectUrl, setRedirectUrl ] = React.useState(null);
 
-    constructor(props) {
-      super();
-      this.props = props;
-    }
+    const doCreate = () => setRedirectUrl("/create");
+    const doAdmin  = () => setRedirectUrl("/admin");
+    const doJoin   = () => setRedirectUrl("/join");
+    const doHost   = () => setRedirectUrl("/host");
+    const doEmcee  = () => setRedirectUrl("/emcee");
 
-    doCreate = () => this.props.history.push("/create");
-    doAdmin  = () => this.props.history.push("/admin");
-    doJoin   = () => this.props.history.push("/join");
-    doHost   = () => this.props.history.push("/host");
-    doEmcee  = () => this.props.history.push("/emcee");
-
-    render() {
+    if (!!redirectUrl)
+        return (<Redirect to={redirectUrl} />);
+    else {
         return (
-            <div className="homepage">
-                <div className="hero">
-                    <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-                        Quiz Show
-                    </Typography>
-                    <p style={{ textAlign: 'center' }}>
-                      Lorem Ipsum dolor sic amet
-                    </p>
-                </div>
+            <div style={{ padding: 64 }}>
+                <HeroText
+                    title="Quiz Show"
+                    subtitle="Lorem Ipsum dolor sic amet" />
 
-                <Grid container spacing={4}>
+                <Grid container justify="center" spacing={6}>
                     <HomepageCard
                         title="Create"
                         description="Create a new Quiz Show and let people connect to play."
                         buttonText="Create"
-                        onClick={this.doCreate}
+                        onClick={doCreate}
                     />
                     <HomepageCard
                         title="Admin"
                         description="Reconnect, manage, and close Quiz Shows that you emcee."
                         buttonText="Admin"
-                        onClick={this.doAdmin}
+                        onClick={doAdmin}
                     />
                     <HomepageCard
                         title="Emcee"
                         description="Run a Quiz Show that you created."
                         buttonText="Emcee"
-                        onClick={this.doEmcee}
+                        onClick={doEmcee}
                     />
                     <HomepageCard
                         title="Join"
                         description="Join a Game Show with a code from your emcee."
                         buttonText="Join"
-                        onClick={this.doJoin}
+                        onClick={doJoin}
                     />
                     <HomepageCard
                         title="Host"
                         description="Show the game board on a big screen for all players."
                         buttonText="Host"
-                        onClick={this.doHost}
+                        onClick={doHost}
                     />
                 </Grid>
             </div>

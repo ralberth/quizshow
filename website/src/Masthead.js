@@ -40,9 +40,9 @@ const Masthead = (props) => {
 
     const menuClose = () => setOpen(false);
 
-    if (nav.length > 0)
-        return <Redirect to={nav}/>
-    else {
+    if (nav.length > 0) {
+        return (<Redirect to={nav}/>);
+    } else {
         return (
             <div className={classes.root}>
                 <AppBar position="static">

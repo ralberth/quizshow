@@ -25,7 +25,6 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-event-observer": "^0.5.11",
-    "react-helmet": "^5.2.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "styled-components": "^4.3.2"

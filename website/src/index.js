@@ -1,10 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { Helmet } from "react-helmet";
 import Homepage from './homepage/Homepage';
+import Container from "@material-ui/core/Container";
 import GameAdmin from "./GameAdmin";
 import CreateGame from "./CreateGame";
 import HostGame from "./hostgame/HostGame";
@@ -14,22 +13,16 @@ import configureAmplify from "./config/configureAmplify";
 import ChooseGameToHost from "./hostgame/ChooseGameToHost";
 import FlashMessage from "./FlashMessage";
 import ChooseGameToEmcee from "./emcee/ChooseGameToEmcee";
+import EmceeGame from "./emcee/EmceeGame";
 
 configureAmplify();
 
 const IndexPage = () => (
-    <Container>
-        <Helmet>
-            <title>Quiz Show</title>
-            <meta
-                name="viewport"
-                content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-            />
-        </Helmet>
-        <BrowserRouter>
-            <Masthead />
-            <CssBaseline />
-            <FlashMessage />
+    <BrowserRouter>
+        <Masthead />
+        <CssBaseline />
+        <FlashMessage />
+        <Container>
             <Switch>
                 <Route exact path="/"                     component={Homepage} />
                 <Route exact path="/create"               component={CreateGame} />
@@ -37,10 +30,10 @@ const IndexPage = () => (
                 <Route exact path="/host"                 component={ChooseGameToHost} />
                 <Route exact path="/host/:gameId"         component={HostGame} />
                 <Route exact path="/emcee"                component={ChooseGameToEmcee} />
-                <Route exact path="/emcee/:gameId"        component={HostGame} />
+                <Route exact path="/emcee/:gameId"        component={EmceeGame} />
             </Switch>
-        </BrowserRouter>
-    </Container>
+        </Container>
+    </BrowserRouter>
 );
 
 const RootPage = withAuthenticator(IndexPage);
