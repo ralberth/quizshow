@@ -1,25 +1,24 @@
-type Question {
-    quesId: ID!
-    gameId: ID!
-    catgId: ID!
-    prize: Int!
-    question: String!
-    answer: String!
-    state: String
+type Game {
+    gameId: Int!
+    emcee: String!
+    title: String!
+    categories: [Category!]
 }
 
 type Category {
     gameId: Int!
-    catgId: ID!
+    catgId: Int!
     categoryName: String!
+    questions: [Question!]
 }
 
-type Game {
-    gameId: ID!
-    emcee: String!
-    title: String!
-    categories: [Category!]
-    questions: [Question!]
+type Question {
+    catgId: Int!
+    quesId: Int!
+    prize: Int!
+    question: String!
+    answer: String!
+    state: String
 }
 
 enum StateEnum {

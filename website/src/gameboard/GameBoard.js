@@ -43,28 +43,18 @@ const SUB_QUES_UPDATES_GQL = gql(`
  * below.  The order of columns in each row corresponds to the order of categories in
  * "categories" passed in.
  */
-const createMatrixFromQuesList = (categories, questions) => {
-    // Intermediate helper: maps catgId to an array of questions in prize order
-    const catMap = {};
-    categories.forEach(catg => {
-        const quesThisCatg = [];
-        for(var i = 0; i < questions.length; i++) {
-            if (questions[i].catgId === catg.catgId)
-                quesThisCatg.push(questions[i]);
-        }
-        catMap[catg.catgId] = quesThisCatg;
-    });
+const createMatrixFromGame = (game) => {
+    game.categories.forEach(catg => catg.questions.sort((a,b) => a.prize - b.prize));
 
-    // Convert catMap into 2D array
     const mat = [];
     while(true) {
         const row = [];
-        categories.forEach(catg => row.push(catMap[catg.catgId].shift()));
+        game.categories.forEach(catg => row.push(catg.questions.shift()));
         const nonNullEntries = row.find(x => x !== null);
         if (nonNullEntries)
             mat.push(row);
         else
-            break; // all arrays in catMap exhausted
+            break;
     }
 
     return mat;
@@ -102,7 +92,7 @@ class GameBoard extends React.Component {
 
 
     render() {
-        const ranks = createMatrixFromQuesList(this.game.categories, this.game.questions);
+        const ranks = createMatrixFromGame(this.game);
 
         return (
             <div>

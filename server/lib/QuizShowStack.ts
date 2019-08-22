@@ -96,15 +96,15 @@ export class QuizShowStack extends cdk.Stack {
 
         const ddbQues = new dynamo.Table(this, 'QuizQuestions', {
             tableName: 'QuizQuestions',
-            partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
+            partitionKey: { name: 'catgId', type: AttributeType.NUMBER },
+            sortKey: { name: 'quesId', type: AttributeType.NUMBER },
             readCapacity: DDB_IOPS,
             writeCapacity: DDB_IOPS,
             removalPolicy: RemovalPolicy.DESTROY
         });
         ddbQues.addGlobalSecondaryIndex({
-            indexName: 'GameIdQuesId',
-            partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
-            sortKey: { name: 'quesId', type: AttributeType.NUMBER },
+            indexName: 'QuesId',
+            partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
             projectionType: ProjectionType.ALL
         });
 

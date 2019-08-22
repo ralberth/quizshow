@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "author": "Rich Alberth <richalberth@gmail.com>",
   "dependencies": {
+    "aws-sdk": "^2.515.0",
     "csv-parse": "^4.4.5"
   },
   "scripts": {

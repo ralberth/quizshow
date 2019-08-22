@@ -14,7 +14,7 @@ const ALL_GAMES_GQL = gql(`
     }
 `);
 
-class ChooseGameToHost extends React.Component {
+class ChooseGameToEmcee extends React.Component {
 
     constructor(props) {
         super();
@@ -38,7 +38,7 @@ class ChooseGameToHost extends React.Component {
 
     render() {
         if (this.state.redirectToGame) {
-            return (<Redirect to={`/host/${this.state.redirectToGame}`} />);
+            return (<Redirect to={`/emcee/${this.state.redirectToGame}`} />);
         } else {
             return (
                 <PickGameDialog
@@ -52,4 +52,4 @@ class ChooseGameToHost extends React.Component {
     }
 }
 
-export default ChooseGameToHost;
+export default ChooseGameToEmcee;

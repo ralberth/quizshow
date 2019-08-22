@@ -11,10 +11,11 @@ class Homepage extends React.Component {
       this.props = props;
     }
 
-    doCreate = () => this.props.history.push("/creategame");
-    doAdmin  = () => this.props.history.push("/gameadmin");
-    doJoin   = () => this.props.history.push("/joingame");
-    doHost   = () => this.props.history.push("/hostgame");
+    doCreate = () => this.props.history.push("/create");
+    doAdmin  = () => this.props.history.push("/admin");
+    doJoin   = () => this.props.history.push("/join");
+    doHost   = () => this.props.history.push("/host");
+    doEmcee  = () => this.props.history.push("/emcee");
 
     render() {
         return (
@@ -40,6 +41,12 @@ class Homepage extends React.Component {
                         description="Reconnect, manage, and close Quiz Shows that you emcee."
                         buttonText="Admin"
                         onClick={this.doAdmin}
+                    />
+                    <HomepageCard
+                        title="Emcee"
+                        description="Run a Quiz Show that you created."
+                        buttonText="Emcee"
+                        onClick={this.doEmcee}
                     />
                     <HomepageCard
                         title="Join"

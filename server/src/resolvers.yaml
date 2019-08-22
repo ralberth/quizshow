@@ -55,19 +55,18 @@
       }
     }
   responseMapping: $util.toJson($ctx.result.items)
-- type: Game
+- type: Category
   field: questions
   dataSource: questions
   requestMapping: |
     {
       "version" : "2017-02-28",
       "operation" : "Query",
-      "index": "GameIdQuesId",
       "query" : {
-        "expression": "gameId = :gameId",
+        "expression": "catgId = :catgId",
         "expressionValues" : {
-          ":gameId" : {
-            "N" : "${ctx.source.gameId}"
+          ":catgId" : {
+            "N" : "${ctx.source.catgId}"
           }
         }
       }
@@ -84,12 +83,12 @@
         "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
       },
       "update" : {
-        "expression" : "SET #state :state",
+        "expression" : "SET #state = :state",
         "expressionNames" : {
           "#state" : "state"
         },
         "expressionValues" : {
-          ":state" : { "S" : $util.dynamodb.toDynamoDBJson($ctx.args.state) }
+          ":state" : $util.dynamodb.toDynamoDBJson($ctx.args.state)
         }
       }
     }

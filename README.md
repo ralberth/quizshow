@@ -78,17 +78,17 @@ Indexes:
 
 Each Item is a single question for a QuizGame.  Foreign Key to QuizCategories for the category name.
 
-| gameId | catgId | quesId | prize | question             | answer    | state
-|-------:|-------:|-------:|------:|----------------------|-----------|-------------
-|    109 |     12 |      1 |    50 | Show net interfaces? | ifconfig  | closed
-|    109 |     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  | closed
-|    109 |     12 |      3 |   325 | Open sockets?        | netstat   |
-|   7006 |     77 |      4 |   200 | Red octagon?         | Stop sign |
-|   7006 |     78 |      5 |   300 | Safe distance?       | 2 seconds |
+| catgId | quesId | prize | question             | answer    | state
+|-------:|-------:|------:|----------------------|-----------|-------------
+|     12 |      1 |    50 | Show net interfaces? | ifconfig  | closed
+|     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  | closed
+|     12 |      3 |   325 | Open sockets?        | netstat   |
+|     77 |      4 |   200 | Red octagon?         | Stop sign |
+|     78 |      5 |   300 | Safe distance?       | 2 seconds |
 
 Indexes:
 
-* **Primary:** gameId (HASH) + quesId (RANGE), *to get all question Items for a gameId*
+* **Primary:** catgId (HASH) + quesId (RANGE), *to get all question Items for a gameId*
 * **GSI QuesId:** quesId (HASH), *during game play for people to retrieve individual questions*
 
 

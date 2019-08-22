@@ -50,7 +50,6 @@ if (process.argv[2] === "convert") {
                     quesItems.push({
                         "PutRequest": {
                             "Item": {
-                                gameId: { "N": `${gameId}` },
                                 catgId: { "N": `${catgId}` },
                                 quesId: { "N": `${nextId++}` },
                                 prize: { "N": `${row.prize}` },

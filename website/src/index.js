@@ -13,6 +13,7 @@ import { withAuthenticator } from 'aws-amplify-react';
 import configureAmplify from "./config/configureAmplify";
 import ChooseGameToHost from "./hostgame/ChooseGameToHost";
 import FlashMessage from "./FlashMessage";
+import ChooseGameToEmcee from "./emcee/ChooseGameToEmcee";
 
 configureAmplify();
 
@@ -30,11 +31,13 @@ const IndexPage = () => (
             <CssBaseline />
             <FlashMessage />
             <Switch>
-                <Route exact path="/"                         component={Homepage} />
-                <Route exact path="/creategame"               component={CreateGame} />
-                <Route exact path="/gameadmin"                component={GameAdmin} />
-                <Route exact path="/hostgame"                 component={ChooseGameToHost} />
-                <Route exact path="/hostgame/:gameId"         component={HostGame} />
+                <Route exact path="/"                     component={Homepage} />
+                <Route exact path="/create"               component={CreateGame} />
+                <Route exact path="/admin"                component={GameAdmin} />
+                <Route exact path="/host"                 component={ChooseGameToHost} />
+                <Route exact path="/host/:gameId"         component={HostGame} />
+                <Route exact path="/emcee"                component={ChooseGameToEmcee} />
+                <Route exact path="/emcee/:gameId"        component={HostGame} />
             </Switch>
         </BrowserRouter>
     </Container>
