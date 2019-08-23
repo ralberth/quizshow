@@ -5,9 +5,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import React from 'react';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { Redirect } from 'react-router';
 
 class PickGameDialog extends React.Component {
@@ -18,13 +16,19 @@ class PickGameDialog extends React.Component {
     }
 
     state = {
-        gameId: null,
+        gameId: "",
         cancelPressed: false
     };
 
-    handleChoose = (event) => this.setState({ gameId: event.target.value });
+    handleChoose = (event) => {
+        console.log(`got ${event.target.value}`);
+        this.setState({ gameId: event.target.value });
+    }
 
-    gameChosen = (event) => this.props.onGameChosen(this.state.gameId);
+    gameChosen = () => {
+        if (!!this.state.gameId)
+            this.props.onGameChosen(this.state.gameId);
+    }
 
     handleCancel = () => this.setState({ cancelPressed: true });
 
@@ -41,31 +45,33 @@ class PickGameDialog extends React.Component {
                     onCancel={this.handleCancel}
                     onAccept={this.gameChosen}
                 >
-                    <RadioGroup>
-                        <Table size="small">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Quiz Title</TableCell>
-                                    <TableCell>Emcee</TableCell>
+                    <Table size="small">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell></TableCell>
+                                <TableCell>Quiz Title</TableCell>
+                                <TableCell>Emcee</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {games.map(row => (
+                                <TableRow key={row.gameId}>
+                                    <TableCell>
+                                        <Radio
+                                            value={row.gameId}
+                                            checked={`${this.state.gameId}` === `${row.gameId}`}
+                                            onChange={this.handleChoose}
+                                            color="primary"
+                                        />
+                                    </TableCell>
+                                    <TableCell>
+                                        {row.title}
+                                    </TableCell>
+                                    <TableCell>{row.emcee}</TableCell>
                                 </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {games.map(row => (
-                                    <TableRow key={row.gameId}>
-                                        <TableCell>
-                                            <FormControlLabel
-                                                value={row.gameId}
-                                                control={<Radio />}
-                                                label={row.title}
-                                                onChange={this.handleChoose}
-                                            />
-                                        </TableCell>
-                                        <TableCell>{row.emcee}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </RadioGroup>
+                            ))}
+                        </TableBody>
+                    </Table>
                 </QuizDialog>
             );
         }

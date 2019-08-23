@@ -1,49 +1,17 @@
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
 import API, { graphqlOperation } from "@aws-amplify/api"
 import gql from "graphql-tag"
 import MessageBus from "../common/MessageBus";
 import HeroText from "../common/HeroText";
-
-const useStyles = makeStyles(theme => ({
-    heading: {
-      fontSize: "medium",
-      fontWeight: "bold"
-    },
-    button: {
-        fontSize: "large"
-    }
-}));
-
-const CategoryPanel = ({ category, children }) => {
-    const classes = useStyles();
-    return (
-        <Card raised={true}>
-            <CardHeader title={category} className={classes.heading} />
-            <CardContent>
-                {children}
-            </CardContent>
-        </Card>
-    );
-}
-
-const QuesButton = ({ prize, onClick }) => {
-    const classes = useStyles();
-    return (
-        <Button
-            variant="contained"
-            className={classes.button}
-            onClick={onClick}
-        >
-            ${prize}
-        </Button>
-    );
-}
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Typography from '@material-ui/core/Typography';
+import QuestionControlPanel from './QuestionControlPanel';
+import NominationControl from './NominationControl';
+import Box from '@material-ui/core/Box';
 
 const GET_GAME_GQL = gql(`
     query Query($id: Int!) {
@@ -65,7 +33,6 @@ const GET_GAME_GQL = gql(`
     }
 `);
 
-
 class EmceeGame extends React.Component {
 
     constructor(props) {
@@ -75,7 +42,11 @@ class EmceeGame extends React.Component {
     }
 
     state = {
-        game: null
+        game: null,
+        currentQuestion: null,
+        currentAnswer: null,
+        currentCategory: null,
+        currentPrize: null
     }
 
     componentDidMount = () => {
@@ -86,8 +57,12 @@ class EmceeGame extends React.Component {
             .catch(err => me.bus.flashMessage(err));
     }
 
-    launchQuestion = (event) => {
-        console.log("Question");
+    launchQuestion = (ques) => {
+        this.setState({
+            currentQuestion: ques.question,
+            currentAnswer: ques.answer,
+            currentPrize: ques.prize
+        });
     }
 
     render() {
@@ -97,24 +72,36 @@ class EmceeGame extends React.Component {
             return (
                 <div>
                     <HeroText title={this.state.game.title} />
-                    <Grid container justify="center" spacing={4}>
-                        {this.state.game.categories.map(catg => (
-                            <Grid item key={catg.catgId}>
-                                <CategoryPanel
-                                    category={catg.categoryName}
-                                >
-                                    <Grid container spacing={1}>
-                                        {catg.questions.map(ques => (
-                                            <Grid item key={ques.quesId}>
-                                                <QuesButton
-                                                    prize={ques.prize}
-                                                    onClick={this.launchQuestion} />
-                                            </Grid>))}
-                                    </Grid>
-                                </CategoryPanel>
-                            </Grid>
-                        ))}
-                    </Grid>
+
+                    <QuestionControlPanel
+                        game={this.state.game}
+                        onClick={this.launchQuestion} />
+
+                    <Box
+                        component="div"
+                        visibility={!!this.state.currentQuestion ? "visible" : "hidden"}
+                    >
+                        <Typography variant="h3">
+                            {this.state.currentCategory} for ${this.state.currentPrize}
+                        </Typography>
+
+                        <Table style={{ tableLayout: "fixed" }}>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Question</TableCell>
+                                    <TableCell>Answer</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>{this.state.currentQuestion}</TableCell>
+                                    <TableCell>{this.state.currentAnswer}</TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+
+                        <NominationControl />
+                    </Box>
                 </div>
             );
         }
