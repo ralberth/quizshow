@@ -12,9 +12,19 @@ var yaml = require('js-yaml');
 
 const DDB_IOPS = 20;
 
+/*
+ * WARNING: here's a quote from the CDK documentation as of Aug 25, 2019:
+ *     "This is a developer preview (public beta) module. Releases might lack
+ *      important features and might have future breaking changes."
+ */
+
 export class QuizShowStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
         super(scope, id, props);
+
+        /***********************************************************************
+         ** IAM and Security                                                  **
+         ***********************************************************************/
 
         const role = new iam.Role(this, 'QuizShowAppSyncRole', {
             assumedBy: new ServicePrincipal('appsync.amazonaws.com'),
@@ -27,20 +37,49 @@ export class QuizShowStack extends cdk.Stack {
         statement.addAllResources();
         role.addToPolicy(statement);
 
-        const userPool = new cognito.UserPool(this, 'QuizShowPool');
-        const userPoolClient = new cognito.UserPoolClient(this, 'QuizShowUserPoolClient', {
-            userPoolClientName: 'QuizShowUserPoolClient',
-            userPool: userPool,
-            enabledAuthFlows: [ AuthFlow.USER_PASSWORD ]
+        const userPool = new cognito.CfnUserPool(this, 'QuizShowPool', {
+            adminCreateUserConfig: {
+                allowAdminCreateUserOnly: false
+            },
+            policies: {
+                passwordPolicy: {  // interface PasswordPolicyProperty
+                    minimumLength: 6,
+                    requireLowercase: false,
+                    requireNumbers: false,
+                    requireSymbols: false,
+                    requireUppercase: false
+                }
+            },
+            schema: [
+                {
+                    name: "nickname",
+                    mutable: true,
+                    required: true,
+                    stringAttributeConstraints: {
+                        minLength: "4",
+                        maxLength: "20"
+                    }
+                }
+            ]
         });
 
-        const mySync = new appsync.CfnGraphQLApi(this, "QuizShow", {
+        new cognito.CfnUserPoolClient(this, 'QuizShowUserPoolClient', {
+            userPoolId: userPool.ref,
+            explicitAuthFlows: [ AuthFlow.USER_PASSWORD ]
+        });
+
+
+        /***********************************************************************
+         ** APP SYNC SETUP                                                    **
+         ***********************************************************************/
+
+         const mySync = new appsync.CfnGraphQLApi(this, "QuizShow", {
             name: 'QuizShow',
             authenticationType: 'AMAZON_COGNITO_USER_POOLS',
             userPoolConfig: {
                 awsRegion: 'us-east-1',
                 defaultAction: 'ALLOW',
-                userPoolId: userPool.userPoolId
+                userPoolId: userPool.ref
             }
         });
 
@@ -48,6 +87,11 @@ export class QuizShowStack extends cdk.Stack {
             apiId: mySync.attrApiId,
             definition: fs.readFileSync('src/schema.gql', 'utf8')
         });
+
+
+        /***********************************************************************
+         ** Dynamo Tables and Data Sources                                    **
+         ***********************************************************************/
 
         const ddbGame = new dynamo.Table(this, 'QuizGames', {
             tableName: 'QuizGames',
@@ -83,7 +127,7 @@ export class QuizShowStack extends cdk.Stack {
             removalPolicy: RemovalPolicy.DESTROY
         });
 
-        const catgDataSource = new appsync.CfnDataSource(this, 'catgs_table', {
+        new appsync.CfnDataSource(this, 'catgs_table', {
             apiId: mySync.attrApiId,
             name: 'categories',
             serviceRoleArn: role.roleArn,
@@ -108,7 +152,7 @@ export class QuizShowStack extends cdk.Stack {
             projectionType: ProjectionType.ALL
         });
 
-        const quesDataSource = new appsync.CfnDataSource(this, 'ques_table', {
+        new appsync.CfnDataSource(this, 'ques_table', {
             apiId: mySync.attrApiId,
             name: 'questions',
             serviceRoleArn: role.roleArn,
@@ -118,6 +162,31 @@ export class QuizShowStack extends cdk.Stack {
                 tableName: ddbQues.tableName
             }
         });
+
+        new dynamo.Table(this, 'QuizContestants', {
+            tableName: 'QuizContestants',
+            partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
+            sortKey: { name: 'login', type: AttributeType.STRING },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
+            removalPolicy: RemovalPolicy.DESTROY
+        });
+
+        new appsync.CfnDataSource(this, 'cntst_table', {
+            apiId: mySync.attrApiId,
+            name: 'contestants',
+            serviceRoleArn: role.roleArn,
+            type: 'AMAZON_DYNAMODB',
+            dynamoDbConfig: {
+                awsRegion: 'us-east-1',
+                tableName: ddbQues.tableName
+            }
+        });
+
+
+        /***********************************************************************
+         ** App Sync Resolvers                                                **
+         ***********************************************************************/
 
         const resolvers = yaml.safeLoad(fs.readFileSync('src/resolvers.yaml', 'utf8'));
         resolvers.forEach((resolver:any)=> {

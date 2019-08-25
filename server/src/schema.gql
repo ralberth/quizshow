@@ -1,8 +1,16 @@
+type Contestant {
+    gameId: Int!
+    login: String!
+    name: String!
+    score: Int!
+}
+
 type Game {
     gameId: Int!
     emcee: String!
     title: String!
     categories: [Category!]
+    contestants: [Contestant!]
 }
 
 type Category {

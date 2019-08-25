@@ -20,10 +20,7 @@ class PickGameDialog extends React.Component {
         cancelPressed: false
     };
 
-    handleChoose = (event) => {
-        console.log(`got ${event.target.value}`);
-        this.setState({ gameId: event.target.value });
-    }
+    handleChoose = (event) => this.setState({ gameId: event.target.value });
 
     gameChosen = () => {
         if (!!this.state.gameId)

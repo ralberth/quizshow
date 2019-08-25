@@ -55,6 +55,23 @@
       }
     }
   responseMapping: $util.toJson($ctx.result.items)
+- type: Game
+  field: contestants
+  dataSource: contestants
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "Query",
+      "query" : {
+        "expression": "gameId = :gameId",
+        "expressionValues" : {
+          ":gameId" : {
+            "N" : "${ctx.source.gameId}"
+          }
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result.items)
 - type: Category
   field: questions
   dataSource: questions

@@ -9,13 +9,24 @@ This uses AWS as the server (AppSync specifically) and stores data in Dynamo DB.
 
 ## Install the Dynamo tables, AppSync stuff, AWS resources
 
-```bash
-% cd server
+```
+cd server
 npm install
+npm run build
 cdk deploy
 ```
 
 __Note__: If you run into other issues, make sure you have followed the [CDK getting started guide][1].
+
+To load the sample games into Dynamo so you have something to play with, go get (temporary) IAM user/role access/secret/session keys and set them as environment variables, then:
+
+```bash
+cd samplegames
+npm install
+npm convert
+npm load
+```
+
 
 ## Install sample data to play with
 
@@ -32,6 +43,21 @@ npm run load
 * Clear out the Cognito User Pool
 * Change IOPS on the Dynamo tables to support a bunch of users at once
 * Clear out the Dynamo tables
+
+
+# Cognito User Pool Structure
+
+Data on the humans involved in the game are stored in Cognito *only*, as opposed to having a separate table holding users' names, logins, etc.
+
+User Pools have Attributes that are set if the user pool ins't associated with an identity provider.  If there is an IdP, the Attributes come from it.
+
+To be as simple as possible, Cognito is setup with:
+
+1. login name required
+1. nickname required (like a 'screen handle')
+1. Email and phone numbers optional, no emails or TXTs will be sent to verify unless you click a button to verify
+1. Passwords are weak: nothing required, at least 6 characters
+1. Anyone can sign-up for an account
 
 
 # Dynamo Table Structure
@@ -92,12 +118,37 @@ Indexes:
 * **GSI QuesId:** quesId (HASH), *during game play for people to retrieve individual questions*
 
 
+## QuizContestants
+
+Each Item is a person who is playing a particular Game.  There is no Dynamo representation of just a person.  We're using Cognito User Pools which carry their own Attributes like name and login.  This is sufficient as the database of record for human name info.  Contestants are logged-in Users from a Cognito User Pool that are playing a game.  Because of this, each Item in QuizContestants carries their current score.
+
+| gameId | login  | name        | score
+|-------:|--------|-------------|------:
+|     12 | asmith | Agnet Smith |   500
+|     12 | jbond  | James Bond  | 12900
+|     12 | msmart | Max Smart   |     0
+|     53 | deter  | Deter M.    |  1400
+|     53 | harold | Harold      |   100
+
+Indexes:
+
+* **Primary:** gameId (HASH) + login (RANGE), *to get all people playing a game, or to get/update the current score for a player*
+
+
 # TO DO
+
+## General Look & Feel
+
+1. Use the `[system palette][2]` in styled components instead of hard-coding colors
+1. Consider `<Box letterSpacing={2}>` for hero text and large questions, maybe category labels on hostgame screen
+1. Consider `<Hidden>` with appropriate breaks so tablet and phone interfaces are not cluttered
+
 
 ## Join, Login, Start
 
 1. QR code to join the game
-1. Add other providers to Cognito User Pool
+1. Add other identity providers to Cognito User Pool
+1. Lessen custom password requirements (Cognito User Pool Password Policy)
 
 
 ## Quiz Host Screen
@@ -142,3 +193,4 @@ Indexes:
 
 
 [1]: https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html
+[2]: https://material-ui.com/system/palette/
