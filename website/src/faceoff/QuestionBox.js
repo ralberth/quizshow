@@ -7,22 +7,22 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: theme.spacing(5, 3),
     },
-    catgAndPrize: {
+    catgAndPoints: {
         fontStyle: "italic",
         color: "slateblue",
         paddingBottom: theme.spacing(6)
     }
 }));
 
-const QuestionBox = ({ category, prize, question }) => {
+const QuestionBox = ({ category, points, question }) => {
     const classes = useStyles();
     return (
         <Paper
             className={classes.root}
             elevation={3}
         >
-            <Typography variant="h4" className={classes.catgAndPrize}>
-                {category} for ${prize}
+            <Typography variant="h4" className={classes.catgAndPoints}>
+                {category} for {points} points
             </Typography>
             <Typography variant="h2">
                 {question}

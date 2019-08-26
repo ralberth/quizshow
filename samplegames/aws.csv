@@ -1,4 +1,4 @@
-category,prize,question,answer
+category,points,question,answer
 EC2,100,Name a burstable instance type,T2 T3 T3a
 EC2,200,What does C in C5.XL stand for?,Compute
 EC2,300,What is a Placement Group?,All instances in same AZ/DC

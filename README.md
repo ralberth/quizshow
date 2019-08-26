@@ -118,13 +118,13 @@ Indexes:
 
 Each Item is a single question for a QuizGame.  Foreign Key to QuizCategories for the category name.
 
-| catgId | quesId | prize | question             | answer    | state
-|-------:|-------:|------:|----------------------|-----------|-------------
-|     12 |      1 |    50 | Show net interfaces? | ifconfig  | closed
-|     10 |      2 |   100 | Layer 4 protocols?   | TCP, UDP  | closed
-|     12 |      3 |   325 | Open sockets?        | netstat   |
-|     77 |      4 |   200 | Red octagon?         | Stop sign |
-|     78 |      5 |   300 | Safe distance?       | 2 seconds |
+| catgId | quesId | points | question             | answer    | state
+|-------:|-------:|-------:|----------------------|-----------|-------------
+|     12 |      1 |     50 | Show net interfaces? | ifconfig  | closed
+|     10 |      2 |    100 | Layer 4 protocols?   | TCP, UDP  | closed
+|     12 |      3 |    325 | Open sockets?        | netstat   |
+|     77 |      4 |    200 | Red octagon?         | Stop sign |
+|     78 |      5 |    300 | Safe distance?       | 2 seconds |
 
 Indexes:
 
@@ -177,7 +177,7 @@ Indexes:
 1. MC mobile app: click buttons to make the game progress.  It's more of an intelligent TV remote: it doesn't display the whole board all the time, no animations, setup to allow MC to easily run the game.
 1. MC app shows the ANSWER too for reference.
 1. MC clicks a question, main board shows it and unlocks the players buzzers
-1. From top down, the head person has "Correct!" And "Nope" buttons.  MC clicks one.  If correct, clears people on the leaderboard and awards prize money.  MC clicks "Nope" pops the top person and moves to next person.
+1. From top down, the head person has "Correct!" And "Nope" buttons.  MC clicks one.  If correct, clears people on the leaderboard and awards points.  MC clicks "Nope" pops the top person and moves to next person.
 1. Mobile version too!
 1. Create Quiz Game screen: Paste YAML description of the questions, answers, and categories.
 1. MC has a "clear the board" button that removes all answered people on the leader board

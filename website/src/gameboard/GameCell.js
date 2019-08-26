@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const GameCell = ({ prize, state }) => {
+const GameCell = ({ points, state }) => {
     const classes = useStyles();
     return (
         <Paper
@@ -24,7 +24,7 @@ const GameCell = ({ prize, state }) => {
             elevation={ state === "closed" ? 0 : 5 }
         >
             <Typography align="center" variant="h5">
-                ${prize}
+                {points}
             </Typography>
         </Paper>
     );

@@ -44,7 +44,7 @@ const SUB_QUES_UPDATES_GQL = gql(`
  * "categories" passed in.
  */
 const createMatrixFromGame = (game) => {
-    game.categories.forEach(catg => catg.questions.sort((a,b) => a.prize - b.prize));
+    game.categories.forEach(catg => catg.questions.sort((a,b) => a.points - b.points));
 
     const mat = [];
     while(true) {
@@ -112,7 +112,7 @@ class GameBoard extends React.Component {
                                 {rank.map((ques, quesNum) => (
                                     <TableCell key={`cell_${rankNum}_${quesNum}`}>
                                         { ques ? (<GameCell
-                                                    prize={ques.prize}
+                                                    points={ques.points}
                                                     state={this.state.closedQuestions.has(ques.quesId) ? "closed" : ques.state} />)
                                                : "" }
                                     </TableCell>
@@ -124,7 +124,7 @@ class GameBoard extends React.Component {
                 <Faceoff
                     isOpen={false}
                     category="MyCategory"
-                    prize="100"
+                    points="100"
                     question="Lorem ipsum dolor sic amet?"/>
             </div>
         );

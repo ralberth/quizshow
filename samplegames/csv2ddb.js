@@ -52,7 +52,7 @@ if (process.argv[2] === "convert") {
                             "Item": {
                                 catgId: { "N": `${catgId}` },
                                 quesId: { "N": `${nextId++}` },
-                                prize: { "N": `${row.prize}` },
+                                points: { "N": `${row.points}` },
                                 question: { "S": row.question },
                                 answer: { "S": row.answer }
                             }

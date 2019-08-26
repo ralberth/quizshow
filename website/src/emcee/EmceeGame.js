@@ -23,7 +23,7 @@ const GET_GAME_GQL = gql(`
                 questions {
                     quesId
                     catgId
-                    prize
+                    points
                     question
                     answer
                     state
@@ -46,7 +46,7 @@ class EmceeGame extends React.Component {
         currentQuestion: null,
         currentAnswer: null,
         currentCategory: null,
-        currentPrize: null
+        currentPoints: null
     }
 
     componentDidMount = () => {
@@ -61,7 +61,7 @@ class EmceeGame extends React.Component {
         this.setState({
             currentQuestion: ques.question,
             currentAnswer: ques.answer,
-            currentPrize: ques.prize
+            currentPoints: ques.points
         });
     }
 
@@ -82,7 +82,7 @@ class EmceeGame extends React.Component {
                         visibility={!!this.state.currentQuestion ? "visible" : "hidden"}
                     >
                         <Typography variant="h3">
-                            {this.state.currentCategory} for ${this.state.currentPrize}
+                            {this.state.currentCategory} for {this.state.currentPoints} points
                         </Typography>
 
                         <Table style={{ tableLayout: "fixed" }}>

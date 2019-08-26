@@ -23,7 +23,7 @@ type Category {
 type Question {
     catgId: Int!
     quesId: Int!
-    prize: Int!
+    points: Int!
     question: String!
     answer: String!
     state: String

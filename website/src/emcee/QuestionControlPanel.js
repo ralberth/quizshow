@@ -28,7 +28,7 @@ const CategoryPanel = ({ category, children }) => {
     );
 }
 
-const QuesButton = ({ prize, onClick }) => {
+const QuesButton = ({ points, onClick }) => {
     const classes = useStyles();
     return (
         <Button
@@ -36,7 +36,7 @@ const QuesButton = ({ prize, onClick }) => {
             className={classes.button}
             onClick={onClick}
         >
-            ${prize}
+            {points}
         </Button>
     );
 }
@@ -56,7 +56,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
                             {catg.questions.map(ques => (
                                 <Grid item key={ques.quesId}>
                                     <QuesButton
-                                        prize={ques.prize}
+                                        points={ques.points}
                                         onClick={launchQuestion(ques)} />
                                 </Grid>))}
                         </Grid>

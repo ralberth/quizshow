@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Faceoff = ({ isOpen, category, prize, question, answer }) => {
+const Faceoff = ({ isOpen, category, points, question, answer }) => {
     const classes = useStyles();
 
     return (
@@ -32,7 +32,7 @@ const Faceoff = ({ isOpen, category, prize, question, answer }) => {
                     <Grid item xs={8}>
                         <QuestionBox
                             category={category}
-                            prize={prize}
+                            points={points}
                             question={question}
                             answer={answer} />
                     </Grid>

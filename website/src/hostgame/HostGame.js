@@ -19,7 +19,7 @@ const GET_GAME_GQL = gql(`
                 categoryName
                 questions {
                     quesId
-                    prize
+                    points
                     state
                 }
             }
