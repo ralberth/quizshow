@@ -1,6 +1,7 @@
 # How To Build
 
 1. Install Node.JS
+1. Copy the ***contents*** of `quizshow_config.sh` into your shell startup and edit it for your own values below.
 1. `cd website && npm start` to startup a dev server that auto-refreshes your browser.
 
 # How To Install
@@ -58,6 +59,19 @@ To be as simple as possible, Cognito is setup with:
 1. Email and phone numbers optional, no emails or TXTs will be sent to verify unless you click a button to verify
 1. Passwords are weak: nothing required, at least 6 characters
 1. Anyone can sign-up for an account
+1. Custom sign-up screen that skips phone number and adds nickname fields.
+
+Using `withPlaceholder` in `index.js` makes sure all people have to sign-in (or sign-up and sign-in) before the app is rendered.  Once signed-in, `Auth.currentAuthenticatedUser()` will return (via a promise) an object that looks like this:
+
+```json
+{
+    "username": "joeuser",
+    "attributes": {
+        "nickname" : "Joe",
+        "email": "joeuser@somewhere.com"
+    }
+}
+```
 
 
 # Dynamo Table Structure

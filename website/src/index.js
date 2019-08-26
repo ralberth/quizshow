@@ -14,6 +14,7 @@ import ChooseGameToHost from "./hostgame/ChooseGameToHost";
 import FlashMessage from "./FlashMessage";
 import ChooseGameToEmcee from "./emcee/ChooseGameToEmcee";
 import EmceeGame from "./emcee/EmceeGame";
+import { SignUp, SignIn, ConfirmSignIn, VerifyContact, ConfirmSignUp, ForgotPassword, RequireNewPassword } from 'aws-amplify-react/dist/Auth';
 
 configureAmplify();
 
@@ -36,6 +37,29 @@ const IndexPage = () => (
     </BrowserRouter>
 );
 
-const RootPage = withAuthenticator(IndexPage);
+const signUpArgs = {
+    signUpConfig: {
+        header: "Create a new Quiz Show Account!",
+        signUpFields: [
+            {
+                key: "nickname",
+                label: "Nickname / Screenname",
+                type: "string",
+                required: true
+            }
+        ],
+        hiddenDefaults: [ 'phone_number' ]
+    }
+};
+
+const RootPage = withAuthenticator(IndexPage, false, [
+    <SignIn/>,
+    <ConfirmSignIn/>,
+    <VerifyContact/>,
+    <SignUp {...signUpArgs} />,
+    <ConfirmSignUp/>,
+    <ForgotPassword/>,
+    <RequireNewPassword />
+]);
 
 ReactDOM.render(<RootPage />, document.getElementById('root'));

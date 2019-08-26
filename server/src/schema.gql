@@ -27,6 +27,7 @@ type Question {
     question: String!
     answer: String!
     state: String
+    nominees: [String!]
 }
 
 enum StateEnum {

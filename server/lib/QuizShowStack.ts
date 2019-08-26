@@ -3,7 +3,7 @@ import iam = require('@aws-cdk/aws-iam');
 import appsync = require('@aws-cdk/aws-appsync');
 import cognito = require('@aws-cdk/aws-cognito');
 import dynamo = require('@aws-cdk/aws-dynamodb');
-import { AuthFlow } from '@aws-cdk/aws-cognito';
+import { AuthFlow, CfnUserPool } from '@aws-cdk/aws-cognito';
 import { ServicePrincipal } from '@aws-cdk/aws-iam';
 import { Duration, RemovalPolicy } from '@aws-cdk/core';
 import { AttributeType, ProjectionType } from '@aws-cdk/aws-dynamodb';
@@ -23,24 +23,30 @@ export class QuizShowStack extends cdk.Stack {
         super(scope, id, props);
 
         /***********************************************************************
-         ** IAM and Security                                                  **
+         ** IAM Roles and Policies                                            **
          ***********************************************************************/
 
-        const role = new iam.Role(this, 'QuizShowAppSyncRole', {
+        const appSyncRole = new iam.Role(this, 'QuizShowAppSyncRole', {
             assumedBy: new ServicePrincipal('appsync.amazonaws.com'),
             maxSessionDuration: Duration.hours(12),
             inlinePolicies: {}
         });
 
-        const statement = new iam.PolicyStatement();
-        statement.addActions("dynamodb:*")
-        statement.addAllResources();
-        role.addToPolicy(statement);
+        const ddbPolicyStmt = new iam.PolicyStatement();
+        ddbPolicyStmt.addActions("dynamodb:*")
+        ddbPolicyStmt.addAllResources();
+        appSyncRole.addToPolicy(ddbPolicyStmt);
+
+
+        /***********************************************************************
+         ** Cognito                                                           **
+         ***********************************************************************/
 
         const userPool = new cognito.CfnUserPool(this, 'QuizShowPool', {
             adminCreateUserConfig: {
                 allowAdminCreateUserOnly: false
             },
+            autoVerifiedAttributes: [ "email" ],
             policies: {
                 passwordPolicy: {  // interface PasswordPolicyProperty
                     minimumLength: 6,
@@ -73,7 +79,7 @@ export class QuizShowStack extends cdk.Stack {
          ** APP SYNC SETUP                                                    **
          ***********************************************************************/
 
-         const mySync = new appsync.CfnGraphQLApi(this, "QuizShow", {
+        const mySync = new appsync.CfnGraphQLApi(this, "QuizShow", {
             name: 'QuizShow',
             authenticationType: 'AMAZON_COGNITO_USER_POOLS',
             userPoolConfig: {
@@ -110,7 +116,7 @@ export class QuizShowStack extends cdk.Stack {
         const gameDataSource = new appsync.CfnDataSource(this, 'games_table', {
             apiId: mySync.attrApiId,
             name: 'games',
-            serviceRoleArn: role.roleArn,
+            serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
                 awsRegion: 'us-east-1',
@@ -130,7 +136,7 @@ export class QuizShowStack extends cdk.Stack {
         new appsync.CfnDataSource(this, 'catgs_table', {
             apiId: mySync.attrApiId,
             name: 'categories',
-            serviceRoleArn: role.roleArn,
+            serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
                 awsRegion: 'us-east-1',
@@ -155,7 +161,7 @@ export class QuizShowStack extends cdk.Stack {
         new appsync.CfnDataSource(this, 'ques_table', {
             apiId: mySync.attrApiId,
             name: 'questions',
-            serviceRoleArn: role.roleArn,
+            serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
                 awsRegion: 'us-east-1',
@@ -175,7 +181,7 @@ export class QuizShowStack extends cdk.Stack {
         new appsync.CfnDataSource(this, 'cntst_table', {
             apiId: mySync.attrApiId,
             name: 'contestants',
-            serviceRoleArn: role.roleArn,
+            serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
                 awsRegion: 'us-east-1',

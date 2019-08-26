@@ -31,7 +31,10 @@ const Masthead = (props) => {
     const [ username, setUsername ] = useState("");
 
     Auth.currentAuthenticatedUser()
-        .then((userObj) => setUsername(userObj.username));
+        .then((userObj) => {
+            // console.log(userObj);
+            setUsername(userObj.attributes.nickname);
+        });
 
     const menuOpen = (event) => {
         setAnchorElement(event.currentTarget);
