@@ -17,6 +17,7 @@
     "aws-amplify-react": "^2.3.12",
     "classnames": "^2.2.6",
     "graphql-tag": "^2.10.1",
+    "lodash": "4.17.15",
     "material-ui-dropzone": "^2.4.0",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
@@ -27,7 +28,8 @@
     "react-event-observer": "^0.5.11",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "use-deep-compare-effect": "1.2.0"
   },
   "devDependencies": {
     "prettier": "^1.18.2"

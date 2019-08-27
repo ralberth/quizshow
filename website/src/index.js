@@ -14,6 +14,8 @@ import ChooseGameToHost from "./hostgame/ChooseGameToHost";
 import FlashMessage from "./FlashMessage";
 import ChooseGameToEmcee from "./emcee/ChooseGameToEmcee";
 import EmceeGame from "./emcee/EmceeGame";
+import ChooseGameToPlay from "./play/ChooseGameToPlay"
+import PlayGame from "./play/PlayGame"
 import { SignUp, SignIn, ConfirmSignIn, VerifyContact, ConfirmSignUp, ForgotPassword, RequireNewPassword } from 'aws-amplify-react/dist/Auth';
 
 configureAmplify();
@@ -32,6 +34,8 @@ const IndexPage = () => (
                 <Route exact path="/host/:gameId"         component={HostGame} />
                 <Route exact path="/emcee"                component={ChooseGameToEmcee} />
                 <Route exact path="/emcee/:gameId"        component={EmceeGame} />
+                <Route exact path="/play"                 component={ChooseGameToPlay} />
+                <Route exact path="/play/:gameId"         component={PlayGame} />
             </Switch>
         </Container>
     </BrowserRouter>

@@ -9,7 +9,7 @@ const Homepage = (props) => {
 
     const doCreate = () => setRedirectUrl("/create");
     // const doAdmin  = () => setRedirectUrl("/admin");
-    const doJoin   = () => setRedirectUrl("/join");
+    const doJoin   = () => setRedirectUrl("/play");
     // const doHost   = () => setRedirectUrl("/host");
     const doEmcee  = () => setRedirectUrl("/emcee");
 
