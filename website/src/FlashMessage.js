@@ -23,6 +23,8 @@ const FlashMessage = () => {
 
         if (typeof data === 'string')
             setMessage(data);
+        else if (data.error && data.error.errorMessage)
+            setMessage(data.error.errorMessage);
         else if (data.errors && data.errors[0] && data.errors[0].message)
             setMessage(data.errors[0].message);
         else
@@ -44,7 +46,6 @@ const FlashMessage = () => {
             autoHideDuration={8000}
             ContentProps={{ 'aria-describedby': 'message-id' }}
             message={message}
-            // TransitionComponent={<Slide direction="left" />}
             action={[
                 <IconButton
                     key="close"

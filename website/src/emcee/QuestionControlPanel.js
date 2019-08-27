@@ -2,31 +2,29 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import React from 'react';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
+// import Card from '@material-ui/core/Card';
+// import CardContent from '@material-ui/core/CardContent';
+// import CardHeader from '@material-ui/core/CardHeader';
+import Box from '@material-ui/core/Box';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        width: '90%'
+    },
     heading: {
-      fontSize: "medium",
-      fontWeight: "bold"
+        fontSize: theme.typography.pxToRem(15)
     },
     button: {
-        fontSize: "large"
+        margin: theme.spacing(1),
+        padding: theme.spacing(1),
+        fontSize: theme.typography.pxToRem(18)
     }
 }));
-
-const CategoryPanel = ({ category, children }) => {
-    const classes = useStyles();
-    return (
-        <Card raised={true}>
-            <CardHeader title={category} className={classes.heading} />
-            <CardContent>
-                {children}
-            </CardContent>
-        </Card>
-    );
-}
 
 const QuesButton = ({ points, onClick }) => {
     const classes = useStyles();
@@ -42,28 +40,51 @@ const QuesButton = ({ points, onClick }) => {
 }
 
 const QuestionControlPanel = ({ game, onClick }) => {
+    const classes = useStyles();
+    const [expanded, setExpanded] = React.useState(false);
 
     const launchQuestion = (ques) => () => onClick(ques);
 
+    const handleChange = panel => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+
     return (
-        <Grid container justify="center" spacing={4}>
+        <Box classes={classes.root}>
             {game.categories.map(catg => (
-                <Grid item key={catg.catgId}>
-                    <CategoryPanel
-                        category={catg.categoryName}
+                <ExpansionPanel
+                    key={catg.categoryName}
+                    expanded={expanded === catg.catgId}
+                    onChange={handleChange(catg.catgId)}
+                >
+                    <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        id={`panel_${catg.catgId}`}
                     >
-                        <Grid container spacing={1}>
+                        <Typography className={classes.heading}>{catg.categoryName}</Typography>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <Grid
+                            container
+                            direction="row"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
                             {catg.questions.map(ques => (
-                                <Grid item key={ques.quesId}>
+                                <Grid
+                                    item
+                                    key={ques.quesId}
+                                >
                                     <QuesButton
                                         points={ques.points}
                                         onClick={launchQuestion(ques)} />
-                                </Grid>))}
+                                </Grid>
+                            ))}
                         </Grid>
-                    </CategoryPanel>
-                </Grid>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
             ))}
-        </Grid>
+        </Box>
     );
 }
 

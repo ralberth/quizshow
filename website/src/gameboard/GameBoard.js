@@ -84,7 +84,10 @@ class GameBoard extends React.Component {
                     cq.add(data.quesId);
                     me.setState({ closedQuestions: cq });
                 },
-                error: err => this.bus.flashMessage(err)
+                error: err => {
+                    this.bus.flashMessage(err);
+                    this.game = null;
+                }
             });
     }
 
@@ -100,7 +103,7 @@ class GameBoard extends React.Component {
                     <TableHead>
                         <TableRow>
                             {this.game.categories.map(catg => (
-                                <CategoryTableCell key={`catg_${catg.catgId}`}>
+                                <CategoryTableCell key={`catg_${catg.categoryName}`}>
                                     {catg.categoryName}
                                 </CategoryTableCell>
                             ))}

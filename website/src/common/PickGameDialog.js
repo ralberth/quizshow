@@ -1,12 +1,13 @@
 import QuizDialog from "./QuizDialog";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+// import Table from '@material-ui/core/Table';
+// import TableBody from '@material-ui/core/TableBody';
+// import TableCell from '@material-ui/core/TableCell';
+// import TableHead from '@material-ui/core/TableHead';
+// import TableRow from '@material-ui/core/TableRow';
 import React from 'react';
 import Radio from '@material-ui/core/Radio';
 import { Redirect } from 'react-router';
+import Box from '@material-ui/core/Box';
 
 class PickGameDialog extends React.Component {
 
@@ -42,7 +43,18 @@ class PickGameDialog extends React.Component {
                     onCancel={this.handleCancel}
                     onAccept={this.gameChosen}
                 >
-                    <Table size="small">
+                    {games.map(row => (
+                        <Box key={row.gameId}>
+                            <Radio
+                                value={row.gameId}
+                                checked={`${this.state.gameId}` === `${row.gameId}`}
+                                onChange={this.handleChoose}
+                                color="primary"
+                            />
+                            {row.title}
+                        </Box>
+                    ))}
+                    {/* <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell></TableCell>
@@ -68,7 +80,7 @@ class PickGameDialog extends React.Component {
                                 </TableRow>
                             ))}
                         </TableBody>
-                    </Table>
+                    </Table> */}
                 </QuizDialog>
             );
         }

@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
     },
     nominationLogin: {
         fontStyle: "italic",
-        color: "blue",
         padding: theme.spacing(1, 0, 0, 1)
     },
     nominationName: {

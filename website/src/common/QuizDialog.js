@@ -3,9 +3,9 @@ import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import CloseIcon from '@material-ui/icons/Close';
+// import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 
 const styles = (theme) => ({
@@ -34,9 +34,9 @@ const QuizDialog = withStyles(styles)(props => {
                 <Typography variant="h6">
                     {title}
                 </Typography>
-                <IconButton aria-label="close" className={classes.closeButton} onClick={onCancel}>
+                {/* <IconButton aria-label="close" className={classes.closeButton} onClick={onCancel}>
                     <CloseIcon />
-                </IconButton>
+                </IconButton> */}
             </MuiDialogTitle>
 
             <DialogContent>{children}</DialogContent>
