@@ -54,7 +54,8 @@ if (process.argv[2] === "convert") {
                                 quesId: { "N": `${nextId++}` },
                                 points: { "N": `${row.points}` },
                                 question: { "S": row.question },
-                                answer: { "S": row.answer }
+                                answer: { "S": row.answer },
+                                state: { "S" : "ready" }
                             }
                         }
                     });

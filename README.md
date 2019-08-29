@@ -17,19 +17,16 @@ npm run build
 cdk deploy
 ```
 
-__Note__: If you run into other issues, make sure you have followed the [CDK getting started guide][1].
+If you see `Unable to resolve AWS account to use. It must be either configured when you define your CDK or through the environment`, you need to read in your `quizshow_config.sh` file: you don't have environment variable `QUIZSHOW_ACCOUNT` set.
 
-To load the sample games into Dynamo so you have something to play with, go get (temporary) IAM user/role access/secret/session keys and set them as environment variables, then:
+If you see `Need to perform AWS calls for account 123456789012, but no credentials found. Tried: default credentials`, you probably are using a plugin or other invalid setup in your `~/.aws/config` file.  Rename it out of the way and try again.
 
-```bash
-cd samplegames
-npm install
-npm convert
-npm load
-```
+If you run into other issues, make sure you have followed the [CDK getting started guide][1].
 
 
 ## Install sample data to play with
+
+To load the sample games into Dynamo so you have something to play with, go get (temporary) IAM user/role access/secret/session keys and set them as environment variables, then:
 
 ```bash
 cd samplegames

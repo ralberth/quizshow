@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
-    active: {
+    ready: {
         padding: 18,
         borderRadius: 10,
         backgroundColor: 'lightblue'
@@ -20,11 +20,11 @@ const GameCell = ({ points, state }) => {
     const classes = useStyles();
     return (
         <Paper
-            className={ state === "closed" ? classes.closed : classes.active }
+            className={ state === "closed" ? classes.closed : classes.ready }
             elevation={ state === "closed" ? 0 : 5 }
         >
             <Typography align="center" variant="h5">
-                {points}
+                {state === "closed" ? "" : points}
             </Typography>
         </Paper>
     );

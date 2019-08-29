@@ -6,7 +6,7 @@ import { QuizShowStack } from '../lib/QuizShowStack';
 const app = new cdk.App();
 new QuizShowStack(app, 'QuizShow', {
     env: {
-        region: process.env['AWS_REGION'],
-        account: process.env['AWS_ACCOUNT']
+        region: process.env['REACT_APP_QUIZSHOW_REGION'],
+        account: process.env['QUIZSHOW_ACCOUNT']
     }
 });

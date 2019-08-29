@@ -116,7 +116,7 @@ class GameBoard extends React.Component {
                                     <TableCell key={`cell_${rankNum}_${quesNum}`}>
                                         { ques ? (<GameCell
                                                     points={ques.points}
-                                                    state={this.state.closedQuestions.has(ques.quesId) ? "closed" : ques.state} />)
+                                                    state={ques.state} />)
                                                : "" }
                                     </TableCell>
                                 ))}

@@ -26,13 +26,14 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const QuesButton = ({ points, onClick }) => {
+const QuesButton = ({ points, disabled, onClick }) => {
     const classes = useStyles();
     return (
         <Button
             variant="contained"
             className={classes.button}
             onClick={onClick}
+            disabled={disabled}
         >
             {points}
         </Button>
@@ -77,6 +78,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
                                 >
                                     <QuesButton
                                         points={ques.points}
+                                        disabled={ques.state === 'closed'}
                                         onClick={launchQuestion(ques)} />
                                 </Grid>
                             ))}

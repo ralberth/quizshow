@@ -3,15 +3,12 @@ import API, { graphqlOperation } from "@aws-amplify/api"
 import gql from "graphql-tag"
 import MessageBus from "../common/MessageBus";
 import HeroText from "../common/HeroText";
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Typography from '@material-ui/core/Typography';
+// import Typography from '@material-ui/core/Typography';
 import QuestionControlPanel from './QuestionControlPanel';
-import NominationControl from './NominationControl';
-import Box from '@material-ui/core/Box';
+// import Box from '@material-ui/core/Box';
+// import { Button } from '@material-ui/core';
+import QuestionDisplay from './QuestionDisplay';
+import AnswerDisplay from './AnswerDisplay';
 
 const GET_GAME_GQL = gql(`
     query Query($id: Int!) {
@@ -33,6 +30,14 @@ const GET_GAME_GQL = gql(`
     }
 `);
 
+const UPDATE_QUES_STATE_GQL = gql(`
+    mutation mod($quesId: Int!, $newState: StateEnum) {
+        setQuestionState(quesId: $quesId, newState: $newState) {
+            quesId
+        }
+    }
+`);
+
 class EmceeGame extends React.Component {
 
     constructor(props) {
@@ -43,67 +48,83 @@ class EmceeGame extends React.Component {
 
     state = {
         game: null,
-        currentQuestion: null,
-        currentAnswer: null,
-        currentCategory: null,
-        currentPoints: null
+        question: null,
+        mode: 'loading'
     }
 
     componentDidMount = () => {
         const { gameId } = this.props.match.params;
-        let me = this;
         API.graphql(graphqlOperation(GET_GAME_GQL, { id: gameId }))
-            .then(game => me.setState({ game: game.data.getGameById }))
-            .catch(err => me.bus.flashMessage(err));
+            .then(game => {
+                this.setState({ mode: 'choose', game: game.data.getGameById });
+                console.log("CHOOSE");
+            })
+            .catch(err => this.bus.flashMessage(err));
     }
 
-    launchQuestion = (ques) => {
-        this.setState({
-            currentQuestion: ques.question,
-            currentAnswer: ques.answer,
-            currentPoints: ques.points
-        });
+    setQuesState = (ques, state) => {
+        // const args = { quesId: this.state.question.quesId, newStatus: 'open' };
+        // API.graphql(graphqlOperation(UPDATE_QUES_STATE_GQL, args))
+        //     .then(ques => {
+        //         // TODO: update AppSync
+        //         this.setState({ mode: 'answer', question: this.state.question });
+        //     })
+        //     .catch(err => this.bus.flashMessage(err));
+    }
+
+    showQuestion = (ques) => {
+        this.setState({ mode: 'question', question: ques });
+    }
+
+    cancelQuestion = () => {
+        this.setState({ mode: 'choose', question: null });
+    }
+
+    abortQuestion = () => {
+        this.setQuesState(this.state.question.quesId, 'closed');
+        this.setState({ mode: 'choose', question: null });
+    }
+
+    openQuestion = () => {
+        this.setState({ mode: 'answer', question: this.state.question });
+        this.setQuesState(this.state.question.quesId, 'open');
+    }
+
+    cancelAnswer = () => {
+        this.setQuesState(this.state.question.quesId, 'ready');
+        this.setState({ mode: 'choose', question: null });
     }
 
     render() {
-        if (!this.state.game) {
+        switch(this.state.mode) {
+        case 'loading':
             return (<span>Loading...</span>);
-        } else {
+        case 'choose':
             return (
                 <div>
                     <HeroText title={this.state.game.title} />
-
                     <QuestionControlPanel
                         game={this.state.game}
-                        onClick={this.launchQuestion} />
-
-                    <Box
-                        component="div"
-                        visibility={!!this.state.currentQuestion ? "visible" : "hidden"}
-                    >
-                        <Typography variant="h3">
-                            {this.state.currentCategory} for {this.state.currentPoints} points
-                        </Typography>
-
-                        <Table style={{ tableLayout: "fixed" }}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Question</TableCell>
-                                    <TableCell>Answer</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>{this.state.currentQuestion}</TableCell>
-                                    <TableCell>{this.state.currentAnswer}</TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-
-                        <NominationControl />
-                    </Box>
+                        onClick={this.showQuestion} />
                 </div>
             );
+        case 'question':
+            return (
+                <QuestionDisplay
+                    text={this.state.question.question}
+                    onCancel={this.cancelQuestion}
+                    onAbort={this.abortQuestion}
+                    onNext={this.openQuestion} />
+            );
+        case 'answer':
+            return (
+                <AnswerDisplay
+                    text={this.state.question.answer}
+                    onCancel={this.cancelAnswer}
+                    onAbort={this.abortQuestion} />
+            );
+        default:
+            return (<div>Something went wrong, bad value for Mode</div>);
         }
     }
 }

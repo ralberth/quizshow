@@ -26,11 +26,13 @@ type Question {
     points: Int!
     question: String!
     answer: String!
-    state: String
+    state: StateEnum!
     nominees: [String!]
 }
 
 enum StateEnum {
+    ready
+    open
     closed
 }
 
