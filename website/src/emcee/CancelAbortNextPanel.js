@@ -11,17 +11,17 @@ const CancelAbortNextPanel = ({ onCancel, onAbort, onNext }) => (
         alignItems="flex-start"
     >
         <Grid item>
-            <Box display={onCancel ? "block" : "none"}>
+            <Box visibility={onCancel ? "visible" : "hidden"}>
                 <CancelButton onCancel={onCancel} />
             </Box>
         </Grid>
         <Grid item>
-            <Box display={onAbort ? "block" : "none"}>
+            <Box visibility={onAbort ? "visible" : "hidden"}>
                 <AbortButton onAbort={onAbort} />
             </Box>
         </Grid>
         <Grid item>
-            <Box display={onNext ? "block" : "none"}>
+            <Box visibility={onNext ? "visible" : "hidden"}>
                 <NextButton onNext={onNext} />
             </Box>
         </Grid>

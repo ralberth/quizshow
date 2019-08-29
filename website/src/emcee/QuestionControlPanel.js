@@ -51,7 +51,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
     };
 
     return (
-        <Box classes={classes.root}>
+        <Box className={classes.root}>
             {game.categories.map(catg => (
                 <ExpansionPanel
                     key={catg.categoryName}

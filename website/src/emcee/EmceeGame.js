@@ -31,8 +31,8 @@ const GET_GAME_GQL = gql(`
 `);
 
 const UPDATE_QUES_STATE_GQL = gql(`
-    mutation mod($quesId: Int!, $newState: StateEnum) {
-        setQuestionState(quesId: $quesId, newState: $newState) {
+    mutation mod($catgId: Int!, $quesId: Int!, $newState: StateEnum!) {
+        setQuestionState(catgId: $catgId, quesId: $quesId, state: $newState) {
             quesId
         }
     }
@@ -52,48 +52,42 @@ class EmceeGame extends React.Component {
         mode: 'loading'
     }
 
+    buildQuesXref = (game) => {
+        var ret = {};
+        game.categories.forEach(catg =>
+            catg.questions.forEach(ques =>
+                ret[ques.quesId] = ques));
+        return ret;
+    }
+
     componentDidMount = () => {
         const { gameId } = this.props.match.params;
         API.graphql(graphqlOperation(GET_GAME_GQL, { id: gameId }))
-            .then(game => {
-                this.setState({ mode: 'choose', game: game.data.getGameById });
-                console.log("CHOOSE");
+            .then(response => {
+                const game = response.data.getGameById;
+                this.setState({ mode: 'choose', game: game });
+                this.quesXref = this.buildQuesXref(game);
             })
             .catch(err => this.bus.flashMessage(err));
     }
 
-    setQuesState = (ques, state) => {
-        // const args = { quesId: this.state.question.quesId, newStatus: 'open' };
-        // API.graphql(graphqlOperation(UPDATE_QUES_STATE_GQL, args))
-        //     .then(ques => {
-        //         // TODO: update AppSync
-        //         this.setState({ mode: 'answer', question: this.state.question });
-        //     })
-        //     .catch(err => this.bus.flashMessage(err));
+    transition = (question, newQuesState, newMode, newQuesForState) => {
+        console.log(`Moving "${question.question} to ${newQuesState}.  Screen to ${newMode}`);
+        const args = { catgId: question.catgId, quesId: question.quesId, newState: newQuesState };
+        API.graphql(graphqlOperation(UPDATE_QUES_STATE_GQL, args))
+            .then(ques => {
+                // Now that AppSync is up to date, set my local stuff and redraw
+                this.quesXref[question.quesId].state = newQuesState; // updates this.state.game tree
+                this.setState({ mode: newMode, question: newQuesForState });
+            })
+            .catch(err => this.bus.flashMessage(err));
     }
 
-    showQuestion = (ques) => {
-        this.setState({ mode: 'question', question: ques });
-    }
-
-    cancelQuestion = () => {
-        this.setState({ mode: 'choose', question: null });
-    }
-
-    abortQuestion = () => {
-        this.setQuesState(this.state.question.quesId, 'closed');
-        this.setState({ mode: 'choose', question: null });
-    }
-
-    openQuestion = () => {
-        this.setState({ mode: 'answer', question: this.state.question });
-        this.setQuesState(this.state.question.quesId, 'open');
-    }
-
-    cancelAnswer = () => {
-        this.setQuesState(this.state.question.quesId, 'ready');
-        this.setState({ mode: 'choose', question: null });
-    }
+    showQues   = (q) => this.transition(q,                   'ready',  'question', q);
+    cancelQues = ()  => this.transition(this.state.question, 'ready',  'choose',   null);
+    abortQues  = ()  => this.transition(this.state.question, 'closed', 'choose',   null);
+    openQues   = ()  => this.transition(this.state.question, 'open',   'answer',   this.state.question);
+    cancelAns  = ()  => this.transition(this.state.question, 'ready',  'choose',   null);
 
     render() {
         switch(this.state.mode) {
@@ -105,23 +99,23 @@ class EmceeGame extends React.Component {
                     <HeroText title={this.state.game.title} />
                     <QuestionControlPanel
                         game={this.state.game}
-                        onClick={this.showQuestion} />
+                        onClick={this.showQues} />
                 </div>
             );
         case 'question':
             return (
                 <QuestionDisplay
                     text={this.state.question.question}
-                    onCancel={this.cancelQuestion}
-                    onAbort={this.abortQuestion}
-                    onNext={this.openQuestion} />
+                    onCancel={this.cancelQues}
+                    onAbort={this.abortQues}
+                    onNext={this.openQues} />
             );
         case 'answer':
             return (
                 <AnswerDisplay
                     text={this.state.question.answer}
-                    onCancel={this.cancelAnswer}
-                    onAbort={this.abortQuestion} />
+                    onCancel={this.cancelAns}
+                    onAbort={this.abortQues} />
             );
         default:
             return (<div>Something went wrong, bad value for Mode</div>);

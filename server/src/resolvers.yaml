@@ -97,6 +97,7 @@
       "version" : "2017-02-28",
       "operation" : "UpdateItem",
       "key" : {
+        "catgId": $util.dynamodb.toDynamoDBJson($ctx.args.catgId),
         "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
       },
       "update" : {

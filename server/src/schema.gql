@@ -43,7 +43,7 @@ type Query {
 }
 
 type Mutation {
-    setQuestionState(quesId: Int!, state: StateEnum!): Question
+    setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question
 }
 
 type Subscription {
