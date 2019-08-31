@@ -12,6 +12,45 @@
     }
   responseMapping: $util.toJson($ctx.result)
 - type: Query
+  field: getQuestionByCatgIdQuesId
+  dataSource: questions
+  requestMapping: |
+    {
+      "version": "2017-02-28",
+      "operation": "GetItem",
+      "key": {
+          "catgId": $util.dynamodb.toDynamoDBJson($ctx.args.catgId),
+          "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+- type: Query
+  field: getQuestionByQuesId
+  dataSource: questions
+  requestMapping: |
+    {
+        "version" : "2017-02-28",
+        "operation" : "Query",
+        "index" : "QuesId",
+        "query" : {
+            "expression": "#quesId = :quesId",
+            "expressionNames" : {
+            "#quesId" : "quesId"
+        },
+            "expressionValues" : {
+                ":quesId" : {
+                    "N" : "$ctx.args.quesId"
+                }
+            }
+        }
+    }
+  responseMapping: |
+    #if($ctx.result.items.size() > 0)
+      $util.toJson($ctx.result.items[0])
+    #else
+      null
+    #end
+- type: Query
   field: listGames
   dataSource: games
   requestMapping: |

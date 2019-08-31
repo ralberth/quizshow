@@ -17,7 +17,9 @@ const FlashMessage = () => {
     const [open, setOpen] = React.useState(false);
     const [message, setMessage] = React.useState();
 
-    new MessageBus().onFlashMessage(data => {
+    const mb = new MessageBus();
+    mb.stopAllFlashMessages();
+    mb.onFlashMessage(data => {
         console.log("FlashMessage:");
         console.log(data);
 
@@ -43,7 +45,6 @@ const FlashMessage = () => {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             open={open}
             onClose={handleClose}
-            autoHideDuration={8000}
             ContentProps={{ 'aria-describedby': 'message-id' }}
             message={message}
             action={[

@@ -12,37 +12,39 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Faceoff = ({ isOpen, category, points, question, answer }) => {
+const Faceoff = ({ ques }) => {
     const classes = useStyles();
 
-    return (
-        <Modal
-            open={isOpen}
-            disableBackdropClick={true}
-            disableEscapeKeyDown={true}
-        >
-            <Container className={classes.container}>
-                <Grid
-                    container
-                    direction="row"
-                    justify="space-evenly"
-                    alignItems="flex-start"
-                    spacing={8}
-                >
-                    <Grid item xs={8}>
-                        <QuestionBox
-                            category={category}
-                            points={points}
-                            question={question}
-                            answer={answer} />
+    if (ques && ['display', 'open'].includes(ques.state)) {
+        return (
+            <Modal
+                disableBackdropClick={true}
+                disableEscapeKeyDown={true}
+            >
+                <Container className={classes.container}>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-evenly"
+                        alignItems="flex-start"
+                        spacing={8}
+                    >
+                        <Grid item xs={8}>
+                            <QuestionBox
+                                category="Catg"
+                                points={ques.points}
+                                question={ques.question} />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <NominationGrid />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        <NominationGrid />
-                    </Grid>
-                </Grid>
-            </Container>
-        </Modal>
-    );
+                </Container>
+            </Modal>
+        );
+    } else {
+        return <div/>;
+    }
 }
 
 export default Faceoff;
