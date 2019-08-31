@@ -5,7 +5,7 @@ import QuestionControlPanel from './QuestionControlPanel';
 import QuestionDisplay from './QuestionDisplay';
 import AnswerDisplay from './AnswerDisplay';
 import QuestionUtils from '../util/QuestionUtils';
-import AppSyncClient from '../util/AppSyncClient';
+import appSyncClient from '../util/AppSyncClient';
 
 class EmceeGame extends React.Component {
 
@@ -23,14 +23,14 @@ class EmceeGame extends React.Component {
 
     componentDidMount = () => {
         const { gameId } = this.props.match.params;
-        AppSyncClient.getGameById(gameId, game => {
+        appSyncClient.getGameById(gameId, game => {
             this.setState({ mode: 'choose', game: game });
             this.quesXref = QuestionUtils.buildQuesXref(game);
         });
     }
 
     transition = (question, newQuesState, newMode, newQuesForState) => {
-        AppSyncClient.updateQuestionState(question, newQuesState, () => {
+        appSyncClient.updateQuestionState(question, newQuesState, () => {
             // Now that AppSync is up to date, set my local stuff and redraw
             question.state = newQuesState;
             this.setState({ mode: newMode, question: newQuesForState });

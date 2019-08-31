@@ -2,6 +2,16 @@ import API, { graphqlOperation } from "@aws-amplify/api"
 import gql from "graphql-tag"
 import MessageBus from "../common/MessageBus";
 
+const ALL_GAMES_GQL = gql(`
+    query Query {
+        listGames {
+            gameId
+            emcee
+            title
+        }
+    }
+`);
+
 const GET_GAME_GQL = gql(`
     query Query($id: Int!) {
         getGameById(gameId: $id) {
@@ -32,19 +42,27 @@ const UPDATE_QUES_STATE_GQL = gql(`
 
 const bus = new MessageBus();
 
-const AppSyncClient = {
-    getGameById: (gameId, callback) => {
-        API.graphql(graphqlOperation(GET_GAME_GQL, { id: gameId }))
-            .then(response => callback(response.data.getGameById))
-            .catch(err => bus.flashMessage(err));
-    },
+class AppSyncClient {
 
-    updateQuestionState: (question, newState, callback) => {
-        const args = { catgId: question.catgId, quesId: question.quesId, newState: newState };
-        API.graphql(graphqlOperation(UPDATE_QUES_STATE_GQL, args))
-            .then(response => callback())
+    invoke = (gql, args, expectedReturnDataAttribute, callback) => {
+        API.graphql(graphqlOperation(gql, args))
+            .then(response => {
+                console.log(response.data);
+                const domainObj = response.data[expectedReturnDataAttribute];
+                callback(domainObj);
+            })
             .catch(err => bus.flashMessage(err));
     }
-};
 
-export default AppSyncClient;
+    allGames = (callback) => this.invoke(ALL_GAMES_GQL, {}, 'listGames', callback)
+
+    getGameById = (gameId, callback) =>
+        this.invoke(GET_GAME_GQL, { id: gameId }, 'getGameById', callback)
+
+    updateQuestionState = (question, newState, callback) => {
+        const args = { catgId: question.catgId, quesId: question.quesId, newState: newState };
+        this.invoke(UPDATE_QUES_STATE_GQL, args, 'setQuestionState', callback);
+    }
+}
+
+export default new AppSyncClient();
