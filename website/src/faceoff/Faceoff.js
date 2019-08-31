@@ -12,12 +12,13 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Faceoff = ({ ques }) => {
+const Faceoff = ({ question }) => {
     const classes = useStyles();
 
-    if (ques && ['display', 'open'].includes(ques.state)) {
+    if (question && ['display', 'open'].includes(question.state)) {
         return (
             <Modal
+                open={true}
                 disableBackdropClick={true}
                 disableEscapeKeyDown={true}
             >
@@ -32,8 +33,8 @@ const Faceoff = ({ ques }) => {
                         <Grid item xs={8}>
                             <QuestionBox
                                 category="Catg"
-                                points={ques.points}
-                                question={ques.question} />
+                                points={question.points}
+                                question={question.question} />
                         </Grid>
                         <Grid item xs={4}>
                             <NominationGrid />

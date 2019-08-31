@@ -1,36 +1,17 @@
-import API, { graphqlOperation } from "@aws-amplify/api";
 import Typography from '@material-ui/core/Typography';
 import { styled } from '@material-ui/styles';
-import gql from "graphql-tag";
 import React from 'react';
 import MessageBus from "../common/MessageBus";
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
-import AppSyncClient from '../util/AppSyncClient';
+import appSyncClient from '../util/AppSyncClient';
 
 const GameTitle = styled(Typography)({
     margin: "40px",
     padding: "40px"
 });
 
-const SUB_QUES_UPDATES_GQL = gql(`
-    subscription Subscription {
-        questionStateChange {
-            quesId
-            question
-            state
-        }
-    }
-`);
-
-const GET_QUES_GQL = gql(`
-    query Query($quesId: Int!) {
-        getQuestionByQuesId(quesId: $quesId) {
-            state
-        }
-    }
-`);
 
 class HostGame extends React.Component {
 
@@ -47,33 +28,28 @@ class HostGame extends React.Component {
     }
 
     setupSubscription = () => {
-        this.subscription = API.graphql(graphqlOperation(SUB_QUES_UPDATES_GQL))
-            .subscribe({
-                next: (notification) => {
-                    // Why do we only get quesId back ?!?!
-                    const quesId = notification.value.data.questionStateChange.quesId;
+        this.subscription = appSyncClient.subQuestionStateChange(
+            (stateChange) => {
+                // Why do we only get quesId back ?!?!
+                const quesId = stateChange.quesId;
 
-                    // Go and get the current question until we figure out why we can't get
-                    // back what we want.
-                    API.graphql(graphqlOperation(GET_QUES_GQL, { quesId: quesId }))
-                        .then(response => {
-                            const newState = response.data.getQuestionByQuesId.state;
-                            const question = this.quesXref[quesId];
-                            if (question) {
-                                question.state = newState; // so grid makes closed things go away
-                                this.setState({ question: question });
-                            } else {
-                                console.log(`Ignoring quesId ${quesId}: not found on this game.`);
-                            }
-                        })
-                        .catch(err => this.bus.flashMessage(err));
-                },
-                error: err => this.bus.flashMessage(err)
-            });
+                // Go and get the current question until we figure out why we can't get
+                // back what we want.
+                appSyncClient.getQuestionByQuesId(quesId, (ques) => {
+                    const question = this.quesXref[quesId];
+                    if (question) {
+                        question.state = ques.state; // so grid makes closed things go away
+                        this.setState({ question: question });
+                    } else {
+                        console.log(`Ignoring quesId ${quesId}: not found on this game.`);
+                    }
+                });
+            }
+        );
     }
 
     componentDidMount = () => {
-        AppSyncClient.getGameById(this.gameId, game => {
+        appSyncClient.getGameById(this.gameId, game => {
             this.quesXref = QuestionUtils.buildQuesXref(game);
             this.setState({ game: game });
             this.setupSubscription();
