@@ -4,8 +4,8 @@ import HeroText from "../common/HeroText";
 import QuestionControlPanel from './QuestionControlPanel';
 import QuestionDisplay from './QuestionDisplay';
 import AnswerDisplay from './AnswerDisplay';
-import QuestionUtils from '../util/QuestionUtils';
 import appSyncClient from '../util/AppSyncClient';
+import Loading from '../common/Loading';
 
 class EmceeGame extends React.Component {
 
@@ -25,7 +25,6 @@ class EmceeGame extends React.Component {
         const { gameId } = this.props.match.params;
         appSyncClient.getGameById(gameId, game => {
             this.setState({ mode: 'choose', game: game });
-            this.quesXref = QuestionUtils.buildQuesXref(game);
         });
     }
 
@@ -46,7 +45,7 @@ class EmceeGame extends React.Component {
     render() {
         switch(this.state.mode) {
         case 'loading':
-            return (<span>Loading...</span>);
+            return <Loading />;
         case 'choose':
             return (
                 <div>

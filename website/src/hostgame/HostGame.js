@@ -6,6 +6,7 @@ import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
 import appSyncClient from '../util/AppSyncClient';
+import Loading from "../common/Loading";
 
 const GameTitle = styled(Typography)({
     margin: "40px",
@@ -36,7 +37,7 @@ class HostGame extends React.Component {
                 // Go and get the current question until we figure out why we can't get
                 // back what we want.
                 appSyncClient.getQuestionByQuesId(quesId, (ques) => {
-                    const question = this.quesXref[quesId];
+                    const question = this.quesXref.get(quesId);
                     if (question) {
                         question.state = ques.state; // so grid makes closed things go away
                         this.setState({ question: question });
@@ -60,7 +61,7 @@ class HostGame extends React.Component {
 
     render() {
         if (!this.state.game) {
-            return (<span>Loading...</span>);
+            return <Loading />;
         } else {
             return (
                 <div>

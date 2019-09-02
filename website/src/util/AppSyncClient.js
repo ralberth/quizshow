@@ -2,7 +2,7 @@ import API, { graphqlOperation } from "@aws-amplify/api"
 import gql from "graphql-tag"
 import MessageBus from "../common/MessageBus";
 
-const ALL_GAMES_GQL = gql(`
+const ALL_GAMES_GQL = gql`
     query Query {
         listGames {
             gameId
@@ -10,9 +10,9 @@ const ALL_GAMES_GQL = gql(`
             title
         }
     }
-`);
+`;
 
-const GET_GAME_GQL = gql(`
+const GET_GAME_GQL = gql`
     query Query($id: Int!) {
         getGameById(gameId: $id) {
             title
@@ -30,25 +30,25 @@ const GET_GAME_GQL = gql(`
             }
         }
     }
-`);
+`;
 
-const GET_QUES_GQL = gql(`
+const GET_QUES_GQL = gql`
     query Query($quesId: Int!) {
         getQuestionByQuesId(quesId: $quesId) {
             state
         }
     }
-`);
+`;
 
-const UPDATE_QUES_STATE_GQL = gql(`
+const UPDATE_QUES_STATE_GQL = gql`
     mutation mod($catgId: Int!, $quesId: Int!, $newState: StateEnum!) {
         setQuestionState(catgId: $catgId, quesId: $quesId, state: $newState) {
             quesId
         }
     }
-`);
+`;
 
-const SUB_QUES_UPDATES_GQL = gql(`
+const SUB_QUES_UPDATES_GQL = gql`
     subscription Subscription {
         questionStateChange {
             quesId
@@ -56,7 +56,7 @@ const SUB_QUES_UPDATES_GQL = gql(`
             state
         }
     }
-`);
+`;
 
 const bus = new MessageBus();
 
