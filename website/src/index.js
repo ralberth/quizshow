@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
 import Homepage from './homepage/Homepage';
 import Container from "@material-ui/core/Container";
 import GameAdmin from "./GameAdmin";
@@ -20,13 +21,22 @@ import { SignUp, SignIn, ConfirmSignIn, VerifyContact, ConfirmSignUp, ForgotPass
 
 configureAmplify();
 
-const IndexPage = () => (
-    <BrowserRouter>
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingLeft: `0`,
+    paddingRight: `0`,
+  }
+}));
+
+const IndexPage = () => {
+  const classes = useStyles();
+    return (
+    <BrowserRouter id="BrowserRouter" >
         <Masthead />
         <CssBaseline />
         <FlashMessage />
-        <Container>
-            <Switch>
+        <Container id="Container" className={classes.container} >
+            <Switch id="Switch">
                 <Route exact path="/"                     component={Homepage} />
                 <Route exact path="/create"               component={CreateGame} />
                 <Route exact path="/admin"                component={GameAdmin} />
@@ -39,7 +49,8 @@ const IndexPage = () => (
             </Switch>
         </Container>
     </BrowserRouter>
-);
+  );
+}
 
 const signUpArgs = {
     signUpConfig: {

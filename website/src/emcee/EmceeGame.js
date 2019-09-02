@@ -1,4 +1,5 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
 import MessageBus from "../common/MessageBus";
 import HeroText from "../common/HeroText";
 import QuestionControlPanel from './QuestionControlPanel';
@@ -48,12 +49,12 @@ class EmceeGame extends React.Component {
             return <Loading />;
         case 'choose':
             return (
-                <div>
+                <Grid container direction="column" justify="center" alignItems="center">
                     <HeroText title={this.state.game.title} />
                     <QuestionControlPanel
                         game={this.state.game}
                         onClick={this.showQues} />
-                </div>
+                </Grid>
             );
         case 'question':
             return (
