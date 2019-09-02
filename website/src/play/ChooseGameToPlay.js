@@ -5,6 +5,7 @@ import gql from "graphql-tag"
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import useAppSyncQuery from "../hooks/useAppSyncQuery";
+import Grid from '@material-ui/core/Grid';
 import PaperGame from "./PaperGame";
 
 const ALL_GAMES_GQL = gql`
@@ -17,7 +18,7 @@ const ALL_GAMES_GQL = gql`
   }
 `;
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   title: {
     fontWeight: `bold`,
     margin: `2rem 0`,
@@ -44,9 +45,9 @@ const ChooseGameToPlay = () => {
       return (
         <div className={classes.root} >
           <Typography className={classes.title} variant="h5">Choose A Game</Typography>
-          <div>
+          <Grid container justify="center" alignItems="center">
             { gameList.map((game, i) => <PaperGame key={i} {...game} playCallback={setupGame}/>) }
-          </div>
+          </Grid>
         </div>
       );
   }

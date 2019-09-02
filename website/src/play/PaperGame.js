@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     width: '100%',
     maxWidth: 360,
-    margin: `1rem 0`,
+    margin: theme.spacing(1),
   },
   fab: {
     margin: theme.spacing(2),
