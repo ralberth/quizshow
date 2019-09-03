@@ -95,7 +95,7 @@ class AppSyncClient {
         this.invoke(GET_QUES_GQL, { quesId: quesId }, 'getQuestionByQuesId', callback);
 
     subQuestionStateChange = (callback) =>
-        this.subscribe(SUB_QUES_UPDATES_GQL, {}, 'questionStateChange', callback)
+        this.subscribe(SUB_QUES_UPDATES_GQL, {}, 'questionStateChange', callback);
 }
 
 export default new AppSyncClient();

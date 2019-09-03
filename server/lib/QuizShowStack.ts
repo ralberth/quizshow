@@ -113,7 +113,7 @@ export class QuizShowStack extends cdk.Stack {
             projectionType: ProjectionType.ALL
         });
 
-        const gameDataSource = new appsync.CfnDataSource(this, 'games_table', {
+        const gameDS = new appsync.CfnDataSource(this, 'games_table', {
             apiId: mySync.attrApiId,
             name: 'games',
             serviceRoleArn: appSyncRole.roleArn,
@@ -133,7 +133,7 @@ export class QuizShowStack extends cdk.Stack {
             removalPolicy: RemovalPolicy.DESTROY
         });
 
-        new appsync.CfnDataSource(this, 'catgs_table', {
+        const catgDS = new appsync.CfnDataSource(this, 'catgs_table', {
             apiId: mySync.attrApiId,
             name: 'categories',
             serviceRoleArn: appSyncRole.roleArn,
@@ -158,7 +158,7 @@ export class QuizShowStack extends cdk.Stack {
             projectionType: ProjectionType.ALL
         });
 
-        new appsync.CfnDataSource(this, 'ques_table', {
+        const quesDS = new appsync.CfnDataSource(this, 'ques_table', {
             apiId: mySync.attrApiId,
             name: 'questions',
             serviceRoleArn: appSyncRole.roleArn,
@@ -169,7 +169,7 @@ export class QuizShowStack extends cdk.Stack {
             }
         });
 
-        new dynamo.Table(this, 'QuizContestants', {
+        const ddbCntst = new dynamo.Table(this, 'QuizContestants', {
             tableName: 'QuizContestants',
             partitionKey: { name: 'gameId', type: AttributeType.NUMBER },
             sortKey: { name: 'login', type: AttributeType.STRING },
@@ -178,14 +178,34 @@ export class QuizShowStack extends cdk.Stack {
             removalPolicy: RemovalPolicy.DESTROY
         });
 
-        new appsync.CfnDataSource(this, 'cntst_table', {
+        const cntstDS = new appsync.CfnDataSource(this, 'cntst_table', {
             apiId: mySync.attrApiId,
             name: 'contestants',
             serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
                 awsRegion: 'us-east-1',
-                tableName: ddbQues.tableName
+                tableName: ddbCntst.tableName
+            }
+        });
+
+        const ddbNom = new dynamo.Table(this, 'QuizNominees', {
+            tableName: 'QuizNominees',
+            partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
+            sortKey: { name: 'login', type: AttributeType.STRING },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
+            removalPolicy: RemovalPolicy.DESTROY
+        });
+
+        const nomDS = new appsync.CfnDataSource(this, 'nominee_table', {
+            apiId: mySync.attrApiId,
+            name: 'nominees',
+            serviceRoleArn: appSyncRole.roleArn,
+            type: 'AMAZON_DYNAMODB',
+            dynamoDbConfig: {
+                awsRegion: 'us-east-1',
+                tableName: ddbNom.tableName
             }
         });
 
@@ -195,7 +215,7 @@ export class QuizShowStack extends cdk.Stack {
          ***********************************************************************/
 
         const resolvers = yaml.safeLoad(fs.readFileSync('src/resolvers.yaml', 'utf8'));
-        resolvers.forEach((resolver:any)=> {
+        resolvers.forEach((resolver:any) => {
             const r = new appsync.CfnResolver(this, `${resolver.type}_${resolver.field}`, {
                 apiId: mySync.attrApiId,
                 kind: 'UNIT',
@@ -205,8 +225,11 @@ export class QuizShowStack extends cdk.Stack {
                 requestMappingTemplate: resolver.requestMapping,
                 responseMappingTemplate: resolver.responseMapping
             });
-            r.addDependsOn(gameDataSource);
-            r.addDependsOn(graphql)
+            r.addDependsOn(gameDS);
+            r.addDependsOn(catgDS);
+            r.addDependsOn(quesDS);
+            r.addDependsOn(cntstDS);
+            r.addDependsOn(nomDS);
         });
     }
 }

@@ -128,6 +128,23 @@
       }
     }
   responseMapping: $util.toJson($ctx.result.items)
+- type: Question
+  field: nominees
+  dataSource: nominees
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "Query",
+      "query" : {
+        "expression": "quesId = :quesId",
+        "expressionValues" : {
+          ":quesId" : {
+            "N" : "${ctx.source.catgId}"
+          }
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result.items)
 - type: Mutation
   field: setQuestionState
   dataSource: questions
@@ -146,6 +163,75 @@
         },
         "expressionValues" : {
           ":state" : $util.dynamodb.toDynamoDBJson($ctx.args.state)
+        }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+- type: Mutation
+  field: joinGame
+  dataSource: contestants
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "PutItem",
+      "key" : {
+        "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
+        "login": { "S": "$ctx.identity.username" }
+      },
+      "attributeValues" : {
+        "name":  { "S": "$ctx.identity.claims.nickname" },
+        "score": { "N": "0" }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+- type: Mutation
+  field: nominateSelf
+  dataSource: nominees
+  requestMapping: |
+    #set($ts = $util.time.nowEpochMilliSeconds() - 1567527658683)
+    {
+      "version" : "2017-02-28",
+      "operation" : "PutItem",
+      "key" : {
+        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
+        "login": { "S": "$ctx.identity.username" }
+      },
+      "attributeValues" : {
+        "timebuzzed" : { "N": "$ts" }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+- type: Mutation
+  field: removeNominee
+  dataSource: nominees
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "DeleteItem",
+      "key" : {
+        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+- type: Mutation
+  field: setContestantScore
+  dataSource: contestants
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "UpdateItem",
+      "key" : {
+        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+      },
+      "update" : {
+        "expression" : "SET #score = :score",
+        "expressionNames" : {
+          "#score" : "score"
+        },
+        "expressionValues" : {
+          ":score" : $util.dynamodb.toDynamoDBJson($ctx.args.newScore)
         }
       }
     }

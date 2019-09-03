@@ -27,7 +27,13 @@ type Question {
     question: String!
     answer: String!
     state: StateEnum!
-    nominees: [String!]
+    nominees: [Nominee!]
+}
+
+type Nominee {
+    quesId: Int!
+    login: String!
+    timebuzzed: Int!
 }
 
 enum StateEnum {
@@ -47,11 +53,21 @@ type Query {
 
 type Mutation {
     setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question
+    joinGame(gameId: Int!): Contestant
+    nominateSelf(quesId: Int!): Nominee
+    removeNominee(quesId: Int!, login: String!): Nominee
+    setContestantScore(gameId: Int!, login: String!, newScore: Int!): Contestant
 }
 
 type Subscription {
     questionStateChange: Question
-	@aws_subscribe(mutations: [ "setQuestionState" ])
+	    @aws_subscribe(mutations: [ "setQuestionState" ])
+    nominateSelf(quesId: Int!): Nominee
+        @aws_subscribe(mutations: [ "nominateSelf" ])
+    removeNominee: Nominee
+        @aws_subscribe(mutations: [ "removeNominee" ])
+    setContestantScore(gameId: Int!): Contestant
+        @aws_subscribe(mutations: [ "setContestantScore" ])
 }
 
 schema {
