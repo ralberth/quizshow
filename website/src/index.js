@@ -63,7 +63,7 @@ const signUpArgs = {
                 required: true
             },
             {
-                key: "custom:Organization",
+                key: "custom:organization",
                 label: "Organization",
                 type: "string",
                 required: false
