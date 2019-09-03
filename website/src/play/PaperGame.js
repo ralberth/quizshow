@@ -10,7 +10,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 const useStyles = makeStyles(theme => ({
   paper: {
     width: '100%',
-    maxWidth: 360,
+    maxWidth: 400,
     margin: theme.spacing(1),
   },
   fab: {

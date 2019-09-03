@@ -1,7 +1,9 @@
 import React from 'react';
 import MessageBus from "../common/MessageBus";
-// import appSyncClient from '../util/AppSyncClient';
+import appSyncClient from '../util/AppSyncClient';
 import Loading from '../common/Loading';
+import PlayerCurrentGame from './PlayerCurrentGame'
+import PlayerLeaderboard from './PlayerLeaderboard'
 
 class PlayGame extends React.Component {
 
@@ -14,35 +16,47 @@ class PlayGame extends React.Component {
     state = {
         game: null,
         question: null,
-        mode: 'loading'
+        mode: 'loading',
+        contestants: []
     }
 
     componentDidMount = () => {
-        // appSyncClient.getGameById(this.gameId, game => {
-        //     this.setState({ mode: 'waiting', game: game });
-        // });
+        appSyncClient.getGameById(this.gameId, game => {
+            this.setState({
+              mode: 'waiting',
+              game: game
+            });
+        });
     }
 
     render() {
-        switch(this.state.mode) {
+
+      switch(this.state.mode) {
         case 'loading':
             return <Loading />;
         case 'waiting':
-            return (
-                <div>
-                  Leaderboard Here
-                </div>
-            );
+
+          console.log('game:', this.state.game);
+
+          return (
+            <div >
+              <PlayerCurrentGame title={this.state.game.title}/>
+              <PlayerLeaderboard contestants={this.state.contestants} />
+            </div>
+          );
+
         case 'question':
             return (
               <div>
                 Question Here
               </div>
             );
+
         default:
             return (<div>Something went wrong, bad value for Mode</div>);
         }
     }
+
 }
 
 export default PlayGame;
