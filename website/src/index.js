@@ -61,6 +61,12 @@ const signUpArgs = {
                 label: "Nickname / Screenname",
                 type: "string",
                 required: true
+            },
+            {
+                key: "custom:Organization",
+                label: "Organization",
+                type: "string",
+                required: false
             }
         ],
         hiddenDefaults: [ 'phone_number' ]

@@ -15,6 +15,11 @@ const useStyles = makeStyles(theme => {
 });
 
 const RandomColorAvatar = ({ name }) => {
+
+  // Hast name into number
+  // Number and mod based on number of colors in Material-UI
+  // int between 0-18. Get color index.
+
   const color = randomColor();
   const classes = useStyles(color);
 

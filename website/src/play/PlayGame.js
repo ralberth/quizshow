@@ -32,8 +32,10 @@ class PlayGame extends React.Component {
     render() {
 
       switch(this.state.mode) {
+
         case 'loading':
             return <Loading />;
+
         case 'waiting':
 
           console.log('game:', this.state.game);
