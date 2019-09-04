@@ -5,8 +5,15 @@
   "version": "1.0.0",
   "author": "Rich Alberth <richalberth@gmail.com>",
   "dependencies": {
+    "@aws-amplify/api": "^1.0.42",
+    "@aws-amplify/auth": "^1.2.31",
+    "apollo-boost": "^0.4.4",
     "aws-sdk": "^2.515.0",
-    "csv-parse": "^4.4.5"
+    "csv-parse": "^4.4.5",
+    "esm": "^3.2.25",
+    "graphql": "^14.5.4",
+    "graphql-tag": "^2.10.1",
+    "node-fetch": "^2.6.0"
   },
   "scripts": {
     "convert": "node ./csv2ddb.js convert",

@@ -35,6 +35,21 @@ npm run convert
 npm run load
 ```
 
+Once sample data is in place, run this to load 70+ records into `QuizContestants` table for the gameId you pass on the command-line.  This makes it simpler to draw leader boards, etc.  For example, each Contestant has a random score between 0 and 1000.
+
+Steps:
+
+```bash
+node add_contestants.js 100
+```
+
+Once you have contestants loaded, you'll want to see the game in action as if there were many people all playing along.  Given a specific quesId from the database, run this script to have between 1 and 20 people "buzz in" in rapid succession.  The argument is the quesId value:
+
+```bash
+node -r esm add_nominees.js 123
+```
+
+
 
 # How to Prepare for Production
 
@@ -147,6 +162,8 @@ Indexes:
 
 
 # TO DO
+
+Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existing entries
 
 ## General Look & Feel
 

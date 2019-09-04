@@ -145,6 +145,15 @@
       }
     }
   responseMapping: $util.toJson($ctx.result.items)
+- type: Query
+  field: listContestants
+  dataSource: contestants
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "Scan"
+    }
+  responseMapping: $util.toJson($ctx.result.items)
 - type: Mutation
   field: setQuestionState
   dataSource: questions
@@ -180,12 +189,13 @@
       },
       "attributeValues" : {
         "name":  { "S": "$ctx.identity.claims.nickname" },
+        "organization":  { "S": "$ctx.identity.claims['custom:organization']" },
         "score": { "N": "0" }
       }
     }
   responseMapping: $util.toJson($ctx.result)
 - type: Mutation
-  field: nominateSelf
+  field: nominateContestant
   dataSource: nominees
   requestMapping: |
     #set($ts = $util.time.nowEpochMilliSeconds() - 1567527658683)
@@ -194,7 +204,7 @@
       "operation" : "PutItem",
       "key" : {
         "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
-        "login": { "S": "$ctx.identity.username" }
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
       },
       "attributeValues" : {
         "timebuzzed" : { "N": "$ts" }

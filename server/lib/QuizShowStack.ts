@@ -65,6 +65,16 @@ export class QuizShowStack extends cdk.Stack {
                         minLength: "4",
                         maxLength: "20"
                     }
+                },
+                {
+                    name: "organization",
+                    attributeDataType: "String",
+                    mutable: true,
+                    required: false,
+                    stringAttributeConstraints: {
+                        minLength: "0",
+                        maxLength: "80"
+                    }
                 }
             ]
         });
@@ -86,7 +96,12 @@ export class QuizShowStack extends cdk.Stack {
                 awsRegion: 'us-east-1',
                 defaultAction: 'ALLOW',
                 userPoolId: userPool.ref
-            }
+            },
+            additionalAuthenticationProviders: [
+                {
+                    authenticationType: 'API_KEY'
+                }
+            ]
         });
 
         const graphql = new appsync.CfnGraphQLSchema(this, 'QuizShowSchema', {

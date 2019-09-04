@@ -16,9 +16,9 @@ var quesItems = []
 if (process.argv[2] === "convert") {
     fs.readdir(".", (err, items) => {
         items.forEach(item => {
-            if (item.endsWith(".csv")) {
+            if (item.startsWith("game_") && item.endsWith(".csv")) {
                 console.log(`  parse ${item}`);
-                basename = item.split(".")[0];
+                basename = item.substring(5).split(".")[0];
                 gameId = nextId++;
                 gameItems.push({
                     "PutRequest": {
