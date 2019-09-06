@@ -31,9 +31,10 @@ const ChooseGameToPlay = () => {
   const classes = useStyles();
   const [dialogVisibility, setDialogVisibility] = useState(false);
   const [redirectToGame, setRedirectToGame] = useState(null);
-  const { data: { listGames: gameList=[] } } = useAppSyncQuery(ALL_GAMES_GQL);
+  const { data, error } = useAppSyncQuery(ALL_GAMES_GQL);
+  const { listGames: gameList=[] } = data;
 
-  if (!_.isEmpty(gameList) && !dialogVisibility) {
+  if (!_.isEmpty(gameList) && !error && !dialogVisibility) {
     setDialogVisibility(true);
   }
 

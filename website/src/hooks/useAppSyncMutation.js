@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import API, { graphqlOperation } from '@aws-amplify/api';
 import { print as gqlToString } from 'graphql/language';
-import useDeepCompareEffect from 'use-deep-compare-effect';
 import { AppSyncError } from './AppSyncError';
 
-const useAppSyncQuery = (query, variables) => {
-  const [request, setRequest] = useState({
-    loading: true,
+const useAppSyncMutation = (query, variables) => {
+  const [mutation, setMutation] = useState({
+    working: true,
     error: false,
     data: {}
-  });
+  })
 
-  const appSyncQuery = async (query, variables={}) => {
+  const appSyncMutation = async (query, variables={}) => {
     const queryString = gqlToString(query);
     try {
       const { data: response } = await API.graphql(
@@ -19,38 +18,38 @@ const useAppSyncQuery = (query, variables) => {
       );
       const keys = Object.keys(response);
       if (keys.length === 1 &&  response[keys[0]] !== null) {
-        setRequest({
+        setMutation({
           loading: false,
           data: response,
           error: false
         });
       } else if (response[keys[0]] === null) {
-        setRequest({
+        setMutation({
           loading: false,
-          error: new AppSyncError(queryString, variables, 'AppSync query could not resolve variables!'),
+          error: new AppSyncError(queryString, variables, 'AppSync mutation could not resolve variables!'),
           data: {}
         });
       } else {
-        setRequest({
+        setMutation({
           loading: false,
-          error: new AppSyncError(queryString, variables, 'AppSync query returned more than one object!'),
+          error: new AppSyncError(queryString, variables, 'AppSync mutation returned more than one object!'),
           data: {}
         });
       }
     }  catch (error) {
-      setRequest({
+      setMutation({
         loading: false,
-        error: new AppSyncError(queryString, variables, 'AppSync Query Failed!'),
+        error: new AppSyncError(queryString, variables, 'AppSync mutation Failed!'),
         data: {}
       });
     }
-  };
+  }
 
-  useDeepCompareEffect(() => {
-    appSyncQuery(query, variables);
+  useEffect(() => {
+    appSyncMutation(query, variables)
   }, [query, variables]);
 
-  return request;
+  return mutation;
 };
 
-export default useAppSyncQuery;
+export default useAppSyncMutation;

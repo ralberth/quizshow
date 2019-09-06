@@ -103,7 +103,7 @@ const SUB_REMOVE_NOMINEE_GQL = gql`
 `;
 
 const SET_CONTESTANT_SCORE_GQL = gql`
-    mutation mod(gameId: Int!, login: String!, newScore: Int) {
+    mutation mod($gameId: Int!, $login: String!, $newScore: Int) {
         setContestantScore(gameId: $gameId, login: $login, newScore: $newScore) {
             score
         }
@@ -111,7 +111,7 @@ const SET_CONTESTANT_SCORE_GQL = gql`
 `;
 
 const SUB_SET_CONTESTANT_SCORE_GQL = gql`
-    subscription sub(gameId: Int!) {
+    subscription sub($gameId: Int!) {
         setContestantScore(gameId: $gameId) {
             login
             name
@@ -119,7 +119,6 @@ const SUB_SET_CONTESTANT_SCORE_GQL = gql`
             score
         }
     }
-}
 `;
 
 const bus = new MessageBus();
