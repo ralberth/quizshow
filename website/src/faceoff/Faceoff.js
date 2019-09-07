@@ -1,10 +1,29 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import { Modal } from '@material-ui/core';
 import QuestionBox from './QuestionBox';
 import { makeStyles } from '@material-ui/core/styles';
-import NominationGrid from './NominationGrid';
+import Leaderboard from '../common/Leaderboard';
+
+const people = [
+    {
+        name: 'Rich',
+        login: 'ralberth',
+        organization: 'Amazon'
+    },
+    {
+        name: 'Chris',
+        login: 'csmith',
+        organization: 'Foobar'
+    },
+    {
+        name: 'Sue',
+        login: 'suesue',
+        organization: 'Barbaz'
+    }
+];
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -37,7 +56,9 @@ const Faceoff = ({ question }) => {
                                 question={question.question} />
                         </Grid>
                         <Grid item xs={4}>
-                            <NominationGrid question={question.quesId} />
+                            <Paper>
+                                <Leaderboard contestants={people} />
+                            </Paper>
                         </Grid>
                     </Grid>
                 </Container>

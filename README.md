@@ -83,11 +83,13 @@ User Pools have Attributes that are set if the user pool ins't associated with a
 To be as simple as possible, Cognito is setup with:
 
 1. login name required
-1. nickname required (like a 'screen handle')
-1. Email and phone numbers optional, no emails or TXTs will be sent to verify unless you click a button to verify
+1. Nickname required (like a 'screen handle')
+1. Organization required
+1. Email required for validation
+1. Phone number not required
 1. Passwords are weak: nothing required, at least 6 characters
 1. Anyone can sign-up for an account
-1. Custom sign-up screen that skips phone number and adds nickname fields.
+1. Custom sign-up screen that skips phone number and adds nickname and organiztion fields.
 
 Using `withPlaceholder` in `index.js` makes sure all people have to sign-in (or sign-up and sign-in) before the app is rendered.  Once signed-in, `Auth.currentAuthenticatedUser()` will return (via a promise) an object that looks like this:
 
