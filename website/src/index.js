@@ -32,7 +32,7 @@ const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
 const IndexPage = () => {
   const classes = useStyles();
-    return (
+  return (
     <BrowserRouter id="BrowserRouter" >
         <Masthead />
         <CssBaseline />

@@ -27,6 +27,13 @@ const getObjFromResponse = ({ data }) => {
 
 class AppSyncClient {
 
+    raiseErrorViaToast = (gql, args, errObj) => {
+        console.log("AppSync Error:");
+        console.log("AppSync query", gqlToString(gql));
+        console.log("AppSync Variables", args);
+        bus.flashMessage(errObj);
+    }
+
     query = async (gql, args, callback=null) => {
         try {
             const result = await appSyncConnection.query({ query: gql, variables: args });
@@ -34,11 +41,8 @@ class AppSyncClient {
             if (callback)
                 return callback(obj);
             return obj;
-        } catch (err) {
-            console.log("AppSync Error:");
-            console.log("AppSync query", gqlToString(gql));
-            console.log("AppSync Variables", args);
-            bus.flashMessage(err);
+        } catch(err) {
+            this.raiseErrorViaToast(gql, args, err);
         }
     }
 
@@ -49,23 +53,25 @@ class AppSyncClient {
             if (callback)
                 return callback(obj);
             return obj;
-        } catch (err) {
-            console.log("AppSync Error:");
-            console.log("AppSync query", gqlToString(gql));
-            console.log("AppSync Variables", args);
-            bus.flashMessage(err);
+        } catch(err) {
+            this.raiseErrorViaToast(gql, args, err);
         }
     }
 
-    subscribe = (gql, args, expectedReturnDataAttribute, callback) => {}
-        // API.graphql(graphqlOperation(SUB_QUES_UPDATES_GQL, args))
-        //     .subscribe({
-        //         next: (notification) => {
-        //             const domainObj = notification.value.data[expectedReturnDataAttribute];
-        //             callback(domainObj);
-        //         },
-        //         error: err => bus.flashMessage(err)
-        //     })
+    subscribe = (gql, args, callback) => {
+        try {
+            return appSyncConnection.subscribe({ query: gql, variables: args })
+                .subscribe({
+                    next: (notification) => {
+                        const obj = getObjFromResponse(notification);
+                        callback(obj);
+                    },
+                    error: err => this.raiseErrorViaToast(gql, args, err)
+                });
+        } catch(err) {
+            this.raiseErrorViaToast(gql, args, err);
+        }
+    }
 
     allGames = (callback) => this.query(ALL_GAMES_GQL, {}, callback)
 

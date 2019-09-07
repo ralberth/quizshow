@@ -1,22 +1,12 @@
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import gql from "graphql-tag";
 import React, { useState } from 'react';
 import { Redirect } from 'react-router';
 import { useAppSyncQuery } from "../../graphql/useAppSyncHooks";
 import Loading from '../Loading';
 import PaperGame from "./PaperGame";
-
-const ALL_GAMES_GQL = gql`
-  query Query {
-      listGames {
-          gameId
-          emcee
-          title
-      }
-  }
-`;
+import { ALL_GAMES_GQL } from "../../graphql/graphqlQueries";
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -25,7 +15,6 @@ const useStyles = makeStyles(theme => ({
     textAlign: `center`,
   },
 }));
-
 
 const ChooseGame = ({ uriPrefix }) => {
   const classes = useStyles();

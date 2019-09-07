@@ -50,11 +50,13 @@ const PlayerCard = ({ player }) => {
         primary={`${player.name} (${player.login})`}
         secondary={player.organization}
       />
-      <LeaderbooardPoints
-        className={classes.points}
-        primary={`${player.points.toLocaleString()}`}
-        secondary={`pts`}
-      />
+      { player.points ? <LeaderbooardPoints
+                          className={classes.points}
+                          primary={`${player.points.toLocaleString()}`}
+                          secondary={`pts`}
+                        />
+                      : null
+      }
     </ListItem>
   );
 }
