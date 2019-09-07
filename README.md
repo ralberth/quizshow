@@ -190,12 +190,6 @@ Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existin
 1. Consider `<Hidden>` with appropriate breaks so tablet and phone interfaces are not cluttered
 1. Use Transition for basic movement, like sliding in or growing
 
-## Join, Login, Start
-
-1. QR code to join the game
-1. Add other identity providers to Cognito User Pool
-1. Lessen custom password requirements (Cognito User Pool Password Policy)
-
 
 ## Quiz Host Screen
 
@@ -204,29 +198,9 @@ Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existin
 1. When subscription shows someone joining, do a quick pop-up!
 
 
-## Emcee Interface
-
-1. As the MC, I'm a separate web connection from a mobile device, laptop + screen is the Main Board with no user interaction possible.
-1. MC mobile app: click buttons to make the game progress.  It's more of an intelligent TV remote: it doesn't display the whole board all the time, no animations, setup to allow MC to easily run the game.
-1. MC app shows the ANSWER too for reference.
-1. MC clicks a question, main board shows it and unlocks the players buzzers
-1. From top down, the head person has "Correct!" And "Nope" buttons.  MC clicks one.  If correct, clears people on the leaderboard and awards points.  MC clicks "Nope" pops the top person and moves to next person.
-1. Mobile version too!
-1. Create Quiz Game screen: Paste YAML description of the questions, answers, and categories.
-1. MC has a "clear the board" button that removes all answered people on the leader board
-
-
-## Contestants
-
-1. Attendees connect
-1. Each player's browser shows the question and has a "Bzzz!" Button
-1. When people join, they can include a short “tweet”-like intro message that gets displayed along with their chosen Player Handle.
-
-
 ## AppSync Features
 
 1. Showcase features of AppSync, like subscriptions: read appsync docs, decide which can be shown here
-1. Websockets and AppSync subscribe
 1. All based on creating/logging-in as a user.  If lose admin connection, just launch browser/phone, login, and it shows the other games you created that are still running.  Connect to one and control it.
 1. Handle offline automatically via appsync + Apollo client
 1. Conflict resolution?

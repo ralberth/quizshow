@@ -1,23 +1,21 @@
+import Container from "@material-ui/core/Container";
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { makeStyles } from '@material-ui/core/styles';
+import { withAuthenticator } from 'aws-amplify-react';
+import { ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, SignIn, SignUp, VerifyContact } from 'aws-amplify-react/dist/Auth';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { makeStyles } from '@material-ui/core/styles';
-import Homepage from './homepage/Homepage';
-import Container from "@material-ui/core/Container";
-import GameAdmin from "./GameAdmin";
+import ChooseGame from "./common/choosegame/ChooseGame";
+import configureAmplify from "./config/configureAmplify";
 import CreateGame from "./CreateGame";
+import EmceeGame from "./emcee/EmceeGame";
+import FlashMessage from "./FlashMessage";
+import GameAdmin from "./GameAdmin";
+import Homepage from './homepage/Homepage';
 import HostGame from "./hostgame/HostGame";
 import Masthead from './Masthead';
-import { withAuthenticator } from 'aws-amplify-react';
-import configureAmplify from "./config/configureAmplify";
-import ChooseGameToHost from "./hostgame/ChooseGameToHost";
-import FlashMessage from "./FlashMessage";
-import ChooseGameToEmcee from "./emcee/ChooseGameToEmcee";
-import EmceeGame from "./emcee/EmceeGame";
-import ChooseGameToPlay from "./play/ChooseGameToPlay"
-import PlayGame from "./play/PlayGame"
-import { SignUp, SignIn, ConfirmSignIn, VerifyContact, ConfirmSignUp, ForgotPassword, RequireNewPassword } from 'aws-amplify-react/dist/Auth';
+import PlayGame from "./play/PlayGame";
 
 configureAmplify();
 
@@ -27,6 +25,10 @@ const useStyles = makeStyles(theme => ({
     paddingRight: `0`,
   }
 }));
+
+const ChooseGameToHost  = () => <ChooseGame uriPrefix="/host"  />;
+const ChooseGameToEmcee = () => <ChooseGame uriPrefix="/emcee" />;
+const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
 const IndexPage = () => {
   const classes = useStyles();
