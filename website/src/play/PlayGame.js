@@ -1,82 +1,77 @@
-import React from 'react';
-import MessageBus from "../common/MessageBus";
-import appSyncClient from '../util/AppSyncClient';
+import React, { useState } from 'react';
+// import useAppSyncQuery from "../hooks/useAppSyncQuery";
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame'
 import Leaderboard from '../common/Leaderboard'
+// import { getGameByIdGQL } from "../util/graphqlQueries";
 
 const people = [
   {
       name: 'Rich',
       login: 'ralberth',
-      organization: 'Amazon'
+      organization: 'Amazon',
+      points: 500
   },
   {
       name: 'Chris',
       login: 'csmith',
-      organization: 'Foobar'
+      organization: 'Foobar',
+      points: 3250
   },
   {
       name: 'Sue',
       login: 'suesue',
-      organization: 'Barbaz'
+      organization: 'Barbaz',
+      points: 35856
   }
 ];
 
-class PlayGame extends React.Component {
+const PlayGame = ({ match: { params: { gameId } }}) => {
 
-    constructor({ match: { params: { gameId } }}) {
-        super();
-        this.gameId = gameId;
-        this.bus = new MessageBus();
-    }
-
-    state = {
-        game: null,
+    const [state] = useState({
+        // game: null,
+        game: {
+          title: 'The Game Title'
+        },
         question: null,
-        mode: 'loading',
+        mode: 'waiting',
         contestants: people
-    }
+    });
 
-    componentDidMount = () => {
-        appSyncClient.getGameById(this.gameId, game => {
-            this.setState({
-              mode: 'waiting',
-              game: game
-            });
-        });
-    }
+    // const { loading, data: { getGameById: game } } = useAppSyncQuery(getGameByIdGQL, { id: gameId });
 
-    render() {
+    // if (!loading) {
+    //   setState({
+    //       mode: 'waiting',
+    //       game: game
+    //     })
+    // }
 
-      switch(this.state.mode) {
+    switch(state.mode) {
 
-        case 'loading':
-            return <Loading />;
+      case 'loading':
+          return <Loading />;
 
-        case 'waiting':
+      case 'waiting':
 
-          console.log('game:', this.state.game);
+        return (
+          <div>
+            <PlayerCurrentGame title={state.game.title}/>
+            <Leaderboard contestants={state.contestants}
+            />
+          </div>
+        );
 
+      case 'question':
           return (
             <div>
-              <PlayerCurrentGame title={this.state.game.title}/>
-              <Leaderboard contestants={this.state.contestants}
-              />
+              Question Here
             </div>
           );
 
-        case 'question':
-            return (
-              <div>
-                Question Here
-              </div>
-            );
-
-        default:
-            return (<div>Something went wrong, bad value for Mode</div>);
-        }
-    }
+      default:
+          return (<div>Something went wrong, bad value for Mode</div>);
+      }
 
 }
 

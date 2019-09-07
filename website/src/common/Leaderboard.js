@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -21,8 +21,22 @@ const useStyles = makeStyles(theme => ({
   },
   listItemText: {
     margin: `16px 0 16px 16px`
+  },
+  points: {
+    margin: `16px 0 16px 16px`,
+    color: theme.palette.primary.main,
+    textAlign: `right`,
   }
 }));
+
+const LeaderbooardPoints = withStyles({
+  primary: {
+    fontWeight: `bold`
+  },
+  secondary: {
+    fontWeight: `500`
+  }
+})(ListItemText);
 
 const PlayerCard = ({ player }) => {
   const classes = useStyles();
@@ -35,6 +49,11 @@ const PlayerCard = ({ player }) => {
         className={classes.listItemText}
         primary={`${player.name} (${player.login})`}
         secondary={player.organization}
+      />
+      <LeaderbooardPoints
+        className={classes.points}
+        primary={`${player.points.toLocaleString()}`}
+        secondary={`pts`}
       />
     </ListItem>
   );
