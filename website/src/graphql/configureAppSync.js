@@ -1,5 +1,6 @@
 import Amplify, { Auth } from "aws-amplify"
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
+import * as localForage from "localforage";
 import awsconfig from "../config/config";
 
 require('@aws-amplify/pubsub')  // MUST be here or pubsub doesn't work.
@@ -22,6 +23,9 @@ const appSyncConnection = new AWSAppSyncClient({
   auth: {
     type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
     jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken()
+  },
+  offlineConfig: {
+    storage: localForage
   }
 });
 

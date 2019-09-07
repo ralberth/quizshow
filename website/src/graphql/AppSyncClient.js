@@ -12,32 +12,34 @@ const bus = new MessageBus();
 
 const getObjFromResponse = ({ data }) => {
     if (!data)
-        throw "No data found";
+        throw "No data found";                                   // eslint-disable-line no-throw-literal
 
     const keys = Object.keys(data);
     if (keys.length === 1 && data[keys[0]] !== null)
         return data[keys[0]];
 
     if (data[keys[0]] === null)
-        throw 'AppSync query could not resolve variables!';
+        throw 'AppSync query could not resolve variables!';      // eslint-disable-line no-throw-literal
 
-    throw 'AppSync query returned more than one object!';
+    throw 'AppSync query returned more than one object!';        // eslint-disable-line no-throw-literal
 }
 
+const oneLineQueryStr = (gql) => gqlToString(gql).replace(/\n/g, " ").replace(/  +/g, " ");
 
 class AppSyncClient {
 
     raiseErrorViaToast = (gql, args, errObj) => {
-        console.log("AppSync Error:");
-        console.log("AppSync query", gqlToString(gql));
-        console.log("AppSync Variables", args);
+        console.error("AppSync Error:");
+        console.error("AppSync query", gqlToString(gql));
+        console.error("AppSync Variables", args);
         bus.flashMessage(errObj);
     }
 
     query = async (gql, args, callback=null) => {
         try {
             const result = await appSyncConnection.query({ query: gql, variables: args });
-            const obj = getObjFromResponse(result)
+            const obj = getObjFromResponse(result);
+            console.debug(`Query "${oneLineQueryStr(gql)}" return:`, obj);
             if (callback)
                 return callback(obj);
             return obj;
@@ -49,7 +51,8 @@ class AppSyncClient {
     mutate = async (gql, args, callback=null) => {
         try {
             const result = await appSyncConnection.mutate({ mutation: gql, variables: args });
-            const obj = getObjFromResponse(result)
+            const obj = getObjFromResponse(result);
+            console.debug(`Mutation "${oneLineQueryStr(gql)}" with vars ${args} completed`);
             if (callback)
                 return callback(obj);
             return obj;
@@ -60,7 +63,9 @@ class AppSyncClient {
 
     subscribe = (gql, args, callback) => {
         try {
-            return appSyncConnection.subscribe({ query: gql, variables: args })
+            const query = oneLineQueryStr(gql);
+            console.debug(`Subscribing to "${query}" with args ${args}`);
+            const subs = appSyncConnection.subscribe({ query: gql, variables: args })
                 .subscribe({
                     next: (notification) => {
                         const obj = getObjFromResponse(notification);
@@ -68,6 +73,12 @@ class AppSyncClient {
                     },
                     error: err => this.raiseErrorViaToast(gql, args, err)
                 });
+            return {
+                unsubscribe: () => {
+                    console.debug(`Unsubscribed from "${query}"`);
+                    subs.unsubscribe();
+                }
+            };
         } catch(err) {
             this.raiseErrorViaToast(gql, args, err);
         }
