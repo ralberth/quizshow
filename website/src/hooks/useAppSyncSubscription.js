@@ -18,7 +18,7 @@ const reducer = (state, { type, payload }) => {
   }
 }
 
-export const useSubscription = ({ query, variables }) => {
+const useAppSyncSubscription = (query, variables={}) => {
   const [state, dispatch] = useReducer(reducer, {});
   const [error, setError] = useState(false);
   const [complete, setComplete] = useState(false);
@@ -68,3 +68,5 @@ export const useSubscription = ({ query, variables }) => {
     unsubscribe
   };
 };
+
+export default useAppSyncSubscription;
