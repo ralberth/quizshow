@@ -7,28 +7,8 @@ import AnswerDisplay from './AnswerDisplay';
 import appSyncClient from '../util/AppSyncClient';
 import Loading from '../common/Loading';
 import { Enum } from 'enumify';
-import gql from "graphql-tag"
 import useAppSyncQuery from "../hooks/useAppSyncQuery";
-
-const GET_GAME_GQL = gql`
-    query Query($id: Int!) {
-        getGameById(gameId: $id) {
-            title
-            categories {
-                catgId
-                categoryName
-                questions {
-                    quesId
-                    catgId
-                    points
-                    question
-                    answer
-                    state
-                }
-            }
-        }
-    }
-`;
+import { getGameByIdGQL } from "../util/graphqlQueries";
 
 class ScreenMode extends Enum {};
 ScreenMode.initEnum([ "choose", "question", "answer" ]);
@@ -37,7 +17,7 @@ const EmceeGame = (props) => {
     const [ screenMode, setScreenMode ] = useState(ScreenMode.choose);
     const [ question, setQuestion ] = useState(null);
 
-    const { loading, data } = useAppSyncQuery(GET_GAME_GQL, { id: props.match.params.gameId });
+    const { loading, data } = useAppSyncQuery(getGameByIdGQL, { id: props.match.params.gameId });
     const { getGameById: game } = data;
 
     const transition = (question, newQuesState, newMode, newQuesForState) => {
