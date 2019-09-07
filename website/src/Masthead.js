@@ -74,8 +74,8 @@ const Masthead = (props) => {
                 >
 
                     <MenuItem onClick={() => setNav("/")}>Homepage</MenuItem>
-                    <MenuItem onClick={() => setNav("/create")}>Create a new quiz show</MenuItem>
-                    <MenuItem onClick={() => setNav("/admin")}>Admin your quiz shows</MenuItem>
+                    {/* <MenuItem onClick={() => setNav("/create")}>Create a new quiz show</MenuItem> */}
+                    {/* <MenuItem onClick={() => setNav("/admin")}>Admin your quiz shows</MenuItem> */}
                     <MenuItem onClick={() => setNav("/emcee")}>Emcee a quiz show you own</MenuItem>
                     <MenuItem onClick={() => setNav("/host")}>Host a quiz show</MenuItem>
                     <MenuItem>Logout</MenuItem>

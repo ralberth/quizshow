@@ -58,7 +58,14 @@ const Leaderboard = ({ contestants }) => {
       }
       className={classes.root}
     >
-      {contestants.map(person => [ <Divider component="li" />, <PlayerCard player={person} /> ])}
+      {
+        contestants.map(person =>
+          [
+            <Divider key={`${person}-divider`} component="li" />,
+            <PlayerCard key={`${person}-card`} player={person} />
+          ]
+        )
+      }
     </List>
   );
 }
