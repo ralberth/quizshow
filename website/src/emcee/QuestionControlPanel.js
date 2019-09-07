@@ -51,6 +51,9 @@ const QuestionControlPanel = ({ game, onClick }) => {
         setExpanded(isExpanded ? panel : false);
     };
 
+    if (!game)
+        return null;
+
     return (
         <Box className={classes.root}>
             {game.categories.map(catg => (

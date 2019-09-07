@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ChooseGame from "./common/choosegame/ChooseGame";
-import configureAmplify from "./config/configureAmplify";
+import { configureAmplify } from "./config/configureAppSync";
 import CreateGame from "./CreateGame";
 import EmceeGame from "./emcee/EmceeGame";
 import FlashMessage from "./FlashMessage";

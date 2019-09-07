@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
 import { print as gqlToString } from 'graphql/language';
 import { AppSyncError } from './AppSyncError';
+import { appSyncClient } from '../config/configureAppSync';
 
 const useAppSyncMutation = (query, variables) => {
   const [mutation, setMutation] = useState({
@@ -13,9 +13,12 @@ const useAppSyncMutation = (query, variables) => {
   const appSyncMutation = async (query, variables={}) => {
     const queryString = gqlToString(query);
     try {
-      const { data: response } = await API.graphql(
-        graphqlOperation(queryString, variables)
-      );
+      const { data: response } = await appSyncClient.mutate({
+        mutation: query,
+        variables: {
+          input: variables
+        }
+      });
       const keys = Object.keys(response);
       if (keys.length === 1 &&  response[keys[0]] !== null) {
         setMutation({

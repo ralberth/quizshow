@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
 import { print as gqlToString } from 'graphql/language';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { AppSyncError } from './AppSyncError';
+import { appSyncClient } from '../config/configureAppSync';
 
 const useAppSyncQuery = (query, variables) => {
   const [request, setRequest] = useState({
@@ -14,9 +14,11 @@ const useAppSyncQuery = (query, variables) => {
   const appSyncQuery = async (query, variables={}) => {
     const queryString = gqlToString(query);
     try {
-      const { data: response } = await API.graphql(
-        graphqlOperation(queryString, variables)
-      );
+      const { data: response } = await appSyncClient.query({
+        query: query,
+        variables: variables
+      });
+
       const keys = Object.keys(response);
       if (keys.length === 1 &&  response[keys[0]] !== null) {
         setRequest({

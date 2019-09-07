@@ -1,79 +1,90 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import MessageBus from "../common/MessageBus";
 import HeroText from "../common/HeroText";
 import QuestionControlPanel from './QuestionControlPanel';
 import QuestionDisplay from './QuestionDisplay';
 import AnswerDisplay from './AnswerDisplay';
 import appSyncClient from '../util/AppSyncClient';
 import Loading from '../common/Loading';
+import { Enum } from 'enumify';
+import gql from "graphql-tag"
+import useAppSyncQuery from "../hooks/useAppSyncQuery";
 
-class EmceeGame extends React.Component {
-
-    constructor(props) {
-        super();
-        this.props = props;
-        this.bus = new MessageBus();
+const GET_GAME_GQL = gql`
+    query Query($id: Int!) {
+        getGameById(gameId: $id) {
+            title
+            categories {
+                catgId
+                categoryName
+                questions {
+                    quesId
+                    catgId
+                    points
+                    question
+                    answer
+                    state
+                }
+            }
+        }
     }
+`;
 
-    state = {
-        game: null,
-        question: null,
-        mode: 'loading'
-    }
+class ScreenMode extends Enum {};
+ScreenMode.initEnum([ "choose", "question", "answer" ]);
 
-    componentDidMount = () => {
-        const { gameId } = this.props.match.params;
-        appSyncClient.getGameById(gameId, game => {
-            this.setState({ mode: 'choose', game: game });
-        });
-    }
+const EmceeGame = (props) => {
+    const [ screenMode, setScreenMode ] = useState(ScreenMode.choose);
+    const [ question, setQuestion ] = useState(null);
 
-    transition = (question, newQuesState, newMode, newQuesForState) => {
+    const { loading, data } = useAppSyncQuery(GET_GAME_GQL, { id: props.match.params.gameId });
+    const { getGameById: game } = data;
+
+    const transition = (question, newQuesState, newMode, newQuesForState) => {
         appSyncClient.updateQuestionState(question, newQuesState, () => {
             // Now that AppSync is up to date, set my local stuff and redraw
             question.state = newQuesState;
-            this.setState({ mode: newMode, question: newQuesForState });
+            setQuestion(newQuesForState);
+            setScreenMode(newMode);
         });
     }
 
-    showQues   = (q) => this.transition(q,                   'display', 'question', q);
-    cancelQues = ()  => this.transition(this.state.question, 'ready',   'choose',   null);
-    abortQues  = ()  => this.transition(this.state.question, 'closed',  'choose',   null);
-    openQues   = ()  => this.transition(this.state.question, 'open',    'answer',   this.state.question);
-    cancelAns  = ()  => this.transition(this.state.question, 'ready',   'choose',   null);
+    const showQues   = (q) => transition(q,        'display', ScreenMode.question, q);
+    const cancelQues = ()  => transition(question, 'ready',   ScreenMode.choose,   null);
+    const abortQues  = ()  => transition(question, 'closed',  ScreenMode.choose,   null);
+    const openQues   = ()  => transition(question, 'open',    ScreenMode.answer,   question);
+    const cancelAns  = ()  => transition(question, 'ready',   ScreenMode.choose,   null);
 
-    render() {
-        switch(this.state.mode) {
-        case 'loading':
-            return <Loading />;
-        case 'choose':
-            return (
-                <Grid container direction="column" justify="center" alignItems="center">
-                    <HeroText title={this.state.game.title} />
-                    <QuestionControlPanel
-                        game={this.state.game}
-                        onClick={this.showQues} />
-                </Grid>
-            );
-        case 'question':
-            return (
-                <QuestionDisplay
-                    text={this.state.question.question}
-                    onCancel={this.cancelQues}
-                    onAbort={this.abortQues}
-                    onNext={this.openQues} />
-            );
-        case 'answer':
-            return (
-                <AnswerDisplay
-                    text={this.state.question.answer}
-                    onCancel={this.cancelAns}
-                    onAbort={this.abortQues} />
-            );
-        default:
-            return (<div>Something went wrong, bad value for Mode</div>);
-        }
+    if (loading)
+        return <Loading />;
+
+    switch(screenMode) {
+    case ScreenMode.choose:
+        return (
+            <Grid container direction="column" justify="center" alignItems="center">
+                <HeroText title={props.title} />
+                <QuestionControlPanel
+                    game={game}
+                    onClick={showQues} />
+            </Grid>
+        );
+    case ScreenMode.question:
+        return (
+            <QuestionDisplay
+                text={question ? question.question : "?"}
+                onCancel={cancelQues}
+                onAbort={abortQues}
+                onNext={openQues} />
+        );
+    case ScreenMode.answer:
+        return (
+            <AnswerDisplay
+                text={question ? question.answer : "?"}
+                onCancel={cancelAns}
+                onAbort={abortQues} />
+        );
+    default:
+        return (<div>Something went wrong, bad value for Mode</div>);
     }
 }
 

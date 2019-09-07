@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
-import API, { graphqlOperation } from '@aws-amplify/api';
-import { print as gqlToString } from 'graphql/language';
 import {Enum} from 'enumify';
 import _ from 'lodash';
 import Observable from 'zen-observable';
 import { AppSyncError, SubscriptionReducerError } from './AppSyncError';
+import { appSyncClient } from '../config/configureAppSync';
 
 
 class ActionType extends Enum {};
@@ -49,8 +48,7 @@ export const useSubscription = ({ query, variables }) => {
   }, [subscription]);
 
   useEffect(() => {
-      const queryString = gqlToString(query);
-      const observable = API.graphql(graphqlOperation(queryString));
+      const observable = appSyncClient.subscribe({ subscription: query });
       if (observable instanceof Observable) {
         setSubscription(observable.subscribe({
           next: nextCallback,
