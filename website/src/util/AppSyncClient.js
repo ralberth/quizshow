@@ -52,7 +52,6 @@ const SUB_QUES_UPDATES_GQL = gql`
     subscription Subscription {
         questionStateChange {
             quesId
-            question
             state
         }
     }

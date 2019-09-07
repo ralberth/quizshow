@@ -37,7 +37,7 @@ const Faceoff = ({ question }) => {
                                 question={question.question} />
                         </Grid>
                         <Grid item xs={4}>
-                            <NominationGrid />
+                            <NominationGrid question={question.quesId} />
                         </Grid>
                     </Grid>
                 </Container>

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Nomination from "../common/Nomination";
+import appSyncClient from "../util/AppSyncClient";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -17,8 +18,17 @@ const PEOPLE = [
     { login: 'jpeterson', firstName: "Jason" }
 ];
 
-const NominationGrid = () => {
+const NominationGrid = ({ quesId }) => {
     const classes = useStyles();
+
+    useEffect(() => {
+        const subscription = appSyncClient.subNominateContestant(quesId, (res) => {
+            console.log("Nominated!");
+            console.log(res);
+        });
+        return () => subscription.unsubscribe();
+    });
+
     return (
         <Grid
             container

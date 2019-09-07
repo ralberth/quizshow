@@ -50,6 +50,22 @@ node -r esm add_nominees.js 123
 ```
 
 
+## Multiple devices with "npm start"
+
+In case you have firewalls enabled on your developer laptop, use this neat trick to expose the local port 3000 on your LAN so phones/kindles/tablets can be used during debugging: remote port forwarding.
+
+1. Pick a server on the LAN you can normally SSH into like 192.168.1.3
+1. ssh into it and open port 3000:
+   1. `sudo firewall-cmd --zone=public --add-port=3000/tcp --permanent`
+   1. `sudo firewall-cmd --reload`
+1. Setup remote tunnel: `ssh -nNT -R 3000:localhost:3000 192.168.1.3`
+1. On any other device on the LAN, open browser and connect to http://192.168.1.3:3000
+
+ssh command broken-down:
+* `-nNT` means don't give you a terminal prompt where you can do stuff.  Nice to have so you don't accidentally do work in this terminal window and close it unknowingly.  With `-nNT`, the ssh command just sits without doing anything.
+* `-R 3000:localhost:3000` sets up a remote server port so remote port 3000 listens for other people to connect to it and forwards everything back to localhost's port 3000.
+* `192.168.1.3` is the remote host to connect to (and the one that will listen on the port from `-R` above)
+
 
 # How to Prepare for Production
 
@@ -170,7 +186,7 @@ Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existin
 1. Use the `[system palette][2]` in styled components instead of hard-coding colors
 1. Consider `<Box letterSpacing={2}>` for hero text and large questions, maybe category labels on hostgame screen
 1. Consider `<Hidden>` with appropriate breaks so tablet and phone interfaces are not cluttered
-
+1. Use Transition for basic movement, like sliding in or growing
 
 ## Join, Login, Start
 
@@ -181,7 +197,8 @@ Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existin
 
 ## Quiz Host Screen
 
-1. Main board shows leader board with the order in which people buzzed in
+1. Leaderboard punted off the main Host screen.  Maybe in the future we can agree on a "top 3" with gold/silver/bronze icons/pics or something like this.
+1. Main board shows top N list of people who buzzed-in.
 1. When subscription shows someone joining, do a quick pop-up!
 
 
@@ -209,10 +226,21 @@ Use `attribute_not_exists` to prevent PutItem resolvers from overwriting existin
 1. Showcase features of AppSync, like subscriptions: read appsync docs, decide which can be shown here
 1. Websockets and AppSync subscribe
 1. All based on creating/logging-in as a user.  If lose admin connection, just launch browser/phone, login, and it shows the other games you created that are still running.  Connect to one and control it.
-1. Handle offline automatically via appsync
+1. Handle offline automatically via appsync + Apollo client
 1. Conflict resolution?
-1. Security: only the owner of a quiz show can see the answer field.
 1. How can this call more than one data source to demonstrate field-level different sources?
+
+
+## Security
+
+The below refer to (at least) the server forcing behavior, such as erroring out requests from a client that isn't following the UI rules.
+
+1. Rate-limit everyone
+1. Quizzes can be closed/opened: a closed quiz can't be joined.  Only Emcee can open a Quiz they own.
+1. Can't nominate anyone other than yourself
+1. Can't buzz in until a question is in 'open' state
+1. Can't view answers ever unless you're the emcee of a game
+1. Emcee can forcibly ban a player from a game or the entire server
 
 
 ## Way in the future

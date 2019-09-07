@@ -62,13 +62,13 @@ type Mutation {
 }
 
 type Subscription {
-    questionStateChange: Question!
+    questionStateChange: Question
 	    @aws_subscribe(mutations: [ "setQuestionState" ])
-    nominateContestant(quesId: Int!): Nominee!
+    nominateContestant(quesId: Int!): Nominee
         @aws_subscribe(mutations: [ "nominateContestant" ])
-    removeNominee(quesId: Int!): Nominee!
+    removeNominee(quesId: Int!): Nominee
         @aws_subscribe(mutations: [ "removeNominee" ])
-    setContestantScore(gameId: Int!): Contestant!
+    setContestantScore(gameId: Int!): Contestant
         @aws_subscribe(mutations: [ "setContestantScore" ])
 }
 

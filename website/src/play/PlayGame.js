@@ -3,7 +3,25 @@ import MessageBus from "../common/MessageBus";
 import appSyncClient from '../util/AppSyncClient';
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame'
-import PlayerLeaderboard from './PlayerLeaderboard'
+import Leaderboard from '../common/Leaderboard'
+
+const people = [
+  {
+      name: 'Rich',
+      login: 'ralberth',
+      organization: 'Amazon'
+  },
+  {
+      name: 'Chris',
+      login: 'csmith',
+      organization: 'Foobar'
+  },
+  {
+      name: 'Sue',
+      login: 'suesue',
+      organization: 'Barbaz'
+  }
+];
 
 class PlayGame extends React.Component {
 
@@ -17,7 +35,7 @@ class PlayGame extends React.Component {
         game: null,
         question: null,
         mode: 'loading',
-        contestants: []
+        contestants: people
     }
 
     componentDidMount = () => {
@@ -41,9 +59,10 @@ class PlayGame extends React.Component {
           console.log('game:', this.state.game);
 
           return (
-            <div >
+            <div>
               <PlayerCurrentGame title={this.state.game.title}/>
-              <PlayerLeaderboard contestants={this.state.contestants} />
+              <Leaderboard contestants={this.state.contestants}
+              />
             </div>
           );
 
