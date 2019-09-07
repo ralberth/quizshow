@@ -5,11 +5,11 @@ import MessageBus from "../common/MessageBus";
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
-import appSyncClient from '../util/AppSyncClient';
+import appSyncClient from '../graphql/AppSyncClient';
 import Loading from "../common/Loading";
-import useAppSyncQuery from "../hooks/useAppSyncQuery";
-import useAppSyncSubscription from "../hooks/useAppSyncSubscription";
-import { getGameByIdGQL, subQuestionStateChangeGQL } from "../util/graphqlQueries";
+import { useAppSyncQuery } from "../graphql/useAppSyncHooks";
+import useAppSyncSubscription from "../graphql/useAppSyncSubscription";
+import { GET_GAME_BY_ID_GQL, SUB_QUESTION_STATE_CHANGE_GQL } from "../graphql/graphqlQueries";
 
 const GameTitle = styled(Typography)({
     margin: "40px",
@@ -20,10 +20,9 @@ const GameTitle = styled(Typography)({
 const HostGame = (props) => {
     const [ question, setQuestion ] = useState(null);
 
-    const { loading, data } = useAppSyncQuery(getGameByIdGQL, { id: props.match.params.gameId });
-    const { getGameById: game } = data;
+    const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: props.match.params.gameId });
 
-    // const something = useAppSyncSubscription(subQuestionStateChangeGQL);
+    // const something = useAppSyncSubscription(SUB_QUESTION_STATE_CHANGE_GQL);
     // console.log("subs", something);
 
     const quesXref = !!game ? QuestionUtils.buildQuesXref(game) : null;

@@ -62,6 +62,9 @@ const PlayerCard = ({ player }) => {
 const Leaderboard = ({ contestants }) => {
   const classes = useStyles();
 
+  if (!contestants)
+    return null;
+
   return (
     <List
       component="nav"

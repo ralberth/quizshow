@@ -4,41 +4,41 @@ import HeroText from "../common/HeroText";
 import QuestionControlPanel from './QuestionControlPanel';
 import QuestionDisplay from './QuestionDisplay';
 import AnswerDisplay from './AnswerDisplay';
-import appSyncClient from '../util/AppSyncClient';
+import appSyncClient from '../graphql/AppSyncClient';
 import Loading from '../common/Loading';
 import { Enum } from 'enumify';
-import useAppSyncQuery from "../hooks/useAppSyncQuery";
-import { getGameByIdGQL } from "../util/graphqlQueries";
+import { useAppSyncQuery } from "../graphql/useAppSyncHooks";
+import { GET_GAME_BY_ID_GQL } from "../graphql/graphqlQueries";
 
 class ScreenMode extends Enum {};
 ScreenMode.initEnum([ "choose", "question", "answer" ]);
 
 const EmceeGame = (props) => {
-    const [ screenMode, setScreenMode ] = useState(ScreenMode.choose);
-    const [ question, setQuestion ] = useState(null);
+    const [ vars, setVars ] = useState({
+        screenMode: ScreenMode.choose,
+        question: null
+    });
 
-    const { loading, data } = useAppSyncQuery(getGameByIdGQL, { id: props.match.params.gameId });
-    const { getGameById: game } = data;
+    const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: props.match.params.gameId });
 
     const transition = (question, newQuesState, newMode, newQuesForState) => {
         appSyncClient.updateQuestionState(question, newQuesState, () => {
             // Now that AppSync is up to date, set my local stuff and redraw
             question.state = newQuesState;
-            setQuestion(newQuesForState);
-            setScreenMode(newMode);
+            setVars({ screenMode: newMode, question: newQuesForState });
         });
     }
 
-    const showQues   = (q) => transition(q,        'display', ScreenMode.question, q);
-    const cancelQues = ()  => transition(question, 'ready',   ScreenMode.choose,   null);
-    const abortQues  = ()  => transition(question, 'closed',  ScreenMode.choose,   null);
-    const openQues   = ()  => transition(question, 'open',    ScreenMode.answer,   question);
-    const cancelAns  = ()  => transition(question, 'ready',   ScreenMode.choose,   null);
+    const showQues   = (q) => transition(q,             'display', ScreenMode.question, q);
+    const cancelQues = ()  => transition(vars.question, 'ready',   ScreenMode.choose,   null);
+    const abortQues  = ()  => transition(vars.question, 'closed',  ScreenMode.choose,   null);
+    const openQues   = ()  => transition(vars.question, 'open',    ScreenMode.answer,   vars.question);
+    const cancelAns  = ()  => transition(vars.question, 'ready',   ScreenMode.choose,   null);
 
     if (loading)
         return <Loading />;
 
-    switch(screenMode) {
+    switch(vars.screenMode) {
     case ScreenMode.choose:
         return (
             <Grid container direction="column" justify="center" alignItems="center">
@@ -51,7 +51,7 @@ const EmceeGame = (props) => {
     case ScreenMode.question:
         return (
             <QuestionDisplay
-                text={question ? question.question : "?"}
+                text={vars.question ? vars.question.question : "?"}
                 onCancel={cancelQues}
                 onAbort={abortQues}
                 onNext={openQues} />
@@ -59,7 +59,7 @@ const EmceeGame = (props) => {
     case ScreenMode.answer:
         return (
             <AnswerDisplay
-                text={question ? question.answer : "?"}
+                text={vars.question ? vars.question.answer : "?"}
                 onCancel={cancelAns}
                 onAbort={abortQues} />
         );

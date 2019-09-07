@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-// import useAppSyncQuery from "../hooks/useAppSyncQuery";
+import Leaderboard from '../common/Leaderboard';
 import Loading from '../common/Loading';
-import PlayerCurrentGame from './PlayerCurrentGame'
-import Leaderboard from '../common/Leaderboard'
+import PlayerCurrentGame from './PlayerCurrentGame';
 // import { getGameByIdGQL } from "../util/graphqlQueries";
 
 const people = [

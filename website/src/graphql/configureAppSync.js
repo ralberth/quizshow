@@ -1,6 +1,6 @@
 import Amplify, { Auth } from "aws-amplify"
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-import awsconfig from "./config";
+import awsconfig from "../config/config";
 
 require('@aws-amplify/pubsub')  // MUST be here or pubsub doesn't work.
 
@@ -16,7 +16,7 @@ const configureAmplify = () => {
   Amplify.configure(awsconfig);
 }
 
-const appSyncClient = new AWSAppSyncClient({
+const appSyncConnection = new AWSAppSyncClient({
   url: awsconfig.aws_appsync_graphqlEndpoint,
   region: awsconfig.aws_appsync_region,
   auth: {
@@ -25,4 +25,4 @@ const appSyncClient = new AWSAppSyncClient({
   }
 });
 
-export { configureAmplify, appSyncClient };
+export { configureAmplify, appSyncConnection };

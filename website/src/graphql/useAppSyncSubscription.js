@@ -3,7 +3,7 @@ import {Enum} from 'enumify';
 import _ from 'lodash';
 import Observable from 'zen-observable';
 import { AppSyncError, SubscriptionReducerError } from './AppSyncError';
-import { appSyncClient } from '../config/configureAppSync';
+import { appSyncConnection } from './configureAppSync';
 
 
 class ActionType extends Enum {};
@@ -48,7 +48,7 @@ const useAppSyncSubscription = (query, variables={}) => {
   }, [subscription]);
 
   useEffect(() => {
-      const observable = appSyncClient.subscribe({ subscription: query });
+      const observable = appSyncConnection.subscribe({ subscription: query });
       if (observable instanceof Observable) {
         setSubscription(observable.subscribe({
           next: nextCallback,

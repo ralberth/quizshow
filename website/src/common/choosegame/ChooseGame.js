@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Redirect } from 'react-router';
-// import _ from 'lodash';
-import gql from "graphql-tag"
+import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import useAppSyncQuery from "../../hooks/useAppSyncQuery";
-import Grid from '@material-ui/core/Grid';
+import gql from "graphql-tag";
+import React, { useState } from 'react';
+import { Redirect } from 'react-router';
+import { useAppSyncQuery } from "../../graphql/useAppSyncHooks";
+import Loading from '../Loading';
 import PaperGame from "./PaperGame";
 
 const ALL_GAMES_GQL = gql`
@@ -30,27 +30,28 @@ const useStyles = makeStyles(theme => ({
 const ChooseGame = ({ uriPrefix }) => {
   const classes = useStyles();
   const [redirectToGame, setRedirectToGame] = useState(null);
-  const { data } = useAppSyncQuery(ALL_GAMES_GQL);
-  const { listGames: gameList=[] } = data;
+  const { loading, data } = useAppSyncQuery(ALL_GAMES_GQL);
 
   const setupGame = gameId => setRedirectToGame(`${uriPrefix}/${gameId}`);
 
-  if (redirectToGame) {
-      return (<Redirect to={redirectToGame} />);
-  } else {
-      return (
-        <div className={classes.root} >
-          <Typography className={classes.title} variant="h5">Choose A Game</Typography>
-          <Grid container justify="center" alignItems="center">
-            {
-              gameList.map(
-                game => <PaperGame key={game.gameId} {...game} playCallback={setupGame}/>
-              )
-            }
-          </Grid>
-        </div>
-      );
-  }
+  if (loading)
+    return <Loading />;
+
+  if (redirectToGame)
+    return (<Redirect to={redirectToGame} />);
+
+  return (
+    <div className={classes.root} >
+      <Typography className={classes.title} variant="h5">Choose A Game</Typography>
+      <Grid container justify="center" alignItems="center">
+        {
+          data.map(
+            game => <PaperGame key={game.gameId} {...game} playCallback={setupGame}/>
+          )
+        }
+      </Grid>
+    </div>
+  );
 }
 
 export default ChooseGame;
