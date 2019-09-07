@@ -1,10 +1,18 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import { Redirect } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import HomepageCard from './HomepageCard';
 import HeroText from "../common/HeroText";
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    margin: `auto`,
+  }
+}));
+
 const Homepage = (props) => {
+    const classes = useStyles();
     const [ redirectUrl, setRedirectUrl ] = React.useState(null);
 
     const doCreate = () => setRedirectUrl("/create");
@@ -17,7 +25,7 @@ const Homepage = (props) => {
         return (<Redirect to={redirectUrl} />);
     else {
         return (
-            <div style={{ padding: 64 }}>
+            <Grid container className={classes.root} justify="center" alignItems="center" spacing={2} >
                 <HeroText
                     title="Quiz Show"
                     subtitle="Lorem Ipsum dolor sic amet" />
@@ -54,7 +62,7 @@ const Homepage = (props) => {
                         onClick={doHost}
                     /> */}
                 </Grid>
-            </div>
+            </Grid>
         );
     }
 }

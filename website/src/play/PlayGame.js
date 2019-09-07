@@ -3,6 +3,7 @@ import Leaderboard from '../common/Leaderboard';
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
 // import { getGameByIdGQL } from "../util/graphqlQueries";
+import ContestantQuestion from './ContestantQuestion';
 
 const people = [
   {
@@ -33,7 +34,7 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
           title: 'The Game Title'
         },
         question: null,
-        mode: 'waiting',
+        mode: 'question',
         contestants: people
     });
 
@@ -64,7 +65,7 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
       case 'question':
           return (
             <div>
-              Question Here
+              <ContestantQuestion />
             </div>
           );
 
