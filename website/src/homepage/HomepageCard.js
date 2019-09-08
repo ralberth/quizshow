@@ -9,6 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
+    root: {
+      margin: `24px`,
+    },
     cardHeader: {
         background: "#eee",
         padding: 8
@@ -26,7 +29,7 @@ const HomepageCard = (props) => {
     const classes = useStyles();
 
     return (
-        <Grid item key={props.title} xs={12} sm={6} md={4}>
+        <Grid item key={props.title} className={classes.root} xs={12} sm={6} md={4}>
             <Card raised={true}>
                 <CardHeader
                     title={props.title}

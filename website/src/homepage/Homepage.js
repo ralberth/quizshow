@@ -25,12 +25,12 @@ const Homepage = (props) => {
         return (<Redirect to={redirectUrl} />);
     else {
         return (
-            <Grid container className={classes.root} justify="center" alignItems="center" spacing={2} >
+            <Grid container className={classes.root} justify="center" alignItems="center" >
                 <HeroText
                     title="Quiz Show"
                     subtitle="Lorem Ipsum dolor sic amet" />
 
-                <Grid container justify="center" spacing={6}>
+                <Grid container justify="center" >
                     <HomepageCard
                         title="Join"
                         description="Join a Game Show with a code from your emcee."
