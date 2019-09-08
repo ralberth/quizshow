@@ -26,7 +26,7 @@ const HostGame = (props) => {
 
     if (quesStateChange) {
         // Why do we only get quesId back ?!?!
-        const quesId = quesStateChange.quesId;
+        const { quesId } = quesStateChange;
 
         // Go and get the current question until we figure out why we can't get
         // back what we want.

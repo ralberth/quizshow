@@ -71,7 +71,10 @@ class AppSyncClient {
                         const obj = getObjFromResponse(notification);
                         callback(obj);
                     },
-                    error: err => this.raiseErrorViaToast(gql, args, err)
+                    error: err => {
+                      console.error(`from inside subscribe`, err);
+                      this.raiseErrorViaToast(gql, args, err)
+                    }
                 });
             return {
                 unsubscribe: () => {

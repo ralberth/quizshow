@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Leaderboard from '../common/Leaderboard';
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
-// import { getGameByIdGQL } from "../util/graphqlQueries";
 import ContestantQuestion from './ContestantQuestion';
+import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
+import { GET_GAME_BY_ID_GQL, SUB_QUESTION_STATE_CHANGE_GQL } from "../graphql/graphqlQueries";
+import appSyncClient from '../graphql/AppSyncClient';
 
 const people = [
   {
@@ -28,50 +30,56 @@ const people = [
 
 const PlayGame = ({ match: { params: { gameId } }}) => {
 
-    const [state] = useState({
-        // game: null,
-        game: {
-          title: 'The Game Title'
-        },
+    const [state, setState] = useState({
         question: null,
-        mode: 'question',
-        contestants: people
+        mode: "waiting",
+        buzzDisabled: true,
     });
 
-    // const { loading, data: { getGameById: game } } = useAppSyncQuery(getGameByIdGQL, { id: gameId });
+    const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: gameId });
 
-    // if (!loading) {
-    //   setState({
-    //       mode: 'waiting',
-    //       game: game
-    //     })
-    // }
+    const quesStateChange = useAppSyncSubs(SUB_QUESTION_STATE_CHANGE_GQL);
 
-    switch(state.mode) {
+    console.debug('quesStateChange', quesStateChange)
 
-      case 'loading':
-          return <Loading />;
+    if (quesStateChange) {
+        // Why do we only get quesId back ?!?!
+        const { quesId } = quesStateChange;
 
-      case 'waiting':
+        // Go and get the current question until we figure out why we can't get
+        // back what we want.
+        appSyncClient.getQuestionByQuesId(quesId, (ques) => {
+          setState({
+            question: ques,
+            mode: "question",
+            buzzDisabled: ques.state !== 'open'
+          });
+        });
+    }
+
+    if (loading) {
+
+      return <Loading />;
+
+    } else if (state.mode === "waiting") {
 
         return (
           <div>
-            <PlayerCurrentGame title={state.game.title}/>
-            <Leaderboard contestants={state.contestants}
+            <PlayerCurrentGame title={game ? game.title : ``}/>
+            <Leaderboard contestants={people}
             />
           </div>
         );
 
-      case 'question':
+    } else if (state.mode === "question") {
+
           return (
             <div>
-              <ContestantQuestion />
+              <ContestantQuestion question={state.question} buzzDisabled={state.buzzDisabled} />
             </div>
           );
 
-      default:
-          return (<div>Something went wrong, bad value for Mode</div>);
-      }
+    }
 
 }
 
