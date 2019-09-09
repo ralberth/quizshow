@@ -52,7 +52,7 @@ class AppSyncClient {
         try {
             const result = await appSyncConnection.mutate({ mutation: gql, variables: args });
             const obj = getObjFromResponse(result);
-            console.debug(`Mutation "${oneLineQueryStr(gql)}" with vars ${args} completed`);
+            console.debug(`Mutation "${oneLineQueryStr(gql)}" with vars ${JSON.stringify(args)} completed`);
             if (callback)
                 return callback(obj);
             return obj;
@@ -61,7 +61,7 @@ class AppSyncClient {
         }
     }
 
-    subscribe = (gql, args, callback) => {
+    subscribe = (gql, args={}, callback) => {
         try {
             const query = oneLineQueryStr(gql);
             console.debug(`Subscribing to "${query}" with args ${args}`);
@@ -93,7 +93,7 @@ class AppSyncClient {
         this.query(GET_GAME_BY_ID_GQL, { id: gameId },  callback)
 
     updateQuestionState = (question, newState, callback) => {
-        const args = { catgId: question.catgId, quesId: question.quesId, newState: newState };
+        const args = { catgId: question.catgId, quesId: question.quesId, state: newState };
         this.mutate(UPDATE_QUES_STATE_GQL, args,  callback);
     }
 

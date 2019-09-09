@@ -3,6 +3,7 @@ import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import * as localForage from "localforage";
 import awsconfig from "../config/config";
 
+// eslint-disable-next-line no-undef
 require('@aws-amplify/pubsub')  // MUST be here or pubsub doesn't work.
 
 

@@ -40,12 +40,39 @@
     "@typescript-eslint/eslint-plugin": "^2.1.0",
     "@typescript-eslint/parser": "^2.1.0",
     "@typescript-eslint/typescript-estree": "^2.1.0",
+    "eslint": "6.3.0",
+    "eslint-plugin-react": "7.14.3",
+    "eslint-plugin-react-hooks": "^2.0.1",
+    "babel-eslint": "10.0.3",
     "apollo-link-http": "^1.5.16",
     "graphql": "^14.5.4",
     "prettier": "^1.18.2"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "parser": "babel-eslint",
+    "plugins": [
+      "react",
+      "react-hooks"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "rules": {
+      "react/prop-types": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "no-console": "off"
+    },
+    "env": {
+      "es6": true,
+      "browser": true
+    },
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    }
   },
   "license": "MIT",
   "scripts": {

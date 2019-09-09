@@ -5,7 +5,9 @@ import PlayerCurrentGame from './PlayerCurrentGame';
 import ContestantQuestion from './ContestantQuestion';
 import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
 import { GET_GAME_BY_ID_GQL, SUB_QUESTION_STATE_CHANGE_GQL } from "../graphql/graphqlQueries";
+// import useQuestionUpdate from './useQuestionUpdate';
 import appSyncClient from '../graphql/AppSyncClient';
+import ContestantRenderMode from './ContestantRenderMode';
 
 const people = [
   {
@@ -28,32 +30,56 @@ const people = [
   }
 ];
 
-const PlayGame = ({ match: { params: { gameId } }}) => {
+const getContestantRenderMode = quesState => {
+  switch (quesState) {
+    case 'open':
+      return ContestantRenderMode.buzzerEnabled;
+    case 'ready':
+      return ContestantRenderMode.waiting;
+    case 'display':
+      return ContestantRenderMode.buzzerDisabled;
+    case 'closed':
+      return ContestantRenderMode.waiting;
+    default:
+      throw new Error('Unknown Question State:', quesState);
+  }
+}
 
+const isNewQuestionId = (state, quesId) => {
+  return state.question && state.question.quesId && quesId !== state.question.quesId;
+}
+
+const isStateQuestionNull = (state, quesId) => {
+  return quesId && !state.question;
+}
+
+const isSameQuestionId = (state, quesId) => {
+  return quesId === state.question.quesId;
+}
+
+const isNewRenderMode = (state, quesState) => {
+  return getContestantRenderMode(quesState) !== state.mode;
+}
+
+const PlayGame = ({ match: { params: { gameId } }}) => {
     const [state, setState] = useState({
         question: null,
-        mode: "waiting",
-        buzzDisabled: true,
+        mode: ContestantRenderMode.waiting,
     });
-
     const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: gameId });
+    const { quesId=null, state: quesState=null } = useAppSyncSubs(SUB_QUESTION_STATE_CHANGE_GQL);
 
-    const quesStateChange = useAppSyncSubs(SUB_QUESTION_STATE_CHANGE_GQL);
-
-    console.debug('quesStateChange', quesStateChange)
-
-    if (quesStateChange) {
-        // Why do we only get quesId back ?!?!
-        const { quesId } = quesStateChange;
-
-        // Go and get the current question until we figure out why we can't get
-        // back what we want.
-        appSyncClient.getQuestionByQuesId(quesId, (ques) => {
-          setState({
-            question: ques,
-            mode: "question",
-            buzzDisabled: ques.state !== 'open'
-          });
+    if (isStateQuestionNull(state, quesId) || isNewQuestionId(state, quesId)) {
+      appSyncClient.getQuestionByQuesId(quesId, (ques) => {
+        setState({
+          question: ques,
+          mode: getContestantRenderMode(ques.state)
+        });
+      })
+    } else if (quesState && isSameQuestionId(state, quesId) && isNewRenderMode(state, quesState)) {
+        setState({
+          ...state,
+          mode: getContestantRenderMode(quesState)
         });
     }
 
@@ -61,7 +87,7 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
 
       return <Loading />;
 
-    } else if (state.mode === "waiting") {
+    } else if (state.mode === ContestantRenderMode.waiting) {
 
         return (
           <div>
@@ -71,11 +97,11 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
           </div>
         );
 
-    } else if (state.mode === "question") {
+    } else if (state.mode !== ContestantRenderMode.waiting) {
 
           return (
             <div>
-              <ContestantQuestion question={state.question} buzzDisabled={state.buzzDisabled} />
+              <ContestantQuestion {...state} />
             </div>
           );
 

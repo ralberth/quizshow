@@ -4,10 +4,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Fab from '@material-ui/core/Fab';
+import ContestantRenderMode from './ContestantRenderMode';
 
-const question = `Physical device that backs-up on-prem disks to the cloud`;
-
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles(() => {
   return {
     question: {
       fontWeight: `bold`,
@@ -44,8 +43,9 @@ const Buzzer = withStyles({
   }
 })(Fab);
 
-const ContestantQuestion = () => {
+const ContestantQuestion = ({ question: { question }, mode }) => {
   const classes = useStyles();
+  const buzzerDisabled = mode !== ContestantRenderMode.buzzerEnabled;
 
   return (
     <div>
@@ -68,7 +68,7 @@ const ContestantQuestion = () => {
           <Grid className={classes.bottomGrid} >
             <Grid container justify="center" alignItems="center" >
 
-              <Buzzer aria-label="add" disabled={true} >
+              <Buzzer aria-label="add" disabled={buzzerDisabled} >
                 BUZZ
               </Buzzer>
 

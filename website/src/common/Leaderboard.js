@@ -67,6 +67,8 @@ const Leaderboard = ({ contestants }) => {
   if (!contestants)
     return null;
 
+  const sortedContestants = contestants.sort((a, b) => b.points - a.points);
+
   return (
     <List
       component="nav"
@@ -83,7 +85,7 @@ const Leaderboard = ({ contestants }) => {
       className={classes.root}
     >
       {
-        contestants.map(person =>
+        sortedContestants.map(person =>
           [
             <Divider key={`${person}-divider`} component="li" />,
             <PlayerCard key={`${person}-card`} player={person} />

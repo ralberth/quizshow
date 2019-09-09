@@ -42,15 +42,21 @@ export const SUB_QUESTION_STATE_CHANGE_GQL = gql`
 export const GET_QUES_GQL = gql`
     query Query($quesId: Int!) {
         getQuestionByQuesId(quesId: $quesId) {
+            catgId
+            quesId
+            points
+            question
+            answer
             state
         }
     }
 `;
 
 export const UPDATE_QUES_STATE_GQL = gql`
-    mutation mod($catgId: Int!, $quesId: Int!, $newState: StateEnum!) {
-        setQuestionState(catgId: $catgId, quesId: $quesId, state: $newState) {
+    mutation mod($catgId: Int!, $quesId: Int!, $state: StateEnum!) {
+        setQuestionState(catgId: $catgId, quesId: $quesId, state: $state) {
             quesId
+            state
         }
     }
 `;
