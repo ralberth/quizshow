@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Grid from '@material-ui/core/Grid';
 import Leaderboard from '../common/Leaderboard';
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
@@ -90,19 +91,19 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
     } else if (state.mode === ContestantRenderMode.waiting) {
 
         return (
-          <div>
+          <Grid container direction="column" justify="center" alignItems="center" >
             <PlayerCurrentGame title={game ? game.title : ``}/>
             <Leaderboard contestants={people}
             />
-          </div>
+          </Grid>
         );
 
     } else if (state.mode !== ContestantRenderMode.waiting) {
 
           return (
-            <div>
+            <Grid container >
               <ContestantQuestion {...state} />
-            </div>
+            </Grid>
           );
 
     }

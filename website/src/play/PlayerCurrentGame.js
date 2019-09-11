@@ -10,14 +10,14 @@ const useStyles = makeStyles(theme => {
     subtitle: {
       color: grey[700],
       fontWeight: `bold`,
-      margin: `2rem 2rem 0 2rem`,
-      textAlign: `left`,
+      margin: `2rem 0 0 0`,
+      textAlign: `center`,
     },
     title: {
       color: theme.palette.primary.main,
       fontWeight: `bold`,
-      margin: `0 0 2rem 2rem`,
-      textAlign: `left`,
+      margin: `0 0 2rem 0`,
+      textAlign: `center`,
     }
   };
 });
