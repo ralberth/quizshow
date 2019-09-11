@@ -12,6 +12,7 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     maxWidth: 400,
     margin: theme.spacing(1),
+    cursor: `pointer`,
   },
   fab: {
     margin: theme.spacing(2),
@@ -27,13 +28,13 @@ const PaperGame = ({ gameId, title, playCallback }) => {
   const classes = useStyles();
 
   const playClicked = () => {
-    if (!!gameId) {
+    if (gameId) {
       playCallback(gameId);
     }
   }
 
   return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} onClick={playClicked} >
         <Grid container direction="row" justify="center" alignItems="center">
           <Grid item xs>
             <Typography variant="h6" className={classes.gameName}>
