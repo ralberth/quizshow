@@ -2,13 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     div: {
-        padding: 28
+      paddingBottom: `8px`,
+      paddingTop: `48px`,
     },
     heading: {
-      fontSize: "medium",
-      fontWeight: "bold"
+      fontWeight: "500"
     },
     button: {
         fontSize: "large"
@@ -20,8 +20,9 @@ const HeroText = ({ title, subtitle }) => {
     return (
         <div className={classes.div}>
             <Typography
+                className={classes.heading}
                 component="h1"
-                variant="h2"
+                variant="h3"
                 align="center"
                 color="textPrimary"
                 gutterBottom

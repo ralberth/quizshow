@@ -8,7 +8,7 @@ import HeroText from "../common/HeroText";
 const useStyles = makeStyles(theme => ({
   root: {
     margin: `auto`,
-  }
+  },
 }));
 
 const Homepage = (props) => {
@@ -21,14 +21,14 @@ const Homepage = (props) => {
     // const doHost   = () => setRedirectUrl("/host");
     const doEmcee  = () => setRedirectUrl("/emcee");
 
-    if (!!redirectUrl)
+    if (redirectUrl)
         return (<Redirect to={redirectUrl} />);
     else {
         return (
             <Grid container className={classes.root} justify="center" alignItems="center" >
                 <HeroText
-                    title="Quiz Show"
-                    subtitle="Lorem Ipsum dolor sic amet" />
+                    title="Quiz Show" />
+                    {/* subtitle="Lorem Ipsum dolor sic amet" /> */}
 
                 <Grid container justify="center" >
                     <HomepageCard

@@ -24,8 +24,6 @@ export const useAppSyncQuery = (query, variables) => {
     return result;
 };
 
-
-// TODO: this re-subscribes every render.  Find out how to get true componentDidMount() behavior
 export const useAppSyncSubs = (initialQuery, initialVars) => {
     const [query] = useState(initialQuery)
     const [vars] = useState(initialVars)
