@@ -8,7 +8,9 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(theme => ({
     button: {
         margin: theme.spacing(1),
-        padding: theme.spacing(1,3)
+        padding: theme.spacing(1,3),
+        minWidth: `14rem`,
+        minHeight: `4rem`,
     },
     iconLeft: {
         marginRight: theme.spacing(1)

@@ -13,7 +13,7 @@ import { GET_GAME_BY_ID_GQL } from "../graphql/graphqlQueries";
 class ScreenMode extends Enum {}
 ScreenMode.initEnum([ "choose", "question", "answer" ]);
 
-const EmceeGame = ({ match: { params: { gameId } }, title }) => {
+const EmceeGame = ({ match: { params: { gameId } } }) => {
     const [ vars, setVars ] = useState({
         screenMode: ScreenMode.choose,
         question: null
@@ -42,7 +42,7 @@ const EmceeGame = ({ match: { params: { gameId } }, title }) => {
       case ScreenMode.choose:
           return (
               <Grid container direction="column" justify="center" alignItems="center">
-                  <HeroText title={title} />
+                  <HeroText title={`Categories`} />
                   <QuestionControlPanel
                       game={game}
                       onClick={showQues} />

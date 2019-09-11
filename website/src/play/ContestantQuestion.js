@@ -48,7 +48,6 @@ const ContestantQuestion = ({ question: { question }, mode }) => {
   const buzzerDisabled = mode !== ContestantRenderMode.buzzerEnabled;
 
   return (
-    <div>
       <Box height="calc(100% - 64px)" >
 
         <Grid container direction="column" >
@@ -78,7 +77,6 @@ const ContestantQuestion = ({ question: { question }, mode }) => {
         </Grid>
 
       </Box>
-    </div>
   )
 }
 

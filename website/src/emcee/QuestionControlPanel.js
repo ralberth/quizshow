@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(2),
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -73,7 +73,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
                         <Grid
                             container
                             direction="row"
-                            justify="flex-start"
+                            justify="center"
                             alignItems="flex-start"
                         >
                             {catg.questions.map(ques => (
