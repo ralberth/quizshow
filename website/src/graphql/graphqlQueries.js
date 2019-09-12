@@ -119,17 +119,22 @@ export const SUB_REMOVE_NOMINEE_GQL = gql`
     }
 `;
 
-export const SET_CONTESTANT_SCORE_GQL = gql`
-    mutation mod($gameId: Int!, $login: String!, $newScore: Int) {
-        setContestantScore(gameId: $gameId, login: $login, newScore: $newScore) {
+export const ADD_CONTESTANT_SCORE_GQL = gql`
+    mutation mod($gameId: Int!, $login: String!, $increment: Int!) {
+        addContestantScore(gameId: $gameId, login: $login, increment: $increment) {
+            gameId
+            login
+            name
+            organization
             score
         }
     }
 `;
 
-export const SUB_SET_CONTESTANT_SCORE_GQL = gql`
+export const SUB_ADD_CONTESTANT_SCORE_GQL = gql`
     subscription sub($gameId: Int!) {
-        setContestantScore(gameId: $gameId) {
+        addContestantScore(gameId: $gameId) {
+            gameId
             login
             name
             organization

@@ -37,12 +37,12 @@ const Homepage = (props) => {
                         buttonText="Join"
                         onClick={doJoin}
                     />
-                    <HomepageCard
+                    {/* <HomepageCard
                         title="Create"
                         description="Create a new Quiz Show and let people connect to play."
                         buttonText="Create"
                         onClick={doCreate}
-                    />
+                    /> */}
                     {/* <HomepageCard
                         title="Admin"
                         description="Reconnect, manage, and close Quiz Shows that you emcee."

@@ -14,7 +14,7 @@ const ANSWER_STYLE = {
 
 class AnswerDisplay extends React.Component {
 
-  // quesId, answer, onCancel, onAbort
+  // gameId, question, onCancel, onAbort
 
     state = {
       nominees: [] // kept sorted
@@ -42,15 +42,16 @@ class AnswerDisplay extends React.Component {
 
     handleCorrect = () => {
         const login = this.state.nominees[0].login;
-        appSyncClient.removeNominee(this.props.quesId, login,
+        appSyncClient.removeNominee(this.props.question.quesId, login,
             () => this.removeLoginFromNominees(login));
-        //appSyncClient.setContestantScore
+        appSyncClient.addContestantScore(this.props.gameId, login, this.props.question.points,
+          (me) => console.debug(`Added ${this.props.question.points} to ${login}.  Score is ${me.score}`));
         this.props.onAbort();
     }
 
     handleWrong = () => {
       const login = this.state.nominees[0].login;
-        appSyncClient.removeNominee(this.props.quesId, login,
+        appSyncClient.removeNominee(this.props.question.quesId, login,
             () => this.removeLoginFromNominees(login));
     }
 
@@ -60,7 +61,7 @@ class AnswerDisplay extends React.Component {
 
               <Grid item>
                 <Typography style={ANSWER_STYLE} variant="h5" >
-                  { `A: ${this.props.answer}` }
+                  { `A: ${this.props.question.answer}` }
                 </Typography>
               </Grid>
 

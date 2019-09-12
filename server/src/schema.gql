@@ -60,7 +60,7 @@ type Mutation {
     joinGame(gameId: Int!): Contestant! @aws_cognito_user_pools @aws_api_key
     nominateContestant(quesId: Int!, login: String!, name: String!, organization: String!): Nominee! @aws_cognito_user_pools @aws_api_key
     removeNominee(quesId: Int!, login: String!): Nominee!
-    setContestantScore(gameId: Int!, login: String!, newScore: Int!): Contestant!
+    addContestantScore(gameId: Int!, login: String!, increment: Int!): Contestant!
 }
 
 type Subscription {
@@ -70,7 +70,7 @@ type Subscription {
         @aws_subscribe(mutations: [ "nominateContestant" ])
     removeNominee: Nominee
         @aws_subscribe(mutations: [ "removeNominee" ])
-    setContestantScore: Contestant
+    addContestantScore: Contestant
         @aws_subscribe(mutations: [ "setContestantScore" ])
 }
 

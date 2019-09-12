@@ -59,8 +59,8 @@ const EmceeGame = ({ match: { params: { gameId } } }) => {
     case ScreenMode.answer:
         return (
             <AnswerDisplay
-                quesId={vars.question.quesId}
-                answer={vars.question ? vars.question.answer : "?"}
+                gameId={gameId}
+                question={vars.question}
                 onCancel={cancelAns}
                 onAbort={abortQues} />
         );

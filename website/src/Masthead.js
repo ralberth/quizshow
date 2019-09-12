@@ -78,10 +78,10 @@ const Masthead = (props) => {
                     {/* <MenuItem onClick={() => setNav("/admin")}>Admin your quiz shows</MenuItem> */}
                     <MenuItem onClick={() => setNav("/emcee")}>Emcee a quiz show you own</MenuItem>
                     <MenuItem onClick={() => setNav("/host")}>Host a quiz show</MenuItem>
-                    <MenuItem>Logout</MenuItem>
+                    {/* <MenuItem>Logout</MenuItem>
                     <MenuItem onClick={() => setNav("https://github.com/ralberth/quizshow")}>
                         Quiz Show on Github.com
-                    </MenuItem>
+                    </MenuItem> */}
                 </Menu>
             </div>
         );

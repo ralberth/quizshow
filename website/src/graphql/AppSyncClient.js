@@ -4,7 +4,7 @@ import {
     SUB_QUES_UPDATES_GQL, ALL_GAMES_GQL, GET_GAME_BY_ID_GQL, UPDATE_QUES_STATE_GQL,
     GET_QUES_GQL, JOIN_GAME_GQL, NOMINATE_CONTESTANT_GQL,
     SUB_NOMINATE_CONTESTANT_GQL, REMOVE_NOMINEE_GQL, SUB_REMOVE_NOMINEE_GQL,
-    SET_CONTESTANT_SCORE_GQL, SUB_SET_CONTESTANT_SCORE_GQL
+    ADD_CONTESTANT_SCORE_GQL, SUB_ADD_CONTESTANT_SCORE_GQL
 } from './graphqlQueries';
 import { print as gqlToString } from 'graphql/language';
 
@@ -120,13 +120,13 @@ class AppSyncClient {
     subRemoveNominee = (callback) =>
         this.subscribe(SUB_REMOVE_NOMINEE_GQL, {},  callback);
 
-    setContestantScore = (gameId, login, newScore, callback) => {
-        const args = { gameId: gameId, login: login, newScore: newScore };
-        this.mutate(SET_CONTESTANT_SCORE_GQL, args,  callback);
+    addContestantScore = (gameId, login, increment, callback) => {
+        const args = { gameId: gameId, login: login, increment: increment };
+        this.mutate(ADD_CONTESTANT_SCORE_GQL, args,  callback);
     }
 
-    subSetContestantScore = (gameId, callback) =>
-        this.subscribe(SUB_SET_CONTESTANT_SCORE_GQL, { gameId: gameId },  callback);
+    subAddContestantScore = (gameId, callback) =>
+        this.subscribe(SUB_ADD_CONTESTANT_SCORE_GQL, { gameId: gameId },  callback);
 }
 
 export default new AppSyncClient();
