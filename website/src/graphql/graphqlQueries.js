@@ -69,14 +69,22 @@ export const JOIN_GAME_GQL = gql`
     mutation mod($gameId: Int!) {
         joinGame(gameId: $gameId) {
             gameId
+            login
+            name
+            organization
+            score
         }
     }
 `;
 
 export const NOMINATE_CONTESTANT_GQL = gql`
-    mutation mod($quesId: Int!, $login: String!) {
-        nominateContestant(quesId: $quesId, login: $login) {
+    mutation mod($quesId: Int!, $login: String!, $name: String!, $organization: String!) {
+        nominateContestant(quesId: $quesId, login: $login, name: $name, organization: $organization) {
+            quesId
             login
+            name
+            organization
+            timebuzzed
         }
     }
 `;

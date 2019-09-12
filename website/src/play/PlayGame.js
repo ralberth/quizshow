@@ -1,113 +1,78 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Leaderboard from '../common/Leaderboard';
 import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
 import ContestantQuestion from './ContestantQuestion';
-import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
-import { GET_GAME_BY_ID_GQL, SUB_QUES_UPDATES_GQL } from "../graphql/graphqlQueries";
-// import useQuestionUpdate from './useQuestionUpdate';
 import appSyncClient from '../graphql/AppSyncClient';
-import ContestantRenderMode from './ContestantRenderMode';
 
-const people = [
-  {
-      name: 'Rich',
-      login: 'ralberth',
-      organization: 'Amazon',
-      points: 500
-  },
-  {
-      name: 'Chris',
-      login: 'csmith',
-      organization: 'Foobar',
-      points: 3250
-  },
-  {
-      name: 'Sue',
-      login: 'suesue',
-      organization: 'Barbaz',
-      points: 35856
-  }
-];
+class PlayGame extends React.Component {
 
-const getContestantRenderMode = quesState => {
-  switch (quesState) {
-    case 'open':
-      return ContestantRenderMode.buzzerEnabled;
-    case 'ready':
-      return ContestantRenderMode.waiting;
-    case 'display':
-      return ContestantRenderMode.buzzerDisabled;
-    case 'closed':
-      return ContestantRenderMode.waiting;
-    default:
-      throw new Error('Unknown Question State:', quesState);
-  }
-}
-
-const isNewQuestionId = (state, quesId) => {
-  return state.question && state.question.quesId && quesId !== state.question.quesId;
-}
-
-const isStateQuestionNull = (state, quesId) => {
-  return quesId && !state.question;
-}
-
-const isSameQuestionId = (state, quesId) => {
-  return quesId === state.question.quesId;
-}
-
-const isNewRenderMode = (state, quesState) => {
-  return getContestantRenderMode(quesState) !== state.mode;
-}
-
-const PlayGame = ({ match: { params: { gameId } }}) => {
-    const [state, setState] = useState({
-        question: null,
-        mode: ContestantRenderMode.waiting,
-    });
-    const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: gameId });
-    const { quesId=null, state: quesState=null } = useAppSyncSubs(SUB_QUES_UPDATES_GQL);
-
-    if (isStateQuestionNull(state, quesId) || isNewQuestionId(state, quesId)) {
-      appSyncClient.getQuestionByQuesId(quesId, (ques) => {
-        setState({
-          question: ques,
-          mode: getContestantRenderMode(ques.state)
-        });
-      })
-    } else if (quesState && isSameQuestionId(state, quesId) && isNewRenderMode(state, quesState)) {
-        setState({
-          ...state,
-          mode: getContestantRenderMode(quesState)
-        });
+    constructor(props) {
+        super(props);
+        this.gameId = parseInt(props.match.params.gameId, 10);
     }
 
-    if (loading) {
+    state = {
+        me: null, // contestant record
+        game: null,
+        question: null,
+        buzzerDisabled: true
+    }
 
-      return <Loading />;
+    handleQuestionStateChange = (ques) => {
+        console.debug("Question change: ", ques);
+        if (ques.state === "ready" || ques.state === "closed")
+          this.setState({ question: null, buzzerDisabled: true });
+        if (ques.state === "display")
+          this.setState({ question: ques, buzzerDisabled: true });
+        if (ques.state === "open")
+          this.setState({ buzzerDisabled: false });
+    }
 
-    } else if (state.mode === ContestantRenderMode.waiting) {
+    componentDidMount = () => {
+        appSyncClient.joinGame(this.gameId, me => this.setState({ me: me }));
+        appSyncClient.getGameById(this.gameId, game => this.setState({ game: game }));
+        this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
+    }
 
-        return (
-          <Grid container direction="column" justify="center" alignItems="center" >
-            <PlayerCurrentGame title={game ? game.title : ``}/>
-            <Leaderboard contestants={people}
-            />
-          </Grid>
-        );
+    componentWillUnmount = () => {
+        this.quesSub.unsubscribe();
+    }
 
-    } else if (state.mode !== ContestantRenderMode.waiting) {
+    handleBuzzButton = () => {
+        appSyncClient.nominateContestant(
+            this.state.question.quesId,
+            this.state.me.login,
+            this.state.me.name,
+            this.state.me.organization,
+            () => {});
+        this.setState({ buzzerDisabled: true });
+    }
 
+    render() {
+      if (!this.state.game || !this.state.me)
+          return <Loading />;
+
+      if (!this.state.question)
           return (
-            <Grid container >
-              <ContestantQuestion {...state} />
-            </Grid>
+              <Grid container direction="column" justify="center" alignItems="center" >
+                  <PlayerCurrentGame title={this.state.game.title} />
+                  {/* <Leaderboard people={people}
+                  /> */}
+              </Grid>
           );
 
+      return (
+          <Grid container>
+              <ContestantQuestion
+                question={this.state.question.question}
+                buzzerDisabled={this.state.buzzerDisabled}
+                onBuzz={this.handleBuzzButton}
+              />
+          </Grid>
+      );
     }
-
 }
 
 export default PlayGame;

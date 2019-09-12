@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Fab from '@material-ui/core/Fab';
-import ContestantRenderMode from './ContestantRenderMode';
 
 const useStyles = makeStyles(() => {
   return {
@@ -43,9 +42,8 @@ const Buzzer = withStyles({
   }
 })(Fab);
 
-const ContestantQuestion = ({ question: { question }, mode }) => {
+const ContestantQuestion = ({ question, buzzerDisabled, onBuzz }) => {
   const classes = useStyles();
-  const buzzerDisabled = mode !== ContestantRenderMode.buzzerEnabled;
 
   return (
       <Box height="calc(100% - 64px)" >
@@ -67,7 +65,11 @@ const ContestantQuestion = ({ question: { question }, mode }) => {
           <Grid className={classes.bottomGrid} >
             <Grid container justify="center" alignItems="center" >
 
-              <Buzzer aria-label="add" disabled={buzzerDisabled} >
+              <Buzzer
+                aria-label="add"
+                disabled={buzzerDisabled}
+                onClick={onBuzz}
+              >
                 BUZZ
               </Buzzer>
 

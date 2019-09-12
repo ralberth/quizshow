@@ -106,8 +106,10 @@ class AppSyncClient {
     joinGame = (gameId, callback) =>
         this.mutate(JOIN_GAME_GQL, { gameId: gameId },  callback);
 
-    nominateContestant = (quesId, login, callback) =>
-        this.mutate(NOMINATE_CONTESTANT_GQL, { quesId: quesId, login: login },  callback);
+    nominateContestant = (quesId, login, name, org, callback) => {
+        const args = { quesId: quesId, login: login, name: name, organization: org };
+        this.mutate(NOMINATE_CONTESTANT_GQL, args,  callback);
+    }
 
     subNominateContestant = (callback) =>
         this.subscribe(SUB_NOMINATE_CONTESTANT_GQL, {}, callback);
