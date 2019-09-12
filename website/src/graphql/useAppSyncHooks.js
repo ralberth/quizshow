@@ -28,7 +28,7 @@ export const useAppSyncSubs = (initialQuery, initialVars) => {
     const [query] = useState(initialQuery)
     const [vars] = useState(initialVars)
     const [subscription, setSubscription] = useState(initialVars)
-    const [notification, setNotification] = useState({});
+    const [notification, setNotification] = useState(null);
 
     const unsubscribe = useCallback(() => {
       if (!_.isUndefined(subscription)) {

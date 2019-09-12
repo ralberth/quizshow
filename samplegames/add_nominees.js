@@ -10,14 +10,20 @@ const GET_CONTESTANTS_GQL = `
     query listContestants {
         listContestants {
             login
+            name
+            organization
         }
     }
 `;
 
 const MOD_GQL = `
-    mutation nominateContestant($quesId: Int!, $login: String!) {
-        nominateContestant(quesId: $quesId, login: $login) {
+    mutation nominateContestant($quesId: Int!, $login: String!, $name: String!, $organization: String!) {
+        nominateContestant(quesId: $quesId, login: $login, name: $name, organization: $organization) {
+            quesId
             login
+            name
+            organization
+            timebuzzed
         }
     }
 `;
@@ -36,9 +42,9 @@ const callAppSync = (query, args, opName, callback) => {
     });
 
     const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
-        result.on('data', (data) => {
-            // console.log(JSON.parse(data.toString()));
-            callback(JSON.parse(data.toString()).data[opName]);
+        result.on('data', (body) => {
+            const bodyObj = JSON.parse(body.toString());
+            callback(bodyObj.data[opName]);
         });
     });
     httpRequest.write(req.body);
@@ -50,7 +56,13 @@ callAppSync(GET_CONTESTANTS_GQL, {}, "listContestants", (contestants) => {
     for(var count = 0; count < numToNominate; count++) {
         const i = Math.floor(Math.random() * contestants.length);
         const person = contestants.splice(i, 1)[0]; // remove 1 element at index i
-        callAppSync(MOD_GQL, { quesId: process.argv[2], login: person.login }, 'nominateContestant',
-            () => { });
+        // console.log("Person:", person);
+        const args = {
+            quesId: process.argv[2],
+            login: person.login,
+            name: person.name,
+            organization: person.organization
+        };
+        callAppSync(MOD_GQL, args, 'nominateContestant', () => { });
     }
 });

@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { Enum } from 'enumify';
+import React, { useState } from 'react';
 import HeroText from "../common/HeroText";
+import Loading from '../common/Loading';
+import appSyncClient from '../graphql/AppSyncClient';
+import { GET_GAME_BY_ID_GQL } from "../graphql/graphqlQueries";
+import { useAppSyncQuery } from "../graphql/useAppSyncHooks";
+import AnswerDisplay from './AnswerDisplay';
 import QuestionControlPanel from './QuestionControlPanel';
 import QuestionDisplay from './QuestionDisplay';
-import AnswerDisplay from './AnswerDisplay';
-import appSyncClient from '../graphql/AppSyncClient';
-import Loading from '../common/Loading';
-import { Enum } from 'enumify';
-import { useAppSyncQuery } from "../graphql/useAppSyncHooks";
-import { GET_GAME_BY_ID_GQL } from "../graphql/graphqlQueries";
 
 class ScreenMode extends Enum {}
 ScreenMode.initEnum([ "choose", "question", "answer" ]);
@@ -39,32 +39,33 @@ const EmceeGame = ({ match: { params: { gameId } } }) => {
         return <Loading />;
 
     switch(vars.screenMode) {
-      case ScreenMode.choose:
-          return (
-              <Grid container direction="column" justify="center" alignItems="center">
-                  <HeroText title={`Categories`} />
-                  <QuestionControlPanel
-                      game={game}
-                      onClick={showQues} />
-              </Grid>
-          );
-      case ScreenMode.question:
-          return (
-              <QuestionDisplay
-                  text={vars.question ? vars.question.question : "?"}
-                  onCancel={cancelQues}
-                  onAbort={abortQues}
-                  onNext={openQues} />
-          );
-      case ScreenMode.answer:
-          return (
-              <AnswerDisplay
-                  text={vars.question ? vars.question.answer : "?"}
-                  onCancel={cancelAns}
-                  onAbort={abortQues} />
-          );
-      default:
-          return (<div>Something went wrong, bad value for Mode</div>);
+    case ScreenMode.choose:
+        return (
+            <Grid container direction="column" justify="center" alignItems="center">
+                <HeroText title={`Categories`} />
+                <QuestionControlPanel
+                    game={game}
+                    onClick={showQues} />
+            </Grid>
+        );
+    case ScreenMode.question:
+        return (
+            <QuestionDisplay
+                text={vars.question ? vars.question.question : "?"}
+                onCancel={cancelQues}
+                onAbort={abortQues}
+                onNext={openQues} />
+        );
+    case ScreenMode.answer:
+        return (
+            <AnswerDisplay
+                quesId={vars.question.quesId}
+                answer={vars.question ? vars.question.answer : "?"}
+                onCancel={cancelAns}
+                onAbort={abortQues} />
+        );
+    default:
+        return (<div>Something went wrong, bad value for Mode</div>);
     }
 }
 

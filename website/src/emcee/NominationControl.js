@@ -30,30 +30,7 @@ const NominationControl = () => {
             spacing={4}
         >
             <Grid item xs={12} sm={4}>
-                <Grid
-                    container
-                    direction="row"
-                    spacing={8}
-                >
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            fullWidth={true}
-                        >
-                            Correct
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            fullWidth={true}
-                        >
-                            Wrong
-                        </Button>
-                    </Grid>
-                </Grid>
+
             </Grid>
             <Grid item xs={12} sm={8}>
                 <Grid container direction="column" spacing={2}>

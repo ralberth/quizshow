@@ -6,8 +6,8 @@ import { CancelButton, AbortButton, NextButton } from '../common/StandardButtons
 
 const useStyles = makeStyles(() => {
   return {
-    girdItem: {
-      margin: `10px 0`,
+    gridItem: {
+      margin: `8px 0`,
     },
   };
 });
@@ -16,23 +16,18 @@ const CancelAbortNextPanel = ({ onCancel, onAbort, onNext }) => {
   const classes = useStyles();
 
   return (
-      <Grid
-          container
-          direction="column"
-          justify="space-between"
-          alignItems="center"
-      >
-          <Grid item className={classes.girdItem} >
+      <Grid container justify="space-around" alignItems="center">
+          <Grid item sm={4} xs={12} className={classes.gridItem} >
               <Box visibility={onCancel ? "visible" : "hidden"}>
                   <CancelButton onCancel={onCancel} />
               </Box>
           </Grid>
-          <Grid item className={classes.girdItem} >
+          <Grid item sm={4} xs={12} className={classes.gridItem} >
               <Box visibility={onAbort ? "visible" : "hidden"}>
                   <AbortButton onAbort={onAbort} />
               </Box>
           </Grid>
-          <Grid item className={classes.girdItem} >
+          <Grid item sm={4} xs={12} className={classes.gridItem} >
               <Box visibility={onNext ? "visible" : "hidden"}>
                   <NextButton onNext={onNext} />
               </Box>

@@ -5,7 +5,7 @@ import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
 import ContestantQuestion from './ContestantQuestion';
 import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
-import { GET_GAME_BY_ID_GQL, SUB_QUESTION_STATE_CHANGE_GQL } from "../graphql/graphqlQueries";
+import { GET_GAME_BY_ID_GQL, SUB_QUES_UPDATES_GQL } from "../graphql/graphqlQueries";
 // import useQuestionUpdate from './useQuestionUpdate';
 import appSyncClient from '../graphql/AppSyncClient';
 import ContestantRenderMode from './ContestantRenderMode';
@@ -68,7 +68,7 @@ const PlayGame = ({ match: { params: { gameId } }}) => {
         mode: ContestantRenderMode.waiting,
     });
     const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: gameId });
-    const { quesId=null, state: quesState=null } = useAppSyncSubs(SUB_QUESTION_STATE_CHANGE_GQL);
+    const { quesId=null, state: quesState=null } = useAppSyncSubs(SUB_QUES_UPDATES_GQL);
 
     if (isStateQuestionNull(state, quesId) || isNewQuestionId(state, quesId)) {
       appSyncClient.getQuestionByQuesId(quesId, (ques) => {

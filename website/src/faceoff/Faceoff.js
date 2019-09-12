@@ -7,23 +7,23 @@ import QuestionBox from './QuestionBox';
 import { makeStyles } from '@material-ui/core/styles';
 import Leaderboard from '../common/Leaderboard';
 
-const people = [
-    {
-        name: 'Rich',
-        login: 'ralberth',
-        organization: 'Amazon'
-    },
-    {
-        name: 'Chris',
-        login: 'csmith',
-        organization: 'Foobar'
-    },
-    {
-        name: 'Sue',
-        login: 'suesue',
-        organization: 'Barbaz'
-    }
-];
+// const people = [
+//     {
+//         name: 'Rich',
+//         login: 'ralberth',
+//         organization: 'Amazon'
+//     },
+//     {
+//         name: 'Chris',
+//         login: 'csmith',
+//         organization: 'Foobar'
+//     },
+//     {
+//         name: 'Sue',
+//         login: 'suesue',
+//         organization: 'Barbaz'
+//     }
+// ];
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const Faceoff = ({ question }) => {
+const Faceoff = ({ question, nominees }) => {
     const classes = useStyles();
 
     if (question && ['display', 'open'].includes(question.state)) {
@@ -51,13 +51,13 @@ const Faceoff = ({ question }) => {
                     >
                         <Grid item xs={8}>
                             <QuestionBox
-                                category="Catg"
+                                category=""
                                 points={question.points}
                                 question={question.question} />
                         </Grid>
                         <Grid item xs={4}>
                             <Paper>
-                                <Leaderboard contestants={people} />
+                                <Leaderboard people={nominees} />
                             </Paper>
                         </Grid>
                     </Grid>

@@ -7,10 +7,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ChooseGame from "./common/choosegame/ChooseGame";
-import CreateGame from "./CreateGame";
+// import CreateGame from "./CreateGame";
 import EmceeGame from "./emcee/EmceeGame";
 import FlashMessage from "./FlashMessage";
-import GameAdmin from "./GameAdmin";
+// import GameAdmin from "./GameAdmin";
 import { configureAmplify } from "./graphql/configureAppSync";
 import Homepage from './homepage/Homepage';
 import HostGame from "./hostgame/HostGame";
@@ -40,8 +40,8 @@ const IndexPage = () => {
         <Container id="Container" className={classes.container} >
             <Switch id="Switch">
                 <Route exact path="/"                     component={Homepage} />
-                <Route exact path="/create"               component={CreateGame} />
-                <Route exact path="/admin"                component={GameAdmin} />
+                {/* <Route exact path="/create"               component={CreateGame} /> */}
+                {/* <Route exact path="/admin"                component={GameAdmin} /> */}
                 <Route exact path="/host"                 component={ChooseGameToHost} />
                 <Route exact path="/host/:gameId"         component={HostGame} />
                 <Route exact path="/emcee"                component={ChooseGameToEmcee} />

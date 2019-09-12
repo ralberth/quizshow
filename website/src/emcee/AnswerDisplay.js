@@ -1,83 +1,111 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-// import Prompter from './Prompter';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelAbortNextPanel from './CancelAbortNextPanel';
-// import Leaderboard from '../common/Leaderboard';
+import CorrectWrongPanel from './CorrectWrongPanel';
+import Leaderboard from '../common/Leaderboard';
+import { SUB_NOMINATE_CONTESTANT_GQL } from '../graphql/graphqlQueries';
+import { useAppSyncSubs } from "../graphql/useAppSyncHooks";
+import appSyncClient from "../graphql/AppSyncClient";
 
-const useStyles = makeStyles(() => {
-  return {
-    answer: {
-      fontWeight: `bold`,
-      margin: `2rem`,
-      textAlign: `center`,
-    },
-    topGrid: {
-      position: `fixed`,
-      height: `33%`,
-      width: `100%`,
-      maxWidth: `1280px`,
-    },
-    middleGrid: {
-      position: `fixed`,
-      height: `55%`,
-      width: `100%`,
-      maxWidth: `1280px`,
-      bottom: 0,
-    },
-    // bottomGrid: {
-    //   position: `fixed`,
-    //   height: `33%`,
-    //   width: `100%`,
-    //   maxWidth: `1280px`,
-    //   bottom: `0`,
-    // },
-    answerGrid: {
-      maxWidth: `320px`,
+const ANSWER_STYLE = {
+    fontWeight: `bold`,
+    margin: `6rem`,
+    textAlign: `center`,
+};
+
+class AnswerDisplay extends React.Component {
+
+  // quesId, answer, onCancel, onAbort
+
+    state = {
+      nominees: [] // kept sorted
+    };
+
+    handleSubscribedNominee = (nominee) => {
+        console.debug("got new nominee: ", nominee);
+        this.state.nominees.push(nominee);
+        this.state.nominees.sort((a,b) => a.timebuzzed - b.timebuzzed);
+        this.forceUpdate();
     }
-  };
-});
 
-const AnswerDisplay = ({ text, people, onCancel, onAbort }) => {
-    const classes = useStyles();
+    componentDidMount = () => {
+        this.sub = appSyncClient.subNominateContestant(this.handleSubscribedNominee);
+    }
 
-    return (
-      <Box height="calc(100% - 64px)" >
-        <Grid container direction="column" >
+    componentWillUnmount = () => {
+      this.sub.unsubscribe();
+    }
 
-          <Grid container className={classes.topGrid} justify="center" alignItems="center" >
-            <Grid item className={classes.answerGrid}>
+    render() {
+        return (
+            <Grid container direction="column" justify="flex-start" alignItems="center">
 
-              <Typography className={classes.answer} variant="h5" >
-                { `A: ${text}` }
-              </Typography>
+              <Grid item>
+                <Typography style={ANSWER_STYLE} variant="h5" >
+                  { `A: ${this.props.answer}` }
+                </Typography>
+              </Grid>
 
+              <Grid item>
+                  <CancelAbortNextPanel
+                      onCancel={this.props.onCancel}
+                      onAbort={this.props.onAbort} />
+              </Grid>
+
+              <Grid item>
+                <CorrectWrongPanel/>
+              </Grid>
+
+              <Grid item>
+                <Leaderboard people={this.state.nominees} />
+              </Grid>
             </Grid>
-          </Grid>
-
-          <Grid className={classes.middleGrid} >
-            <Grid container direction="column" justify="center" alignItems="center" >
-
-              <CancelAbortNextPanel
-                  onCancel={onCancel}
-                  onAbort={onAbort} />
-
-            </Grid>
-          </Grid>
-
-          {/* <Grid className={classes.bottomGrid} >
-            <Grid container justify="center" alignItems="center" >
-
-              <Leaderboard contestants={people} />
-
-            </Grid>
-          </Grid> */}
-
-        </Grid>
-      </Box>
-    );
+        );
+    }
 }
+
+
+
+// const AnswerDisplay = ({ quesId, answer, onCancel, onAbort }) => {
+//     const classes = useStyles();
+//     const [ nominees, setNominees ] = useState([]);
+
+//     const newNominee = useAppSyncSubs(SUB_NOMINATE_CONTESTANT_GQL, { quesId: quesId });
+//     if (newNominee) {
+//       console.debug("got new nominee: ", newNominee);
+//       nominees.push(newNominee);
+//       setNominees(nominees);
+//     }
+
+//     return (
+//       <Grid container direction="column" justify="flex-start" alignItems="center">
+
+//         <Grid item className={classes.questionGrid}>
+//           <Typography className={classes.answer} variant="h5" >
+//             { `A: ${answer}` }
+//           </Typography>
+//         </Grid>
+
+//         <Grid item className={classes.bottomGrid} >
+//             <CancelAbortNextPanel
+//                 onCancel={onCancel}
+//                 onAbort={onAbort} />
+//         </Grid>
+
+//         <Grid item>
+//           <CorrectWrongPanel/>
+//         </Grid>
+
+//         <Grid item>
+//           <Leaderboard
+//             people={nominees}
+//             sortFcn={ (a, b) => a.timeBuzzed - b.timeBuzzed }
+//           />
+//         </Grid>
+//       </Grid>
+//     );
+// }
 
 export default AnswerDisplay;

@@ -30,15 +30,6 @@ export const GET_GAME_BY_ID_GQL = gql`
     }
 `;
 
-export const SUB_QUESTION_STATE_CHANGE_GQL = gql`
-    subscription Subscription {
-        questionStateChange {
-            quesId
-            state
-        }
-    }
-`;
-
 export const GET_QUES_GQL = gql`
     query Query($quesId: Int!) {
         getQuestionByQuesId(quesId: $quesId) {
@@ -55,7 +46,11 @@ export const GET_QUES_GQL = gql`
 export const UPDATE_QUES_STATE_GQL = gql`
     mutation mod($catgId: Int!, $quesId: Int!, $state: StateEnum!) {
         setQuestionState(catgId: $catgId, quesId: $quesId, state: $state) {
+            catgId
             quesId
+            points
+            question
+            answer
             state
         }
     }
@@ -87,10 +82,12 @@ export const NOMINATE_CONTESTANT_GQL = gql`
 `;
 
 export const SUB_NOMINATE_CONTESTANT_GQL = gql`
-    subscription sub($quesId: Int!) {
-        nominateContestant(quesId: $quesId) {
+    subscription sub {
+        nominateContestant {
             quesId
             login
+            name
+            organization
             timebuzzed
         }
     }
@@ -105,8 +102,8 @@ export const REMOVE_NOMINEE_GQL = gql`
 `;
 
 export const SUB_REMOVE_NOMINEE_GQL = gql`
-    subscription sub($quesId: Int!) {
-        removeNominee(quesId: $quesId) {
+    subscription sub {
+        removeNominee {
             quesId
             login
             timebuzzed

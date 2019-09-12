@@ -61,13 +61,11 @@ const PlayerCard = ({ player }) => {
   );
 }
 
-const Leaderboard = ({ contestants }) => {
+const Leaderboard = ({ people }) => {
   const classes = useStyles();
 
-  if (!contestants)
-    return null;
-
-  const sortedContestants = contestants.sort((a, b) => b.points - a.points);
+  if (!people)
+    people = [];
 
   return (
     <List
@@ -85,7 +83,7 @@ const Leaderboard = ({ contestants }) => {
       className={classes.root}
     >
       {
-        sortedContestants.map(person =>
+        people.map(person =>
           [
             <Divider key={`${person}-divider`} component="li" />,
             <PlayerCard key={`${person}-card`} player={person} />

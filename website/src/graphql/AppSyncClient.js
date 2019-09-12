@@ -64,7 +64,7 @@ class AppSyncClient {
     subscribe = (gql, args={}, callback) => {
         try {
             const query = oneLineQueryStr(gql);
-            console.debug(`Subscribing to "${query}" with args ${args}`);
+            console.debug(`Subscribing to "${query}" with args ${JSON.stringify(args)}`);
             const subs = appSyncConnection.subscribe({ query: gql, variables: args })
                 .subscribe({
                     next: (notification) => {
@@ -109,14 +109,14 @@ class AppSyncClient {
     nominateContestant = (quesId, login, callback) =>
         this.mutate(NOMINATE_CONTESTANT_GQL, { quesId: quesId, login: login },  callback);
 
-    subNominateContestant = (quesId, callback) =>
-        this.subscribe(SUB_NOMINATE_CONTESTANT_GQL, { quesId: quesId },  callback);
+    subNominateContestant = (callback) =>
+        this.subscribe(SUB_NOMINATE_CONTESTANT_GQL, {}, callback);
 
     removeNominee = (quesId, login, callback) =>
         this.mutate(REMOVE_NOMINEE_GQL, { quesId: quesId, login: login },  callback);
 
-    subRemoveNominee = (quesId, callback) =>
-        this.subscribe(SUB_REMOVE_NOMINEE_GQL, { quesId: quesId },  callback);
+    subRemoveNominee = (callback) =>
+        this.subscribe(SUB_REMOVE_NOMINEE_GQL, {},  callback);
 
     setContestantScore = (gameId, login, newScore, callback) => {
         const args = { gameId: gameId, login: login, newScore: newScore };

@@ -1,63 +1,89 @@
 import Typography from '@material-ui/core/Typography';
 import { styled } from '@material-ui/styles';
-import React, { useState } from 'react';
+import React from 'react';
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
 import appSyncClient from '../graphql/AppSyncClient';
 import Loading from "../common/Loading";
 import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
-import { GET_GAME_BY_ID_GQL, SUB_QUESTION_STATE_CHANGE_GQL } from "../graphql/graphqlQueries";
 
 const GameTitle = styled(Typography)({
     margin: "40px",
     padding: "40px"
 });
 
+class HostGame extends React.Component {
 
-const HostGame = (props) => {
-    const [ question, setQuestion ] = useState(null);
-
-    const { loading, data: game } = useAppSyncQuery(GET_GAME_BY_ID_GQL, { id: props.match.params.gameId });
-
-    const quesXref = game ? QuestionUtils.buildQuesXref(game) : null;
-
-    const quesStateChange = useAppSyncSubs(SUB_QUESTION_STATE_CHANGE_GQL);
-
-    if (quesStateChange) {
-        // Why do we only get quesId back ?!?!
-        const { quesId } = quesStateChange;
-
-        // Go and get the current question until we figure out why we can't get
-        // back what we want.
-        appSyncClient.getQuestionByQuesId(quesId, (ques) => {
-            const question = quesXref.get(quesId);
-            if (question) {
-                question.state = ques.state; // so grid makes closed things go away
-                setQuestion(question);
-            } else {
-                console.log(`Ignoring quesId ${quesId}: not found on this game.`);
-            }
-        });
+    constructor(props) {
+        super(props);
+        this.gameId = props.match.params.gameId;
     }
 
-    if (loading)
-        return <Loading />;
+    state = {
+        game: null,
+        question: null,
+        nominees: []
+    }
 
-    return (
-        <div>
-            <GameTitle
-                variant="h3"
-                align="center"
-            >
-                {game ? game.title : ""}
-            </GameTitle>
-            <GameBoard game={game} />
-            <Faceoff
-                question={question}
-            />
-        </div>
-    );
+    handleQuestionStateChange = (ques) => {
+        console.debug("Got ques back on sub:", ques);
+        const question = this.quesXref.get(ques.quesId);
+        if (question) {
+            question.state = ques.state; // so grid makes closed things go away
+            if (question.state === "display")
+                this.setState({ question: question, nominees: [] });
+            if (question.state === "closed" || question.state === "ready")
+                this.setState({ question: null });
+        }
+    }
+
+    handleNominee = (nominee) => {
+        console.debug("Nominated: ", nominee);
+        this.state.nominees.push(nominee);
+        this.state.nominees.sort((a,b) => a.timebuzzed - b.timebuzzed);
+        this.forceUpdate();
+    }
+
+    populateGameBoard = (game) => {
+        this.quesXref = QuestionUtils.buildQuesXref(game);
+        this.setState({ game: game });
+    }
+
+    componentDidMount = () => {
+        appSyncClient.getGameById(this.gameId, this.populateGameBoard);
+        this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
+        this.nomSub  = appSyncClient.subNominateContestant(this.handleNominee);
+    }
+
+    componentWillUnmount = () => {
+        if (this.questionSubscription)
+            this.questionSubscription.unsubscribe();
+        if (this.nomineeSubscription)
+            this.nomineeSubscription.unsubscribe();
+    }
+
+    render() {
+        if (!this.state.game) {
+            return <Loading />
+        } else {
+            return (
+                <div>
+                    <GameTitle
+                        variant="h3"
+                        align="center"
+                    >
+                        {this.state.game.title}
+                    </GameTitle>
+                    <GameBoard game={this.state.game} />
+                    <Faceoff
+                        question={this.state.question}
+                        nominees={this.state.nominees}
+                    />
+                </div>
+            );
+        }
+    }
 }
 
 export default HostGame;
