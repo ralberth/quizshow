@@ -1,81 +1,91 @@
 type Game {
-    gameId: Int!
-    emcee: String!
-    title: String!
-    categories: [Category!]
-    contestants: [Contestant!]
+  categories: [Category!]
+  contestants: [Contestant!]
+  emcee: String!
+  gameId: Int!
+  title: String!
 }
 
 type Category {
-    gameId: Int!
-    catgId: Int!
-    categoryName: String!
-    questions: [Question!]
+  categoryName: String!
+  catgId: Int!
+  gameId: Int!
+  questions: [Question!]
 }
 
 type Question {
-    catgId: Int!
-    quesId: Int!
-    points: Int!
-    question: String!
-    answer: String!
-    state: StateEnum!
-#    nominees: [Nominee!]
+  answer: String!
+  catgId: Int!
+  points: Int!
+  quesId: Int!
+  question: String!
+  state: StateEnum!
 }
 
-type Contestant @aws_cognito_user_pools @aws_api_key {
-    gameId: Int!
-    login: String!
-    name: String!
-    organization: String
-    score: Int!
+type Contestant @aws_api_key @aws_cognito_user_pools {
+  gameId: Int!
+  login: String!
+  name: String!
+  organization: String
+  score: Int!
 }
 
-type Nominee @aws_cognito_user_pools @aws_api_key {
-    quesId: Int!
-    login: String!
-    name: String!
-    organization: String
-    timebuzzed: Int!
+type Nominee @aws_api_key @aws_cognito_user_pools {
+  login: String!
+  name: String!
+  organization: String
+  quesId: Int!
+  timebuzzed: Int!
 }
 
 enum StateEnum {
-    ready
-    display
-    open
-    closed
+  closed
+  display
+  open
+  ready
 }
 
 type Query {
-    listGames: [Game!]
-    listGamesByEmcee(emcee: String!): [Game!]
-    getGameById(gameId: Int!): Game
-    getQuestionByCatgIdQuesId(catgId: Int!, quesId: Int!): Question
-    getQuestionByQuesId(quesId: Int!): Question
-    listContestants: [Contestant!]!  @aws_cognito_user_pools @aws_api_key
+  getGameById(gameId: Int!): Game
+  getQuestionByCatgIdQuesId(catgId: Int!, quesId: Int!): Question
+  getQuestionByQuesId(quesId: Int!): Question
+  listContestants: [Contestant!]!
+    @aws_api_key
+    @aws_cognito_user_pools
+  listGames: [Game!]
+  listGamesByEmcee(emcee: String!): [Game!]
 }
 
 type Mutation {
-    setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question!
-    joinGame(gameId: Int!): Contestant! @aws_cognito_user_pools @aws_api_key
-    nominateContestant(quesId: Int!, login: String!, name: String!, organization: String!): Nominee! @aws_cognito_user_pools @aws_api_key
-    removeNominee(quesId: Int!, login: String!): Nominee!
-    addContestantScore(gameId: Int!, login: String!, increment: Int!): Contestant!
+  addContestantScore(gameId: Int!, increment: Int!, login: String!): Contestant!
+  joinGame(gameId: Int!): Contestant!
+    @aws_api_key
+    @aws_cognito_user_pools
+  nominateContestant(
+    login: String!
+    name: String!
+    organization: String!
+    quesId: Int!
+  ): Nominee!
+    @aws_api_key
+    @aws_cognito_user_pools
+  removeNominee(login: String!, quesId: Int!): Nominee!
+  setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question!
 }
 
 type Subscription {
-    questionStateChange: Question
-	    @aws_subscribe(mutations: [ "setQuestionState" ])
-    nominateContestant: Nominee
-        @aws_subscribe(mutations: [ "nominateContestant" ])
-    removeNominee: Nominee
-        @aws_subscribe(mutations: [ "removeNominee" ])
-    addContestantScore: Contestant
-        @aws_subscribe(mutations: [ "setContestantScore" ])
+  addContestantScore: Contestant
+    @aws_subscribe(mutations: ["addContestantScore"])
+  nominateContestant: Nominee
+    @aws_subscribe(mutations: ["nominateContestant"])
+  questionStateChange: Question
+    @aws_subscribe(mutations: ["setQuestionState"])
+  removeNominee: Nominee
+    @aws_subscribe(mutations: ["removeNominee"])
 }
 
 schema {
-    query: Query
-    mutation: Mutation
-	subscription: Subscription
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
 }
