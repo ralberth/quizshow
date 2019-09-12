@@ -6,7 +6,6 @@ import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
 import appSyncClient from '../graphql/AppSyncClient';
 import Loading from "../common/Loading";
-import { useAppSyncQuery, useAppSyncSubs } from "../graphql/useAppSyncHooks";
 
 const GameTitle = styled(Typography)({
     margin: "40px",
@@ -45,6 +44,11 @@ class HostGame extends React.Component {
         this.forceUpdate();
     }
 
+    handleRemoveNominee = (nominee) => {
+        const newNominees = this.state.nominees.filter(nom => nom.login !== nominee.login);
+        this.setState({ nominees: newNominees });
+    }
+
     populateGameBoard = (game) => {
         this.quesXref = QuestionUtils.buildQuesXref(game);
         this.setState({ game: game });
@@ -54,6 +58,7 @@ class HostGame extends React.Component {
         appSyncClient.getGameById(this.gameId, this.populateGameBoard);
         this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
         this.nomSub  = appSyncClient.subNominateContestant(this.handleNominee);
+        this.delSub  = appSyncClient.subRemoveNominee(this.handleRemoveNominee);
     }
 
     componentWillUnmount = () => {

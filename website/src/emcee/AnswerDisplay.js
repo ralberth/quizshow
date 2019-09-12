@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
 import CancelAbortNextPanel from './CancelAbortNextPanel';
 import CorrectWrongPanel from './CorrectWrongPanel';
 import Leaderboard from '../common/Leaderboard';
-import { SUB_NOMINATE_CONTESTANT_GQL } from '../graphql/graphqlQueries';
-import { useAppSyncSubs } from "../graphql/useAppSyncHooks";
 import appSyncClient from "../graphql/AppSyncClient";
 
 const ANSWER_STYLE = {
@@ -35,7 +32,26 @@ class AnswerDisplay extends React.Component {
     }
 
     componentWillUnmount = () => {
-      this.sub.unsubscribe();
+        this.sub.unsubscribe();
+    }
+
+    removeLoginFromNominees = (login) => {
+        const newNominees = this.state.nominees.filter(nom => nom.login !== login);
+        this.setState({ nominees: newNominees });
+    }
+
+    handleCorrect = () => {
+        const login = this.state.nominees[0].login;
+        appSyncClient.removeNominee(this.props.quesId, login,
+            () => this.removeLoginFromNominees(login));
+        //appSyncClient.setContestantScore
+        this.props.onAbort();
+    }
+
+    handleWrong = () => {
+      const login = this.state.nominees[0].login;
+        appSyncClient.removeNominee(this.props.quesId, login,
+            () => this.removeLoginFromNominees(login));
     }
 
     render() {
@@ -55,7 +71,10 @@ class AnswerDisplay extends React.Component {
               </Grid>
 
               <Grid item>
-                <CorrectWrongPanel/>
+                <CorrectWrongPanel
+                  onCorrect={this.handleCorrect}
+                  onWrong={this.handleWrong}
+                />
               </Grid>
 
               <Grid item>

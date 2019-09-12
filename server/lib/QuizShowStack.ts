@@ -204,24 +204,11 @@ export class QuizShowStack extends cdk.Stack {
             }
         });
 
-        const ddbNom = new dynamo.Table(this, 'QuizNominees', {
-            tableName: 'QuizNominees',
-            partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
-            sortKey: { name: 'login', type: AttributeType.STRING },
-            readCapacity: DDB_IOPS,
-            writeCapacity: DDB_IOPS,
-            removalPolicy: RemovalPolicy.DESTROY
-        });
 
         const nomDS = new appsync.CfnDataSource(this, 'nominee_table', {
             apiId: mySync.attrApiId,
-            name: 'nominees',
-            serviceRoleArn: appSyncRole.roleArn,
-            type: 'AMAZON_DYNAMODB',
-            dynamoDbConfig: {
-                awsRegion: 'us-east-1',
-                tableName: ddbNom.tableName
-            }
+            name: 'EmptyNominees',
+            type: 'NONE'
         });
 
 

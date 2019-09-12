@@ -222,34 +222,30 @@
 
 - type: Mutation
   field: nominateContestant
-  dataSource: nominees
+  dataSource: EmptyNominees
   requestMapping: |
     #set($ts = $util.time.nowEpochMilliSeconds() - 1567527658683)
     {
-      "version" : "2017-02-28",
-      "operation" : "PutItem",
-      "key" : {
-        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
-        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
-      },
-      "attributeValues" : {
-        "name": $util.dynamodb.toDynamoDBJson($ctx.args.name),
-        "organization": $util.dynamodb.toDynamoDBJson($ctx.args.organization),
-        "timebuzzed" : { "N": "$ts" }
+      "version": "2017-02-28",
+      "payload": {
+        "quesId": $ctx.args.quesId,
+        "login": "${ctx.args.login}",
+        "name": "${ctx.args.name}",
+        "organization": "${ctx.args.organization}",
+        "timebuzzed": $ts
       }
     }
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
   field: removeNominee
-  dataSource: nominees
+  dataSource: EmptyNominees
   requestMapping: |
     {
       "version" : "2017-02-28",
-      "operation" : "DeleteItem",
-      "key" : {
-        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId),
-        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+      "payload" : {
+        "quesId": $ctx.args.quesId,
+        "login": "${ctx.args.login}"
       }
     }
   responseMapping: $util.toJson($ctx.result)

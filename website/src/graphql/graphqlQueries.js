@@ -97,6 +97,7 @@ export const REMOVE_NOMINEE_GQL = gql`
     mutation mod($quesId: Int!, $login: String!) {
         removeNominee(quesId: $quesId, login: $login) {
             quesId
+            login
         }
     }
 `;
@@ -106,7 +107,6 @@ export const SUB_REMOVE_NOMINEE_GQL = gql`
         removeNominee {
             quesId
             login
-            timebuzzed
         }
     }
 `;
