@@ -61,7 +61,7 @@ const PlayerCard = ({ player }) => {
   );
 }
 
-const Leaderboard = ({ people }) => {
+const Leaderboard = ({ header, people }) => {
   const classes = useStyles();
 
   if (!people)
@@ -77,7 +77,7 @@ const Leaderboard = ({ people }) => {
           component="div"
           id="nested-list-subheader"
         >
-          Contestants
+          { header }
         </ListSubheader>
       }
       className={classes.root}

@@ -58,7 +58,18 @@ type Query {
 
 type Mutation {
   addContestantScore(gameId: Int!, increment: Int!, login: String!): Contestant!
-  joinGame(gameId: Int!): Contestant!
+  joinGame(
+    gameId: Int!
+    login: String!
+    name: String!
+    organization: String!
+    ): Contestant!
+    @aws_api_key
+    @aws_cognito_user_pools
+  leaveGame(
+    gameId: Int!
+    login: String!
+    ): Contestant!
     @aws_api_key
     @aws_cognito_user_pools
   nominateContestant(
@@ -74,6 +85,10 @@ type Mutation {
 }
 
 type Subscription {
+  contestantHasJoinedTheGame: Contestant
+		@aws_subscribe(mutations: ["joinGame"])
+  contestantHasLeftTheGame: Contestant
+		@aws_subscribe(mutations: ["leaveGame"])
   addContestantScore: Contestant
     @aws_subscribe(mutations: ["addContestantScore"])
   nominateContestant: Nominee

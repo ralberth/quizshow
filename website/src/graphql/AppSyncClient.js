@@ -6,6 +6,10 @@ import {
     SUB_NOMINATE_CONTESTANT_GQL, REMOVE_NOMINEE_GQL, SUB_REMOVE_NOMINEE_GQL,
     ADD_CONTESTANT_SCORE_GQL, SUB_ADD_CONTESTANT_SCORE_GQL
 } from './graphqlQueries';
+import {
+  contestantHasJoinedTheGame,
+  // contestantHasLeftTheGame
+} from '../graphql/schema/subscriptions';
 import { print as gqlToString } from 'graphql/language';
 
 const bus = new MessageBus();
@@ -103,8 +107,13 @@ class AppSyncClient {
     subQuestionStateChange = (callback) =>
         this.subscribe(SUB_QUES_UPDATES_GQL, {},  callback);
 
-    joinGame = (gameId, callback) =>
-        this.mutate(JOIN_GAME_GQL, { gameId: gameId },  callback);
+    joinGame = (gameId, login, name, org, callback) => {
+      const args = { gameId: gameId, login: login, name: name, organization: org };
+      this.mutate(JOIN_GAME_GQL, args,  callback);
+    }
+
+    subPlayerHasJoinedTheGame = (callback) =>
+        this.subscribe(contestantHasJoinedTheGame, {}, callback)
 
     nominateContestant = (quesId, login, name, org, callback) => {
         const args = { quesId: quesId, login: login, name: name, organization: org };

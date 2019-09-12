@@ -26,6 +26,12 @@ export const GET_GAME_BY_ID_GQL = gql`
                     state
                 }
             }
+            contestants {
+              login
+              name
+              organization
+              score
+            }
         }
     }
 `;
@@ -66,8 +72,8 @@ export const SUB_QUES_UPDATES_GQL = gql`
 `;
 
 export const JOIN_GAME_GQL = gql`
-    mutation mod($gameId: Int!) {
-        joinGame(gameId: $gameId) {
+    mutation mod($gameId: Int!, $login: String!, $name: String!, $organization: String!) {
+        joinGame(gameId: $gameId, login: $login, name: $name, organization: $organization) {
             gameId
             login
             name

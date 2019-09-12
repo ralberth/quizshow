@@ -29,7 +29,7 @@
     "react-dom": "^16.9.0",
     "react-event-observer": "^0.5.11",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1",
+    "react-scripts": "3.1.1",
     "styled-components": "^4.3.2",
     "use-deep-compare-effect": "1.2.0",
     "zen-observable": "0.8.14"
@@ -43,7 +43,7 @@
     "eslint": "6.3.0",
     "eslint-plugin-react": "7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
-    "babel-eslint": "10.0.3",
+    "babel-eslint": "10.0.2",
     "apollo-link-http": "^1.5.16",
     "graphql": "^14.5.4",
     "prettier": "^1.18.2"

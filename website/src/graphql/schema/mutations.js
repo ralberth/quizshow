@@ -11,9 +11,20 @@ export const addContestantScore = gql`
       }
     }
 `;
+
 export const joinGame = gql`
-  mutation JoinGame($gameId: Int!) {
-    joinGame(gameId: $gameId) {
+  mutation JoinGame(
+    $gameId: Int!
+    $login: String!
+    $name: String!
+    $organization: String!
+  ) {
+    joinGame(
+      gameId: $gameId
+      login: $login
+      name: $name
+      organization: $organization
+  ) {
       gameId
       login
       name
@@ -22,6 +33,25 @@ export const joinGame = gql`
     }
   }
 `;
+
+export const leaveGame = gql`
+  mutation LeaveGame(
+    $gameId: Int!
+    $login: String!
+  ) {
+    leaveGame(
+      gameId: $gameId
+      login: $login
+  ) {
+      gameId
+      login
+      name
+      organization
+      score
+    }
+  }
+`;
+
 export const nominateContestant = gql`
   mutation NominateContestant(
     $login: String!
@@ -43,6 +73,7 @@ export const nominateContestant = gql`
     }
   }
 `;
+
 export const removeNominee = gql`
   mutation RemoveNominee($login: String!, $quesId: Int!) {
     removeNominee(login: $login, quesId: $quesId) {
@@ -54,6 +85,7 @@ export const removeNominee = gql`
     }
   }
 `;
+
 export const setQuestionState = gql`
   mutation SetQuestionState($catgId: Int!, $quesId: Int!, $state: StateEnum!) {
     setQuestionState(catgId: $catgId, quesId: $quesId, state: $state) {

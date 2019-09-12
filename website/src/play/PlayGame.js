@@ -5,6 +5,7 @@ import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
 import ContestantQuestion from './ContestantQuestion';
 import appSyncClient from '../graphql/AppSyncClient';
+import Auth from "@aws-amplify/auth"
 
 class PlayGame extends React.Component {
 
@@ -17,27 +18,52 @@ class PlayGame extends React.Component {
         me: null, // contestant record
         game: null,
         question: null,
-        buzzerDisabled: true
+        buzzerDisabled: true,
+        contestants: [],
+        leaderboard: false,
     }
 
     handleQuestionStateChange = (ques) => {
         console.debug("Question change: ", ques);
-        if (ques.state === "ready" || ques.state === "closed")
-          this.setState({ question: null, buzzerDisabled: true });
+        if (ques.state === "ready")
+          this.setState({ question: null, buzzerDisabled: true, leaderboard: false });
+        if (ques.state === "closed")
+          this.setState({ question: null, buzzerDisabled: true, leaderboard: true });
         if (ques.state === "display")
           this.setState({ question: ques, buzzerDisabled: true });
         if (ques.state === "open")
           this.setState({ buzzerDisabled: false });
     }
 
-    componentDidMount = () => {
-        appSyncClient.joinGame(this.gameId, me => this.setState({ me: me }));
-        appSyncClient.getGameById(this.gameId, game => this.setState({ game: game }));
+    handleContestantHasJoinedTheGame = newContestant => {
+      this.setState({ contestants: Array.from(new Set([...this.state.contestants, newContestant])) });
+    }
+
+    componentDidMount = async () => {
+        const user = await Auth.currentAuthenticatedUser();
+
+        this.setState({ me: {
+            login: user.username,
+            name: user.attributes.nickname,
+            organization: user.attributes['custom:organization']
+          }});
+
+        appSyncClient.joinGame(
+          this.gameId,
+          this.state.me.login,
+          this.state.me.name,
+          this.state.me.organization,
+          () => {}
+        );
+
+        appSyncClient.getGameById(this.gameId, game => this.setState({ game: game, contestants: game.contestants }));
         this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
+        this.contestantSub = appSyncClient.subPlayerHasJoinedTheGame(this.handleContestantHasJoinedTheGame);
     }
 
     componentWillUnmount = () => {
         this.quesSub.unsubscribe();
+        this.contestantSub.unsubscribe();
     }
 
     handleBuzzButton = () => {
@@ -58,8 +84,9 @@ class PlayGame extends React.Component {
           return (
               <Grid container direction="column" justify="center" alignItems="center" >
                   <PlayerCurrentGame title={this.state.game.title} />
-                  {/* <Leaderboard people={people}
-                  /> */}
+                  <Leaderboard
+                        header={this.state.leaderboard ? `Leaderboard` : `Contestants`}
+                        people={this.state.contestants} />
               </Grid>
           );
 

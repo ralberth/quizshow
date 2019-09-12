@@ -1,5 +1,29 @@
 import gql from "graphql-tag"
 
+export const contestantHasJoinedTheGame = gql`
+  subscription ContestantHasJoinedTheGame {
+    contestantHasJoinedTheGame {
+      gameId
+      login
+      name
+      organization
+      score
+    }
+  }
+`;
+
+export const contestantHasLeftTheGame = gql`
+  subscription ContestantHasLeftTheGame {
+    contestantHasLeftTheGame {
+      gameId
+      login
+      name
+      organization
+      score
+    }
+  }
+`;
+
 export const addContestantScore = gql`
   subscription AddContestantScore {
     addContestantScore {

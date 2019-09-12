@@ -210,12 +210,26 @@
       "operation" : "PutItem",
       "key" : {
         "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
-        "login": { "S": "$ctx.identity.username" }
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
       },
       "attributeValues" : {
-        "name":  { "S": "$ctx.identity.claims.nickname" },
-        "organization":  { "S": "$ctx.identity.claims['custom:organization']" },
+        "name":  $util.dynamodb.toDynamoDBJson($ctx.args.name),
+        "organization":  $util.dynamodb.toDynamoDBJson($ctx.args.organization),
         "score": { "N": "0" }
+      }
+    }
+  responseMapping: $util.toJson($ctx.result)
+
+- type: Mutation
+  field: leaveGame
+  dataSource: contestants
+  requestMapping: |
+    {
+      "version" : "2017-02-28",
+      "operation" : "DeleteItem",
+      "key" : {
+        "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
       }
     }
   responseMapping: $util.toJson($ctx.result)
@@ -224,7 +238,6 @@
   field: nominateContestant
   dataSource: EmptyNominees
   requestMapping: |
-    #set($ts = $util.time.nowEpochMilliSeconds() - 1567527658683)
     {
       "version": "2017-02-28",
       "payload": {

@@ -5,17 +5,17 @@ import Grid from '@material-ui/core/Grid';
 import HomepageCard from './HomepageCard';
 import HeroText from "../common/HeroText";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     margin: `auto`,
   },
 }));
 
-const Homepage = (props) => {
+const Homepage = () => {
     const classes = useStyles();
     const [ redirectUrl, setRedirectUrl ] = React.useState(null);
 
-    const doCreate = () => setRedirectUrl("/create");
+    // const doCreate = () => setRedirectUrl("/create");
     // const doAdmin  = () => setRedirectUrl("/admin");
     const doJoin   = () => setRedirectUrl("/play");
     // const doHost   = () => setRedirectUrl("/host");
