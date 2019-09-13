@@ -3,23 +3,29 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { makeStyles } from '@material-ui/core/styles';
 import { withAuthenticator } from 'aws-amplify-react';
 import { ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, SignIn, SignUp, VerifyContact } from 'aws-amplify-react/dist/Auth';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Auth from "@aws-amplify/auth";
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ChooseGame from "./common/choosegame/ChooseGame";
-// import CreateGame from "./CreateGame";
 import EmceeGame from "./emcee/EmceeGame";
 import FlashMessage from "./FlashMessage";
-// import GameAdmin from "./GameAdmin";
 import { configureAmplify } from "./graphql/configureAppSync";
 import Homepage from './homepage/Homepage';
 import HostGame from "./hostgame/HostGame";
 import Masthead from './Masthead';
+import SideNav from './SideNav';
 import PlayGame from "./play/PlayGame";
+import Toolbar from '@material-ui/core/Toolbar';
+import ScrollTop from './common/ScrollTop';
+import Fab from '@material-ui/core/Fab';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+// import CreateGame from "./CreateGame";
+// import GameAdmin from "./GameAdmin";
 
 configureAmplify();
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   container: {
     paddingLeft: `0`,
     paddingRight: `0`,
@@ -32,12 +38,35 @@ const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
 const IndexPage = () => {
   const classes = useStyles();
+  const [ open, setOpen ] = useState(false);
+  const [ user, setUser] = useState({ attributes: { nickname: '' } });
+
+  const toggleDrawer = (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setOpen(!open);
+  };
+
+  useEffect(() => {
+    const auth = async () => {
+      const user = await Auth.currentAuthenticatedUser();
+      setUser(user);
+    };
+    auth();
+    return () => {
+      Auth.signOut()
+    };
+  }, []);
+
   return (
     <BrowserRouter id="BrowserRouter" >
-        <Masthead />
         <CssBaseline />
+        <SideNav {...{ open, toggleDrawer }} />
         <FlashMessage />
         <Container id="Container" className={classes.container} >
+            <Masthead {...{ user, toggleDrawer }} />
+            <Toolbar id="back-to-top-anchor" />
             <Switch id="Switch">
                 <Route exact path="/"                     component={Homepage} />
                 {/* <Route exact path="/create"               component={CreateGame} /> */}
@@ -49,6 +78,11 @@ const IndexPage = () => {
                 <Route exact path="/play"                 component={ChooseGameToPlay} />
                 <Route exact path="/play/:gameId"         component={PlayGame} />
             </Switch>
+            <ScrollTop threshold={100} selector={'#back-to-top-anchor'} >
+              <Fab color="secondary" size="large" aria-label="scroll back to top">
+                <KeyboardArrowUpIcon />
+              </Fab>
+            </ScrollTop>
         </Container>
     </BrowserRouter>
   );
@@ -76,13 +110,13 @@ const signUpArgs = {
 };
 
 const RootPage = withAuthenticator(IndexPage, false, [
-    <SignIn/>,
-    <ConfirmSignIn/>,
-    <VerifyContact/>,
-    <SignUp {...signUpArgs} />,
-    <ConfirmSignUp/>,
-    <ForgotPassword/>,
-    <RequireNewPassword />
+    <SignIn key={`SignIn`} />,
+    <ConfirmSignIn key={`ConfirmSignIn`}/>,
+    <VerifyContact key={`VerifyContact`} />,
+    <SignUp key={`SignUp`} {...signUpArgs} />,
+    <ConfirmSignUp key={`ConfirmSignUp`} />,
+    <ForgotPassword key={`ForgotPassword`} />,
+    <RequireNewPassword key={`RequireNewPassword`} />
 ]);
 
 ReactDOM.render(<RootPage />, document.getElementById('root'));
