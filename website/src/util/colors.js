@@ -10,7 +10,8 @@ const colors = [red, pink, purple, deepPurple, indigo, blue, lightBlue,
   deepOrange, brown, grey, blueGrey];
 
 const randomColor = () => {
-  return _.sample(colors);
+  const color = _.sample(colors);
+  return color;
 };
 
 const colorForString = (str) => {
@@ -18,8 +19,7 @@ const colorForString = (str) => {
     while ( i < len ) {
         hash  = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
     }
-
-    const index = hash % colors.length;
+    const index = Math.abs(hash % colors.length);
     return colors[index];
 }
 

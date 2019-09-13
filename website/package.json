@@ -17,6 +17,7 @@
     "aws-amplify-react": "^2.4.2",
     "aws-appsync": "^2.0.0",
     "classnames": "^2.2.6",
+    "clsx": "^1.0.4",
     "enumify": "1.0.4",
     "graphql-tag": "^2.10.1",
     "localforage": "^1.7.3",
