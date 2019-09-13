@@ -14,7 +14,6 @@ import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import TvIcon from '@material-ui/icons/Tv';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 // import { createMuiTheme } from '@material-ui/core/styles';
 // import { ThemeProvider } from '@material-ui/styles';
 

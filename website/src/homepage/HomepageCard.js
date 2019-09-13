@@ -7,8 +7,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     root: {
       margin: `24px`,
     },
@@ -25,30 +26,31 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const HomepageCard = (props) => {
+const HomepageCard = ({ title, description, buttonText, path }) => {
     const classes = useStyles();
 
     return (
-        <Grid item key={props.title} className={classes.root} xs={12} sm={6} md={4}>
+        <Grid item key={title} className={classes.root} xs={12} sm={6} md={4}>
             <Card raised={true}>
                 <CardHeader
-                    title={props.title}
+                    title={title}
                     titleTypographyProps={{ align: 'center' }}
                     className={classes.cardHeader}
                 />
                 <CardContent>
                     <Typography variant="subtitle1" align="center">
-                        {props.description}
+                        { description }
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.cardActions}>
                     <Button
+                        component={Link}
+                        to={path}
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={props.onClick}
                     >
-                        {props.buttonText}
+                        { buttonText }
                     </Button>
                 </CardActions>
             </Card>
