@@ -14,6 +14,7 @@ import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import TvIcon from '@material-ui/icons/Tv';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 // import { createMuiTheme } from '@material-ui/core/styles';
 // import { ThemeProvider } from '@material-ui/styles';
 
@@ -22,17 +23,39 @@ const useStyles = makeStyles(theme => ({
     width: 250,
   },
   title: {
-    margin: theme.spacing(0, 1),
+    margin: theme.spacing(2),
   },
   fullList: {
     width: 'auto',
   },
   drawer: {
-    width: 240,
+    [theme.breakpoints.down('sm')]: {
+      width: 240,
+    },
+    [theme.breakpoints.between('sm', 'md')]: {
+      width: 300,
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      width: 440,
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: 440,
+    },
     flexShrink: 0,
   },
   drawerPaper: {
-    width: 240,
+    [theme.breakpoints.down('sm')]: {
+      width: 240,
+    },
+    [theme.breakpoints.between('sm', 'md')]: {
+      width: 300,
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      width: 440,
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: 440,
+    },
     // opacity: 0.98,
   },
   drawerHeader: {
@@ -40,10 +63,21 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   listItem: {
-    padding: `16px`,
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(2, 4),
+    },
+    [theme.breakpoints.between('sm', 'md')]: {
+      padding: theme.spacing(3, 8),
+    },
+    [theme.breakpoints.between('md', 'lg')]: {
+      padding: theme.spacing(4, 12),
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(5, 16),
+    },
   }
 }));
 
@@ -86,7 +120,7 @@ const SideNav = ({ open, toggleDrawer }) => {
           onClose={toggleDrawer}
           >
           <div className={classes.drawerHeader}>
-            <Typography className={classes.title} variant="h6">Quizshow Menu</Typography>
+            <Typography className={classes.title} variant="h6">Quizshow</Typography>
             <IconButton onClick={toggleDrawer}
                 onKeyDown={toggleDrawer}
                 aria-label="close drawer">
@@ -99,12 +133,13 @@ const SideNav = ({ open, toggleDrawer }) => {
               sidenavItems.map(({ text, path, icon }) => (
                 <ListItem button key={text}
                     className={classes.listItem}
+                    alignItems="center"
                     component={Link}
                     to={path}
                     onClick={toggleDrawer}
                     onKeyDown={toggleDrawer}>
-                  <ListItemIcon>{ icon }</ListItemIcon>
-                  <ListItemText primary={text} />
+                    <ListItemIcon>{ icon }</ListItemIcon>
+                    <ListItemText primary={text} />
                 </ListItem>
               ))
             }
