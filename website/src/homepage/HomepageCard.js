@@ -9,17 +9,20 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
     root: {
       margin: `24px`,
     },
     cardHeader: {
-        background: "#eee",
-        padding: 8
+        margin: theme.spacing(1, 1, 0, 1),
+    },
+    cardContent: {
+      margin: theme.spacing(0, 2, 1, 2),
+      backgroundColor: theme.palette.primary.light,
+      borderRadius: `4px`,
     },
     cardActions: {
       padding: 14,
-      background: "#eee",
       fontSize: "medium",
       fontWeight: "bold",
       justifyContent: "center"
@@ -37,7 +40,7 @@ const HomepageCard = ({ title, description, buttonText, path }) => {
                     titleTypographyProps={{ align: 'center' }}
                     className={classes.cardHeader}
                 />
-                <CardContent>
+                <CardContent className={classes.cardContent} >
                     <Typography variant="subtitle1" align="center">
                         { description }
                     </Typography>

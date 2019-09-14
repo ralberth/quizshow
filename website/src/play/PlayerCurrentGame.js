@@ -6,9 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import { grey } from '@material-ui/core/colors';
 
 const useStyles = makeStyles(theme => {
+  const isDark = theme.palette.type === 'dark';
   return {
     subtitle: {
-      color: grey[700],
+      color: isDark ? theme.palette.text.primary : grey[700],
       fontWeight: `bold`,
       margin: `2rem 0 0 0`,
       textAlign: `center`,

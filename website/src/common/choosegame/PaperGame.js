@@ -8,28 +8,31 @@ import Fab from '@material-ui/core/Fab';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
-  fab: {
-    margin: theme.spacing(2),
-  },
-  gameName: {
-    color: grey[800],
-    fontWeight: `900`,
-    textAlign: `center`,
-    textDecoration: `none`,
-  },
-  paperLink: {
-    width: '100%',
-    maxWidth: 400,
-    margin: theme.spacing(1),
-    cursor: `pointer`,
-    textTransform: `uppercase`,
-    textDecoration: `none`,
-    "&:focus, &:hover, &:visited, &:link, &:active": {
-        textDecoration: `none`,
+const useStyles = makeStyles(theme => {
+  const isDark = theme.palette.type === 'dark';
+  return {
+    fab: {
+      margin: theme.spacing(2),
     },
+    gameName: {
+      color: isDark ? theme.palette.text.primary : grey[800],
+      fontWeight: `900`,
+      textAlign: `center`,
+      textDecoration: `none`,
+    },
+    paperLink: {
+      width: '100%',
+      maxWidth: 400,
+      margin: theme.spacing(1),
+      cursor: `pointer`,
+      textTransform: `uppercase`,
+      textDecoration: `none`,
+      "&:focus, &:hover, &:visited, &:link, &:active": {
+          textDecoration: `none`,
+      },
+    }
   }
-}));
+});
 
 const PaperGame = ({ gameId, uriPrefix, title }) => {
   const classes = useStyles();

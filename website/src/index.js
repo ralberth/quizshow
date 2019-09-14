@@ -14,7 +14,7 @@ import { configureAmplify } from "./graphql/configureAppSync";
 import Homepage from './homepage/Homepage';
 import HostGame from "./hostgame/HostGame";
 import Masthead from './Masthead';
-import SideNav from './SideNav';
+import SideNav from './sidenav/SideNav';
 import PlayGame from "./play/PlayGame";
 import Toolbar from '@material-ui/core/Toolbar';
 import ScrollTop from './common/ScrollTop';
@@ -39,11 +39,20 @@ const ChooseGameToEmcee = () => <ChooseGame uriPrefix="/emcee" />;
 const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
 const IndexPage = () => {
-  const classes = useStyles();
   const [ open, setOpen ] = useState(false);
   const [ user, setUser] = useState({ attributes: { nickname: '' } });
-  const [ theme, setTheme ] = useState('light');
-  const muiTheme = createMuiTheme({ palette: { type: theme } });
+  const [ theme, setTheme ] = useState('dark');
+  const muiTheme = createMuiTheme({
+    palette: {
+      type: theme,
+      // primary: {
+      //   dark: `#424242`,
+      //   main: `#6d6d6d`,
+      //   light: `#303030`,
+      // }
+    }
+  });
+  const classes = useStyles();
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');

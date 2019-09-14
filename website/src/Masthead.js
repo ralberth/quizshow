@@ -21,6 +21,11 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1,
   },
+  toolbar: {
+    [theme.breakpoints.down('sm')]: {
+      width: 300,
+    },
+  }
 }));
 
 const roles = [

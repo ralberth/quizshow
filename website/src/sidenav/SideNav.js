@@ -4,11 +4,11 @@ import HomeIcon from '@material-ui/icons/Home';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import TvIcon from '@material-ui/icons/Tv';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
-import SideNavDrawer from './sidenav/SideNavDrawer';
-import SideNavHeader from './sidenav/SideNavHeader';
-import SideNavSignOut from './sidenav/SideNavSignOut';
-import SideNavLinks from './sidenav/SideNavLinks';
-import ThemeToggle from './sidenav/ThemeToggle';
+import SideNavDrawer from './SideNavDrawer';
+import SideNavHeader from './SideNavHeader';
+import SideNavSignOut from './SideNavSignOut';
+import SideNavLinks from './SideNavLinks';
+import ThemeToggle from './ThemeToggle';
 
 const sidenavItems = [
   {
