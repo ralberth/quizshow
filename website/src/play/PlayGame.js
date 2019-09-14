@@ -77,6 +77,8 @@ class PlayGame extends React.Component {
     }
 
     render() {
+      console.log('question:', this.state.question);
+
       if (!this.state.game || !this.state.me)
           return <Loading />;
 

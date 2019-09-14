@@ -20,13 +20,13 @@ const QuestionDisplay = ({ text, onCancel, onAbort, onNext }) => {
   return (
       <Grid container direction="column" justify="flex-start" alignItems="center">
 
-        <Grid item className={classes.questionGrid}>
+        <Grid item >
           <Typography className={classes.question} variant="h5" >
             { `Q: ${text}` }
           </Typography>
         </Grid>
 
-        <Grid item className={classes.bottomGrid} >
+        <Grid item >
             <CancelAbortNextPanel
                 onCancel={onCancel}
                 onAbort={onAbort}
