@@ -12,31 +12,21 @@ import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing(2, 4),
-    },
-    [theme.breakpoints.between('sm', 'md')]: {
-      padding: theme.spacing(3, 8),
-    },
-    [theme.breakpoints.between('md', 'lg')]: {
-      padding: theme.spacing(4, 12),
-    },
-    [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(5, 16),
-    },
+    paddingLeft: theme.spacing(4),
   },
   appTitle: {
     fontWeight: `900`,
     paddingLeft: `10px`,
   },
   accountItem: {
-    paddingTop: 0,
+    paddingTop: theme.spacing(0),
+    paddingBottom: theme.spacing(0),
   },
   accountText: {
     margin: `16px 0 16px 16px`,
   },
   secondaryAction: {
-    right: theme.spacing(3)
+    right: `12px`
   },
 }));
 

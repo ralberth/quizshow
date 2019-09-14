@@ -45,12 +45,7 @@ const IndexPage = () => {
   const muiTheme = createMuiTheme({
     palette: {
       type: theme,
-      // primary: {
-      //   dark: `#424242`,
-      //   main: `#6d6d6d`,
-      //   light: `#303030`,
-      // }
-    }
+    },
   });
   const classes = useStyles();
 
