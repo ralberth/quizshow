@@ -15,10 +15,10 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(3, 8),
     },
     [theme.breakpoints.between('md', 'lg')]: {
-      padding: theme.spacing(4, 12),
+      padding: theme.spacing(3, 12),
     },
     [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(5, 16),
+      padding: theme.spacing(3, 12),
     },
   },
 }));

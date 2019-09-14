@@ -5,7 +5,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -16,10 +16,10 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(3, 8),
     },
     [theme.breakpoints.between('md', 'lg')]: {
-      padding: theme.spacing(4, 12),
+      padding: theme.spacing(3, 12),
     },
     [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(5, 16),
+      padding: theme.spacing(3, 12),
     },
   },
   secondaryAction: {
@@ -38,7 +38,7 @@ const SideNavSignOut = () => {
           onClick={() => Auth.signOut()}
           onKeyDown={() => Auth.signOut()}>
           <ListItemIcon>
-            <VpnKeyIcon />
+            <AccountCircleIcon />
           </ListItemIcon>
           <ListItemText primary={`Sign Out`} />
       </ListItem>

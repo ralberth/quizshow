@@ -3,7 +3,7 @@ import Divider from '@material-ui/core/Divider';
 import HomeIcon from '@material-ui/icons/Home';
 import VideogameAssetIcon from '@material-ui/icons/VideogameAsset';
 import TvIcon from '@material-ui/icons/Tv';
-import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
+import MicIcon from '@material-ui/icons/Mic';
 import SideNavDrawer from './SideNavDrawer';
 import SideNavHeader from './SideNavHeader';
 import SideNavSignOut from './SideNavSignOut';
@@ -29,7 +29,7 @@ const sidenavItems = [
   {
     text: 'Emcee',
     path: '/emcee',
-    icon: <RecordVoiceOverIcon />
+    icon: <MicIcon />
   },
 ];
 
