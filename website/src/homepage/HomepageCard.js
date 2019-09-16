@@ -9,12 +9,18 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => {
+  const isDark = theme.palette.type === 'dark';
+  return {
     root: {
       margin: `24px`,
     },
     cardHeader: {
         margin: theme.spacing(1, 1, 0, 1),
+        fontSize: "large",
+        textTransform: `uppercase`,
+        fontWeight: "900",
+        color: isDark ? theme.palette.primary.light : theme.palette.text.primary,
     },
     cardContent: {
       margin: theme.spacing(0, 2, 1, 2),
@@ -27,7 +33,8 @@ const useStyles = makeStyles(theme => ({
       fontWeight: "bold",
       justifyContent: "center"
     }
-}));
+  }
+});
 
 const HomepageCard = ({ title, description, buttonText, path }) => {
     const classes = useStyles();
