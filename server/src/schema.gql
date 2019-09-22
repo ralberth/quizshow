@@ -47,7 +47,6 @@ enum StateEnum {
 
 type Query {
   getGameById(gameId: Int!): Game
-  getQuestionByCatgIdQuesId(catgId: Int!, quesId: Int!): Question
   getQuestionByQuesId(quesId: Int!): Question
   listContestants: [Contestant!]!
     @aws_api_key
@@ -71,7 +70,6 @@ type Mutation {
     login: String!
     ): Contestant!
     @aws_api_key
-    @aws_cognito_user_pools
   nominateContestant(
     login: String!
     name: String!

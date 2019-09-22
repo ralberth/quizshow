@@ -21,18 +21,6 @@ export const getGameById = gql`
     }
   }
 `;
-export const getQuestionByCatgIdQuesId = gql`
-  query GetQuestionByCatgIdQuesId($catgId: Int!, $quesId: Int!) {
-    getQuestionByCatgIdQuesId(catgId: $catgId, quesId: $quesId) {
-      answer
-      catgId
-      points
-      quesId
-      question
-      state
-    }
-  }
-`;
 export const getQuestionByQuesId = gql`
   query GetQuestionByQuesId($quesId: Int!) {
     getQuestionByQuesId(quesId: $quesId) {
