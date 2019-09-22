@@ -71,12 +71,17 @@ class AnswerDisplay extends React.Component {
                       onAbort={this.props.onAbort} />
               </Grid>
 
-              <Grid item>
-                <CorrectWrongPanel
-                  onCorrect={this.handleCorrect}
-                  onWrong={this.handleWrong}
-                />
-              </Grid>
+              {
+                this.state.nominees.length > 0 ?
+                (
+                    <Grid item>
+                      <CorrectWrongPanel
+                        onCorrect={this.handleCorrect}
+                        onWrong={this.handleWrong}
+                      />
+                    </Grid>
+                ) : null
+              }
 
               <Grid item>
                 <Leaderboard people={this.state.nominees} />
