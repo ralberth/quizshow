@@ -7,24 +7,6 @@ import QuestionBox from './QuestionBox';
 import { makeStyles } from '@material-ui/core/styles';
 import Leaderboard from '../common/Leaderboard';
 
-// const people = [
-//     {
-//         name: 'Rich',
-//         login: 'ralberth',
-//         organization: 'Amazon'
-//     },
-//     {
-//         name: 'Chris',
-//         login: 'csmith',
-//         organization: 'Foobar'
-//     },
-//     {
-//         name: 'Sue',
-//         login: 'suesue',
-//         organization: 'Barbaz'
-//     }
-// ];
-
 const useStyles = makeStyles(theme => ({
     container: {
       padding: theme.spacing(8)
@@ -51,7 +33,7 @@ const Faceoff = ({ question, nominees }) => {
                     >
                         <Grid item xs={8}>
                             <QuestionBox
-                                category=""
+                                category={question.categoryName}
                                 points={question.points}
                                 question={question.question} />
                         </Grid>

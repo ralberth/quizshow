@@ -51,7 +51,7 @@ const EmceeGame = ({ match: { params: { gameId } } }) => {
     case ScreenMode.question:
         return (
             <QuestionDisplay
-                text={vars.question ? vars.question.question : "?"}
+                ques={vars.question}
                 onCancel={cancelQues}
                 onAbort={abortQues}
                 onNext={openQues} />

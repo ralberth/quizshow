@@ -28,6 +28,7 @@ export const getQuestionByQuesId = gql`
       catgId
       points
       quesId
+      categoryName
       question
       state
     }

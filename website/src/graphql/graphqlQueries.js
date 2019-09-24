@@ -21,6 +21,7 @@ export const GET_GAME_BY_ID_GQL = gql`
                     quesId
                     catgId
                     points
+                    categoryName
                     question
                     answer
                     state
@@ -42,6 +43,7 @@ export const GET_QUES_GQL = gql`
             catgId
             quesId
             points
+            categoryName
             question
             answer
             state
@@ -55,6 +57,7 @@ export const UPDATE_QUES_STATE_GQL = gql`
             catgId
             quesId
             points
+            categoryName
             question
             answer
             state

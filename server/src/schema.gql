@@ -18,6 +18,7 @@ type Question {
   catgId: Int!
   points: Int!
   quesId: Int!
+  categoryName: String!
   question: String!
   state: StateEnum!
 }

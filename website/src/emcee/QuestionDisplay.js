@@ -1,40 +1,20 @@
 import React from 'react';
 import CancelAbortNextPanel from './CancelAbortNextPanel';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import QuesAnsHeader from './QuesAnsHeader';
 
-const useStyles = makeStyles(() => {
-  return {
-    question: {
-      fontWeight: `bold`,
-      margin: `6rem`,
-      textAlign: `center`,
-    }
-  };
-});
-
-const QuestionDisplay = ({ text, onCancel, onAbort, onNext }) => {
-  const classes = useStyles();
-
-  return (
-      <Grid container direction="column" justify="flex-start" alignItems="center">
-
-        <Grid item >
-          <Typography className={classes.question} variant="h5" >
-            { `Q: ${text}` }
-          </Typography>
+const QuestionDisplay = ({ ques, onCancel, onAbort, onNext }) => (
+    <Grid container direction="column" justify="flex-start" alignItems="center">
+        <Grid item>
+            <QuesAnsHeader ques={ques}/>
         </Grid>
-
-        <Grid item >
+        <Grid item>
             <CancelAbortNextPanel
                 onCancel={onCancel}
                 onAbort={onAbort}
                 onNext={onNext} />
         </Grid>
-
-      </Grid>
-  );
-}
+    </Grid>
+);
 
 export default QuestionDisplay;

@@ -1,16 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import CancelAbortNextPanel from './CancelAbortNextPanel';
 import CorrectWrongPanel from './CorrectWrongPanel';
 import Leaderboard from '../common/Leaderboard';
 import appSyncClient from "../graphql/AppSyncClient";
-
-const ANSWER_STYLE = {
-    fontWeight: `bold`,
-    margin: `6rem`,
-    textAlign: `center`,
-};
+import QuesAnsHeader from './QuesAnsHeader';
 
 class AnswerDisplay extends React.Component {
 
@@ -60,9 +54,7 @@ class AnswerDisplay extends React.Component {
             <Grid container direction="column" justify="flex-start" alignItems="center">
 
               <Grid item>
-                <Typography style={ANSWER_STYLE} variant="h5" >
-                  { `A: ${this.props.question.answer}` }
-                </Typography>
+                  <QuesAnsHeader ques={this.props.question}/>
               </Grid>
 
               <Grid item>

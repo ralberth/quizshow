@@ -53,6 +53,7 @@ if (process.argv[2] === "convert") {
                                 catgId: { "N": `${catgId}` },
                                 quesId: { "N": `${nextId++}` },
                                 points: { "N": `${row.points}` },
+                                categoryName: { "S": row.category },
                                 question: { "S": row.question },
                                 answer: { "S": row.answer },
                                 state: { "S" : "ready" }

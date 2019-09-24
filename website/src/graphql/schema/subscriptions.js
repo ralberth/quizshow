@@ -53,6 +53,7 @@ export const questionStateChange = gql`
       catgId
       points
       quesId
+      categoryName
       question
       state
     }
