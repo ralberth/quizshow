@@ -1,12 +1,6 @@
-const https = require('https');
-const AWS = require("aws-sdk");
 const fs = require('fs');
 const csv = require('csv-parse/lib/sync');
-const urlParse = require("url").URL;
-const appsyncUrl = process.env.REACT_APP_QUIZSHOW_GRAPHQL_ENDPOINT;
-const region = process.env.REACT_APP_QUIZSHOW_REGION;
-const apiKey = process.env.REACT_APP_QUIZSHOW_APIKEY || process.env.QUIZSHOW_APIKEY;
-const endpoint = new urlParse(appsyncUrl).hostname.toString();
+const callAppSync = require('./callappsync').callAppSync;
 
 const JOIN_GAME = `
   mutation JoinGame(
@@ -30,28 +24,7 @@ const JOIN_GAME = `
   }
 `;
 
-const callAppSync = (query, args, opName, callback) => {
-    const req = new AWS.HttpRequest(appsyncUrl, region);
 
-    req.method = "POST";
-    req.headers.host = endpoint;
-    req.headers["Content-Type"] = "application/json";
-    req.headers["x-api-key"] = apiKey;
-    req.body = JSON.stringify({
-        query: query,
-        operationName: opName,
-        variables: args
-    });
-
-    const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
-        result.on('data', (body) => {
-            const bodyObj = JSON.parse(body.toString());
-            console.log(bodyObj);
-        });
-    });
-    httpRequest.write(req.body);
-    httpRequest.end();
-};
 
 exports.addContestants = (datafile, qty, gameId) => {
     const file = fs.readFileSync(datafile);
@@ -66,7 +39,7 @@ exports.addContestants = (datafile, qty, gameId) => {
             organization: person.organization,
         };
         try {
-          callAppSync(JOIN_GAME, args, 'JoinGame');
+          callAppSync(JOIN_GAME, args, 'JoinGame', () => {});
         } catch(e) {
           console.log('error:', e);//JSON.stringify(e));
           console.log('   person:', JSON.stringify(person));

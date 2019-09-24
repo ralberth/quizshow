@@ -2,6 +2,7 @@
 const loadGame = require('./loadgame').loadGame;
 const cleanTables = require('./cleantables').cleanTables;
 const addContestants = require('./addcontestants').addContestants;
+const addNominees = require('./addnominees').addNominees;
 
 require('yargs') // eslint-disable-line
     .command('cleantables',
@@ -31,5 +32,20 @@ require('yargs') // eslint-disable-line
                                  type: 'number'
                              }),
              argv => addContestants(argv.datafile, argv.quantity, argv.gameid))
+    .command('nominees',
+             'Nominate n contestants for a question',
+             (yargs) => yargs.option('quesid', {
+                                 alias: 'q',
+                                 describe: 'quesId in Dynamo for the question to nominate for',
+                                 demandOption: true,
+                                 type: 'number'
+                             })
+                             .option('quantity', {
+                                alias: 'n',
+                                describe: 'How many new contestants to join the game',
+                                default: 6,
+                                type: 'number'
+                             }),
+             argv => addNominees(argv.quesid, argv.quantity))
     .help()
     .argv
