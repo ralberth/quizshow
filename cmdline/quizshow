@@ -1,15 +1,35 @@
 #!/usr/bin/env node
 const loadGame = require('./loadgame').loadGame;
 const cleanTables = require('./cleantables').cleanTables;
+const addContestants = require('./addcontestants').addContestants;
 
 require('yargs') // eslint-disable-line
     .command('cleantables',
-             'Delete all Items in QuizGames, QuizCategories, and QuizQuestions',
+             'Delete all Items in QuizContestants, QuizGames, QuizCategories, and QuizQuestions',
              () => {},
              cleanTables)
     .command('loadgame <files..>',
              'Load game from CSV into Dynamo tables',
              () => {},
              loadGame)
+    .command('contestants',
+             'Add n new contestants via GraphQL joinGame() (end up in QuizContestants)',
+             (yargs) => yargs.option('datafile', {
+                                 alias: 'f',
+                                 describe: 'CSV with potential contestant logins, names, ...',
+                                 default: 'samplegames/contestants.csv'
+                             })
+                             .option('quantity', {
+                                alias: 'n',
+                                describe: 'How many new contestants to join the game',
+                                default: 10
+                             })
+                             .option('gameid', {
+                                 alias: 'g',
+                                 describe: 'The gameId in QuizGames contestants should join',
+                                 demandOption: true,
+                                 type: 'number'
+                             }),
+             argv => addContestants(argv.datafile, argv.quantity, argv.gameid))
     .help()
     .argv

@@ -3,13 +3,10 @@ const AWS = require("aws-sdk");
 const fs = require('fs');
 const csv = require('csv-parse/lib/sync');
 const urlParse = require("url").URL;
-const file = fs.readFileSync('contestants.csv');
 const appsyncUrl = process.env.REACT_APP_QUIZSHOW_GRAPHQL_ENDPOINT;
 const region = process.env.REACT_APP_QUIZSHOW_REGION;
-const apiKey = process.env.REACT_APP_QUIZSHOW_APIKEY;
+const apiKey = process.env.REACT_APP_QUIZSHOW_APIKEY || process.env.QUIZSHOW_APIKEY;
 const endpoint = new urlParse(appsyncUrl).hostname.toString();
-const GAME_ID = process.argv[2];
-const records = csv(file, { columns: true });
 
 const JOIN_GAME = `
   mutation JoinGame(
@@ -49,29 +46,31 @@ const callAppSync = (query, args, opName, callback) => {
     const httpRequest = https.request({ ...req, host: endpoint }, (result) => {
         result.on('data', (body) => {
             const bodyObj = JSON.parse(body.toString());
-            callback(bodyObj.data[opName]);
+            console.log(bodyObj);
         });
     });
     httpRequest.write(req.body);
     httpRequest.end();
 };
 
-const numToNominate = Math.floor(Math.random() * (70 - 1 + 1) + 1)
-console.log('Num Contestants:', numToNominate)
-for(var count = 0; count < numToNominate; count++) {
-    const i = Math.floor(Math.random() * records.length);
-    const person = records.splice(i, 1)[0]; // remove 1 element at index i
-    const args = {
-        gameId: GAME_ID,
-        login: person.login,
-        name: person.name,
-        organization: person.organization,
-    };
-    try {
-      callAppSync(JOIN_GAME, args, 'JoinGame', () => { });
-    } catch(e) {
-      console.log('error:', JSON.stringify(e));
-      console.log('\nperson:', JSON.stringify(person));
-      console.log('\nargs:', JSON.stringify(args));
+exports.addContestants = (datafile, qty, gameId) => {
+    const file = fs.readFileSync(datafile);
+    const records = csv(file, { columns: true });
+    for(var count = 0; count < qty; count++) {
+        const i = Math.floor(Math.random() * records.length);
+        const person = records.splice(i, 1)[0]; // remove 1 element at index i
+        const args = {
+            gameId: gameId,
+            login: person.login,
+            name: person.name,
+            organization: person.organization,
+        };
+        try {
+          callAppSync(JOIN_GAME, args, 'JoinGame');
+        } catch(e) {
+          console.log('error:', e);//JSON.stringify(e));
+          console.log('   person:', JSON.stringify(person));
+          console.log('   args:', JSON.stringify(args));
+        }
     }
 }

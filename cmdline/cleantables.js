@@ -33,4 +33,9 @@ exports.cleanTables = (argv) => {
         ExpressionAttributeNames: { "#catgId": "catgId", "#quesId": "quesId" },
         ProjectionExpression: "#catgId, #quesId"
     });
+    handleCleanTable(ddb, 'QuizContestants', {
+        TableName: "QuizContestants",
+        ExpressionAttributeNames: { "#gameId": "gameId", "#login": "login" },
+        ProjectionExpression: "#gameId, #login"
+    });
 }
