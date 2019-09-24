@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+const loadGame = require('./loadgame').loadGame;
+const cleanTables = require('./cleantables').cleanTables;
+
+require('yargs') // eslint-disable-line
+    .command('cleantables',
+             'Delete all Items in QuizGames, QuizCategories, and QuizQuestions',
+             () => {},
+             cleanTables)
+    .command('loadgame <files..>',
+             'Load game from CSV into Dynamo tables',
+             () => {},
+             loadGame)
+    .help()
+    .argv
