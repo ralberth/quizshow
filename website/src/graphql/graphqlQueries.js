@@ -13,6 +13,7 @@ export const ALL_GAMES_GQL = gql`
 export const GET_GAME_BY_ID_GQL = gql`
     query Query($id: Int!) {
         getGameById(gameId: $id) {
+            gameId
             title
             categories {
                 catgId
@@ -28,6 +29,7 @@ export const GET_GAME_BY_ID_GQL = gql`
                 }
             }
             contestants {
+              gameId
               login
               name
               organization

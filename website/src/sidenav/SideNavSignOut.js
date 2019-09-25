@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { clearAppSyncLocalStore } from '../graphql/configureAppSync';
 
 const useStyles = makeStyles(theme => ({
   listItem: {
@@ -16,6 +17,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const clearEverything = async () => {
+  await Auth.signOut();
+  await clearAppSyncLocalStore();
+}
+
 const SideNavSignOut = () => {
   const classes = useStyles();
 
@@ -24,8 +30,8 @@ const SideNavSignOut = () => {
       <ListItem button
           className={classes.listItem}
           alignItems="center"
-          onClick={() => Auth.signOut()}
-          onKeyDown={() => Auth.signOut()}>
+          onClick={clearEverything}
+          onKeyDown={clearEverything}>
           <ListItemIcon>
             <AccountCircleIcon />
           </ListItemIcon>
