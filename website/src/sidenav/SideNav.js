@@ -9,45 +9,61 @@ import SideNavHeader from './SideNavHeader';
 import SideNavSignOut from './SideNavSignOut';
 import SideNavLinks from './SideNavLinks';
 import ThemeToggle from './ThemeToggle';
+import { authenticatedUserIsEmcee } from '../graphql/configureAppSync';
 
-const sidenavItems = [
-  {
-    text: 'Home',
-    path: '/',
-    icon: <HomeIcon />
-  },
-  {
-    text: 'Join',
-    path: '/play',
-    icon: <VideogameAssetIcon />
-  },
-  {
-    text: 'Host',
-    path: '/host',
-    icon: <TvIcon />
-  },
-  {
-    text: 'Emcee',
-    path: '/emcee',
-    icon: <MicIcon />
-  },
+const sidenavUserItems = [
+    {
+        text: 'Home',
+        path: '/',
+        icon: <HomeIcon />
+    },
+    {
+        text: 'Join',
+        path: '/play',
+        icon: <VideogameAssetIcon />
+    }
 ];
 
-const SideNav = ({ open, toggleDrawer, toggleTheme, user }) => {
+const sidenavEmceeItems = sidenavUserItems.concat([
+    {
+        text: 'Host',
+        path: '/host',
+        icon: <TvIcon />
+    },
+    {
+        text: 'Emcee',
+        path: '/emcee',
+        icon: <MicIcon />
+    }
+]);
 
-  return (
-      <SideNavDrawer open={open} onClose={toggleDrawer} >
-          <SideNavHeader user={user}
-              onClick={toggleDrawer}
-              onKeyDown={toggleDrawer} />
-          <Divider />
-          <SideNavLinks items={sidenavItems} toggleDrawer={toggleDrawer} />
-          <Divider />
-          <SideNavSignOut />
-          <Divider />
-          <ThemeToggle toggleTheme={toggleTheme} />
-      </SideNavDrawer>
-  );
+class SideNav extends React.Component {
+  // Params: open, toggleDrawer, toggleTheme, user
+
+  state = { isEmcee: false };
+
+  componentDidMount = () =>
+    authenticatedUserIsEmcee()
+      .then(tf => this.setState({ isEmcee: tf }));
+
+  render() {
+    return (
+        <SideNavDrawer open={this.props.open} onClose={this.props.toggleDrawer} >
+            <SideNavHeader user={this.props.user}
+                onClick={this.props.toggleDrawer}
+                onKeyDown={this.props.toggleDrawer} />
+            <Divider />
+            <SideNavLinks
+              items={this.state.isEmcee ? sidenavEmceeItems : sidenavUserItems}
+              toggleDrawer={this.props.toggleDrawer}
+            />
+            <Divider />
+            <SideNavSignOut />
+            <Divider />
+            <ThemeToggle toggleTheme={this.props.toggleTheme} />
+        </SideNavDrawer>
+    );
+  }
 }
 
 export default SideNav;

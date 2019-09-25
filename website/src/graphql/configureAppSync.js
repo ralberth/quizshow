@@ -64,4 +64,13 @@ const appSyncConnection = new AWSAppSyncClient({
   }
 });
 
-export { configureAmplify, appSyncConnection, clearAppSyncLocalStore };
+
+const authenticatedUserIsEmcee = async () => {
+  const authrec = await Auth.currentAuthenticatedUser();
+  const groups = authrec.signInUserSession.idToken.payload['cognito:groups'] || [];
+  console.log("auth groups", groups);
+  return groups.includes('emcee');
+}
+
+
+export { configureAmplify, appSyncConnection, clearAppSyncLocalStore, authenticatedUserIsEmcee };
