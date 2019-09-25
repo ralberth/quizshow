@@ -24,6 +24,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 // import GameAdmin from "./GameAdmin";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import { authenticatedUserIsEmcee } from './graphql/configureAppSync';
 
 configureAmplify();
 
@@ -38,9 +39,14 @@ const ChooseGameToHost  = () => <ChooseGame uriPrefix="/host"  />;
 const ChooseGameToEmcee = () => <ChooseGame uriPrefix="/emcee" />;
 const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
+const RouteNotFound = () => (
+  <div>Page not found</div>
+);
+
 const IndexPage = () => {
   const [ open, setOpen ] = useState(false);
   const [ user, setUser] = useState({ attributes: { nickname: '' } });
+  const [ isEmcee, setEmcee ] = useState(false);
   const [ theme, setTheme ] = useState('dark');
   const muiTheme = createMuiTheme({
     palette: {
@@ -71,6 +77,20 @@ const IndexPage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const getGroups = async () => {
+      const isEmcee = await authenticatedUserIsEmcee();
+      setEmcee(isEmcee);
+    };
+    getGroups();
+  }, []);
+
+  const EmceeOnlyRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) => (
+      isEmcee ? <Component {...props} /> : <RouteNotFound/>)}
+    />
+  );
+
   return (
     <ThemeProvider theme={muiTheme}>
       <BrowserRouter id="BrowserRouter" >
@@ -81,15 +101,16 @@ const IndexPage = () => {
               <Masthead {...{ user, toggleDrawer }} />
               <Toolbar id="back-to-top-anchor" />
               <Switch id="Switch">
-                  <Route exact path="/"                     component={Homepage} />
-                  {/* <Route exact path="/create"               component={CreateGame} /> */}
-                  {/* <Route exact path="/admin"                component={GameAdmin} /> */}
-                  <Route exact path="/host"                 component={ChooseGameToHost} />
-                  <Route exact path="/host/:gameId"         component={HostGame} />
-                  <Route exact path="/emcee"                component={ChooseGameToEmcee} />
-                  <Route exact path="/emcee/:gameId"        component={EmceeGame} />
-                  <Route exact path="/play"                 component={ChooseGameToPlay} />
-                  <Route exact path="/play/:gameId"         component={PlayGame} />
+                <Route exact path="/"                       component={Homepage} />
+                <Route exact path="/play"                   component={ChooseGameToPlay} />
+                <Route exact path="/play/:gameId"           component={PlayGame} />
+                {/* <Route exact path="/create"               component={CreateGame} /> */}
+                {/* <Route exact path="/admin"                component={GameAdmin} /> */}
+                <EmceeOnlyRoute exact path="/host"          component={ChooseGameToHost} />
+                <EmceeOnlyRoute exact path="/host/:gameId"  component={HostGame} />
+                <EmceeOnlyRoute exact path="/emcee"         component={ChooseGameToEmcee} />
+                <EmceeOnlyRoute exact path="/emcee/:gameId" component={EmceeGame} />
+                <Route path='*' exact={true}                component={RouteNotFound}/>
               </Switch>
               <ScrollTop threshold={100} selector={'#back-to-top-anchor'} >
                 <Fab color="secondary" size="large" aria-label="scroll back to top">
