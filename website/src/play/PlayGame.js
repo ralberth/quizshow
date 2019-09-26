@@ -17,6 +17,7 @@ class PlayGame extends React.Component {
         game: null,
         question: null,
         buzzerDisabled: true,
+        buttonText: 'waiting',
         contestants: [],
         leaderboard: false,
     }
@@ -24,13 +25,13 @@ class PlayGame extends React.Component {
     handleQuestionStateChange = (ques) => {
         console.debug("Question change: ", ques);
         if (ques.state === "ready")
-          this.setState({ question: null, buzzerDisabled: true, leaderboard: false });
+          this.setState({ question: null, buzzerDisabled: true, buttonText: 'waiting', leaderboard: false });
         if (ques.state === "closed")
-          this.setState({ question: null, buzzerDisabled: true, leaderboard: true });
+          this.setState({ question: null, buzzerDisabled: true, buttonText: 'waiting', leaderboard: true });
         if (ques.state === "display")
-          this.setState({ question: ques, buzzerDisabled: true });
+          this.setState({ question: ques, buzzerDisabled: true, buttonText: 'waiting' });
         if (ques.state === "open")
-          this.setState({ buzzerDisabled: false });
+          this.setState({ buzzerDisabled: false, buttonText: 'Buzz' });
     }
 
     handleContestantHasJoinedTheGame = newContestant => {
@@ -51,7 +52,7 @@ class PlayGame extends React.Component {
 
     handleBuzzButton = () => {
         appSyncClient.nominateSelf(this.state.question.quesId, () => {});
-        this.setState({ buzzerDisabled: true });
+        this.setState({ buzzerDisabled: true, buttonText: 'Buzzed' });
     }
 
     render() {
@@ -75,6 +76,7 @@ class PlayGame extends React.Component {
               <ContestantQuestion
                 question={this.state.question}
                 buzzerDisabled={this.state.buzzerDisabled}
+                buttonText={this.state.buttonText}
                 onBuzz={this.handleBuzzButton}
               />
           </Grid>

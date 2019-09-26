@@ -65,7 +65,7 @@ const Buzzer = withStyles(({ palette }) => {
   }
 })(Fab);
 
-const ContestantQuestion = ({ question, buzzerDisabled, onBuzz }) => {
+const ContestantQuestion = ({ question, buzzerDisabled, buttonText, onBuzz }) => {
   const classes = useStyles();
 
   return (
@@ -98,7 +98,7 @@ const ContestantQuestion = ({ question, buzzerDisabled, onBuzz }) => {
                 disabled={buzzerDisabled}
                 onClick={onBuzz}
               >
-                BUZZ
+                {buttonText}
               </Buzzer>
             </Grid>
           </Grid>
