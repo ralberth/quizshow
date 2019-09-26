@@ -49,7 +49,8 @@ const roles = [
 
 const Masthead = ({ user, toggleDrawer, location }) => {
     const classes = useStyles();
-    const role = roles.filter(r => location.pathname.split('/')[1] === r.pathname)[0];
+    const myroles = roles.filter(r => location.pathname.split('/')[1] === r.pathname);
+    const role = myroles.length === 0 ? '?' : roles[0];
 
     return (
         <div className={classes.root} >

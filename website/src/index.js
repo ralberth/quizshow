@@ -5,6 +5,8 @@ import { withAuthenticator } from 'aws-amplify-react';
 import { ConfirmSignIn, ConfirmSignUp, ForgotPassword, RequireNewPassword, SignIn, SignUp, VerifyContact } from 'aws-amplify-react/dist/Auth';
 import React, { useState, useEffect } from 'react';
 import Auth from "@aws-amplify/auth";
+import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ChooseGame from "./common/choosegame/ChooseGame";
@@ -40,7 +42,11 @@ const ChooseGameToEmcee = () => <ChooseGame uriPrefix="/emcee" />;
 const ChooseGameToPlay  = () => <ChooseGame uriPrefix="/play"  />;
 
 const RouteNotFound = () => (
-  <div>Page not found</div>
+  <Box>
+    <Typography variant="h5" align="center" style={{ padding: 24 }}>
+      Page not found
+    </Typography>
+  </Box>
 );
 
 const IndexPage = () => {
