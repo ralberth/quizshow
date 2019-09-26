@@ -5,7 +5,6 @@ import Loading from '../common/Loading';
 import PlayerCurrentGame from './PlayerCurrentGame';
 import ContestantQuestion from './ContestantQuestion';
 import appSyncClient from '../graphql/AppSyncClient';
-import Auth from "@aws-amplify/auth"
 
 class PlayGame extends React.Component {
 
@@ -15,7 +14,6 @@ class PlayGame extends React.Component {
     }
 
     state = {
-        me: null, // contestant record
         game: null,
         question: null,
         buzzerDisabled: true,
@@ -40,22 +38,7 @@ class PlayGame extends React.Component {
     }
 
     componentDidMount = async () => {
-        const user = await Auth.currentAuthenticatedUser();
-
-        this.setState({ me: {
-            login: user.username,
-            name: user.attributes.nickname,
-            organization: user.attributes['custom:organization']
-          }});
-
-        appSyncClient.joinGame(
-          this.gameId,
-          this.state.me.login,
-          this.state.me.name,
-          this.state.me.organization,
-          () => {}
-        );
-
+        appSyncClient.joinGame(this.gameId, () => {});
         appSyncClient.getGameById(this.gameId, game => this.setState({ game: game, contestants: game.contestants }));
         this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
         this.contestantSub = appSyncClient.subPlayerHasJoinedTheGame(this.handleContestantHasJoinedTheGame);
@@ -67,19 +50,14 @@ class PlayGame extends React.Component {
     }
 
     handleBuzzButton = () => {
-        appSyncClient.nominateContestant(
-            this.state.question.quesId,
-            this.state.me.login,
-            this.state.me.name,
-            this.state.me.organization,
-            () => {});
+        appSyncClient.nominateSelf(this.state.question.quesId, () => {});
         this.setState({ buzzerDisabled: true });
     }
 
     render() {
       console.log('question:', this.state.question);
 
-      if (!this.state.game || !this.state.me)
+      if (!this.state.game)
           return <Loading />;
 
       if (!this.state.question)
@@ -95,7 +73,7 @@ class PlayGame extends React.Component {
       return (
           <Grid container>
               <ContestantQuestion
-                question={this.state.question.question}
+                question={this.state.question}
                 buzzerDisabled={this.state.buzzerDisabled}
                 onBuzz={this.handleBuzzButton}
               />

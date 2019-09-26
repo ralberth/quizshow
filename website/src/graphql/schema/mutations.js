@@ -13,18 +13,8 @@ export const addContestantScore = gql`
 `;
 
 export const joinGame = gql`
-  mutation JoinGame(
-    $gameId: Int!
-    $login: String!
-    $name: String!
-    $organization: String!
-  ) {
-    joinGame(
-      gameId: $gameId
-      login: $login
-      name: $name
-      organization: $organization
-  ) {
+  mutation JoinGame($gameId: Int!) {
+    joinGame(gameId: $gameId) {
       gameId
       login
       name

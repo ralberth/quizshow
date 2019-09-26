@@ -2,7 +2,7 @@ import MessageBus from "../common/MessageBus";
 import { appSyncConnection } from "./configureAppSync";
 import {
     SUB_QUES_UPDATES_GQL, ALL_GAMES_GQL, GET_GAME_BY_ID_GQL, UPDATE_QUES_STATE_GQL,
-    GET_QUES_GQL, JOIN_GAME_GQL, NOMINATE_CONTESTANT_GQL,
+    GET_QUES_GQL, JOIN_GAME_GQL, NOMINATE_SELF_GQL,
     SUB_NOMINATE_CONTESTANT_GQL, REMOVE_NOMINEE_GQL, SUB_REMOVE_NOMINEE_GQL,
     ADD_CONTESTANT_SCORE_GQL, SUB_ADD_CONTESTANT_SCORE_GQL
 } from './graphqlQueries';
@@ -16,16 +16,16 @@ const bus = new MessageBus();
 
 const getObjFromResponse = ({ data }) => {
     if (!data)
-        throw "No data found";                                   // eslint-disable-line no-throw-literal
+        throw new Error("No data found");
 
     const keys = Object.keys(data);
     if (keys.length === 1 && data[keys[0]] !== null)
         return data[keys[0]];
 
     if (data[keys[0]] === null)
-        throw 'AppSync query could not resolve variables!';      // eslint-disable-line no-throw-literal
+        throw new Error('AppSync query could not resolve variables!');
 
-    throw 'AppSync query returned more than one object!';        // eslint-disable-line no-throw-literal
+    throw new Error('AppSync query returned more than one object!');
 }
 
 const oneLineQueryStr = (gql) => gqlToString(gql).replace(/\n/g, " ").replace(/  +/g, " ");
@@ -107,17 +107,17 @@ class AppSyncClient {
     subQuestionStateChange = (callback) =>
         this.subscribe(SUB_QUES_UPDATES_GQL, {},  callback);
 
-    joinGame = (gameId, login, name, org, callback) => {
-      const args = { gameId: gameId, login: login, name: name, organization: org };
+    joinGame = (gameId, callback) => {
+      const args = { gameId: gameId };
       this.mutate(JOIN_GAME_GQL, args,  callback);
     }
 
     subPlayerHasJoinedTheGame = (callback) =>
         this.subscribe(contestantHasJoinedTheGame, {}, callback)
 
-    nominateContestant = (quesId, login, name, org, callback) => {
-        const args = { quesId: quesId, login: login, name: name, organization: org };
-        this.mutate(NOMINATE_CONTESTANT_GQL, args,  callback);
+    nominateSelf = (quesId, callback) => {
+        const args = { quesId: quesId };
+        this.mutate(NOMINATE_SELF_GQL, args,  callback);
     }
 
     subNominateContestant = (callback) =>

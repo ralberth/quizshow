@@ -77,8 +77,8 @@ export const SUB_QUES_UPDATES_GQL = gql`
 `;
 
 export const JOIN_GAME_GQL = gql`
-    mutation mod($gameId: Int!, $login: String!, $name: String!, $organization: String!) {
-        joinGame(gameId: $gameId, login: $login, name: $name, organization: $organization) {
+    mutation mod($gameId: Int!) {
+        joinGame(gameId: $gameId) {
             gameId
             login
             name
@@ -88,9 +88,9 @@ export const JOIN_GAME_GQL = gql`
     }
 `;
 
-export const NOMINATE_CONTESTANT_GQL = gql`
-    mutation mod($quesId: Int!, $login: String!, $name: String!, $organization: String!) {
-        nominateContestant(quesId: $quesId, login: $login, name: $name, organization: $organization) {
+export const NOMINATE_SELF_GQL = gql`
+    mutation mod($quesId: Int!) {
+        nominateSelf(quesId: $quesId) {
             quesId
             login
             name

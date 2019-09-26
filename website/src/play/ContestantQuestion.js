@@ -76,7 +76,7 @@ const ContestantQuestion = ({ question, buzzerDisabled, onBuzz }) => {
           <Grid container className={classes.tippyTopGrid} >
             <Grid item xs={12} sm={12} md={12} className={classes.categoryGrid}>
               <Typography noWrap className={classes.subtitle} variant="subtitle1" >
-                { `Category: ${ `Foo Bar` }` }
+                {question.categoryName} for {question.points} points:
               </Typography>
             </Grid>
           </Grid>
@@ -85,7 +85,7 @@ const ContestantQuestion = ({ question, buzzerDisabled, onBuzz }) => {
           <Grid container className={classes.topGrid} justify="center" alignItems="center" >
             <Grid item className={classes.questionGrid}>
               <Typography className={classes.question} variant="h5" >
-                { question }
+                { question.question }
               </Typography>
             </Grid>
           </Grid>
