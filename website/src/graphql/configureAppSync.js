@@ -26,9 +26,13 @@ type2KeyFields['Contestant'] = [ 'gameId', 'login' ];
 type2KeyFields['Nominee']    = [ 'quesId', 'login' ];
 
 const dataIdFromObject = (obj) => {
+  // console.log("dataIdFromObject", obj);
+  if (! obj.__typename)
+    throw new Error(`Object to dataIdFromObject doesn't have __typename attribute: ${JSON.stringify(obj, null, 3)}`);
+
   const fields = type2KeyFields[obj.__typename];
   if (!fields)
-    throw new Error("Object to dataIdFromObject doesn't have __typename attribute");
+    throw new Error("__typename of object passed to dataIdFromObject isn't in type2KeyFields");
 
   const vals = fields.map(fieldName => {
     if (fieldName in obj) {
@@ -59,9 +63,9 @@ const appSyncConnection = new AWSAppSyncClient({
   offlineConfig: {
     storage: localForage
   },
-  cacheOptions: {
-    dataIdFromObject: dataIdFromObject
-  }
+  // cacheOptions: {
+  //   dataIdFromObject: dataIdFromObject
+  // }
 });
 
 

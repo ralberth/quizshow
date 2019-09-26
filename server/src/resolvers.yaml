@@ -205,14 +205,42 @@
       "operation" : "PutItem",
       "key" : {
         "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
-        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+        "login": $util.dynamodb.toDynamoDBJson($ctx.identity.username)
       },
       "attributeValues" : {
-        "name":  $util.dynamodb.toDynamoDBJson($ctx.args.name),
-        "organization":  $util.dynamodb.toDynamoDBJson($ctx.args.organization),
+        "name":  $util.dynamodb.toDynamoDBJson($ctx.identity.claims.nickname),
+        "organization":  $util.dynamodb.toDynamoDBJson($ctx.identity.claims.get("custom:organization")),
         "score": { "N": "0" }
       }
     }
+  responseMapping: $util.toJson($ctx.result)
+
+- type: Mutation
+  field: adminJoinGame
+  dataSource: contestants
+  requestMapping: |
+    #foreach($group in $context.identity.claims.get("cognito:groups"))
+      #if($group == "emcee")
+        #set($isEmcee = true)
+      #end
+    #end
+    #if($isEmcee)
+      {
+        "version" : "2017-02-28",
+        "operation" : "PutItem",
+        "key" : {
+          "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
+          "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+        },
+        "attributeValues" : {
+          "name":  $util.dynamodb.toDynamoDBJson($ctx.args.name),
+          "organization":  $util.dynamodb.toDynamoDBJson($ctx.args.organization),
+          "score": { "N": "0" }
+        }
+      }
+    #else
+      $util.error("Only Emcees can call adminJoinGame()")
+    #end
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
@@ -230,19 +258,46 @@
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
-  field: nominateContestant
+  field: nominateSelf
   dataSource: EmptyNominees
   requestMapping: |
+    #set($ts = $util.time.nowEpochMilliSeconds() - 1569453900341)
     {
       "version": "2017-02-28",
       "payload": {
         "quesId": $ctx.args.quesId,
-        "login": "${ctx.args.login}",
-        "name": "${ctx.args.name}",
-        "organization": "${ctx.args.organization}",
+        "login": "${ctx.identity.username}",
+        "name": "${ctx.identity.claims.nickname}",
+        "organization": "${ctx.identity.claims.get("custom:organization")}",
         "timebuzzed": $ts
       }
     }
+  responseMapping: $util.toJson($ctx.result)
+
+  - type: Mutation
+  field: nominateContestant
+  dataSource: EmptyNominees
+  requestMapping: |
+    #set($ts = $util.time.nowEpochMilliSeconds() - 1569453900341)
+    #foreach($group in $context.identity.claims.get("cognito:groups"))
+      #if($group == "emcee")
+        #set($isEmcee = true)
+      #end
+    #end
+    #if($isEmcee)
+      {
+        "version": "2017-02-28",
+        "payload": {
+          "quesId": $ctx.args.quesId,
+          "login": "${ctx.args.login}",
+          "name": "${ctx.args.name}",
+          "organization": "${ctx.args.organization}",
+          "timebuzzed": $ts
+        }
+      }
+    #else
+      $utils.unauthorized()
+    #end
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
