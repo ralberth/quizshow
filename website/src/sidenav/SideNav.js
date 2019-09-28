@@ -9,7 +9,6 @@ import SideNavHeader from './SideNavHeader';
 import SideNavSignOut from './SideNavSignOut';
 import SideNavLinks from './SideNavLinks';
 import ThemeToggle from './ThemeToggle';
-import { authenticatedUserIsEmcee } from '../graphql/configureAppSync';
 
 const sidenavUserItems = [
     {
@@ -37,33 +36,21 @@ const sidenavEmceeItems = sidenavUserItems.concat([
     }
 ]);
 
-class SideNav extends React.Component {
-  // Params: open, toggleDrawer, toggleTheme, user
-
-  state = { isEmcee: false };
-
-  componentDidMount = () =>
-    authenticatedUserIsEmcee()
-      .then(tf => this.setState({ isEmcee: tf }));
-
-  render() {
-    return (
-        <SideNavDrawer open={this.props.open} onClose={this.props.toggleDrawer} >
-            <SideNavHeader user={this.props.user}
-                onClick={this.props.toggleDrawer}
-                onKeyDown={this.props.toggleDrawer} />
-            <Divider />
-            <SideNavLinks
-              items={this.state.isEmcee ? sidenavEmceeItems : sidenavUserItems}
-              toggleDrawer={this.props.toggleDrawer}
-            />
-            <Divider />
-            <SideNavSignOut />
-            <Divider />
-            <ThemeToggle toggleTheme={this.props.toggleTheme} />
-        </SideNavDrawer>
-    );
-  }
-}
+const SideNav = ({ open, toggleDrawer, toggleTheme, user, isEmcee }) => (
+    <SideNavDrawer open={open} onClose={toggleDrawer} >
+        <SideNavHeader user={user}
+            onClick={toggleDrawer}
+            onKeyDown={toggleDrawer} />
+        <Divider />
+        <SideNavLinks
+            items={isEmcee ? sidenavEmceeItems : sidenavUserItems}
+            toggleDrawer={toggleDrawer}
+        />
+        <Divider />
+        <SideNavSignOut />
+        <Divider />
+        <ThemeToggle toggleTheme={toggleTheme} />
+    </SideNavDrawer>
+);
 
 export default SideNav;

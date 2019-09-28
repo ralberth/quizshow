@@ -1,0 +1,6 @@
+{
+    "region": "us-east-1",
+    "graphql": "https://3dujhj7wdrf3xizaksr337yfzm.appsync-api.us-east-1.amazonaws.com/graphql",
+    "userPoolId": "us-east-1_YITwdQZR2",
+    "userPoolWebClientId": "55jafvvoqu2tqugvsju7pvppn4"
+}

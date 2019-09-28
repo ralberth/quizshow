@@ -1,11 +1,23 @@
 import Amplify, { Auth } from "aws-amplify"
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
 import * as localForage from "localforage";
-import awsconfig from "../config/config";
+import awsconfig from "../config/config.json";
 
 // eslint-disable-next-line no-undef
 require('@aws-amplify/pubsub')  // MUST be here or pubsub doesn't work.
 
+const appsyncSettings = {
+  aws_appsync_region: awsconfig.region,
+  aws_appsync_graphqlEndpoint: awsconfig.graphql,
+  aws_appsync_authenticationType: 'AMAZON_COGNITO_USER_POOLS',
+  Auth: {
+    region: awsconfig.region,
+    userPoolId: awsconfig.userPoolId,
+    userPoolWebClientId: awsconfig.userPoolWebClientId,
+    mandatorySignIn: true,
+    authenticationFlowType: 'USER_PASSWORD_AUTH'
+  }
+};
 
 const configureAmplify = () => {
   Amplify.configure({
@@ -15,7 +27,7 @@ const configureAmplify = () => {
       }),
     },
   })
-  Amplify.configure(awsconfig);
+  Amplify.configure(appsyncSettings);
 }
 
 const type2KeyFields = new Map();
@@ -54,8 +66,8 @@ const clearAppSyncLocalStore = () => localForage.clear();
 
 
 const appSyncConnection = new AWSAppSyncClient({
-  url: awsconfig.aws_appsync_graphqlEndpoint,
-  region: awsconfig.aws_appsync_region,
+  url: awsconfig.graphql,
+  region: awsconfig.region,
   auth: {
     type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
     jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken()
@@ -68,13 +80,4 @@ const appSyncConnection = new AWSAppSyncClient({
   // }
 });
 
-
-const authenticatedUserIsEmcee = async () => {
-  const authrec = await Auth.currentAuthenticatedUser();
-  const groups = authrec.signInUserSession.idToken.payload['cognito:groups'] || [];
-  console.log("auth groups", groups);
-  return groups.includes('emcee');
-}
-
-
-export { configureAmplify, appSyncConnection, clearAppSyncLocalStore, authenticatedUserIsEmcee };
+export { configureAmplify, appSyncConnection, clearAppSyncLocalStore };

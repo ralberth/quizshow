@@ -26,7 +26,6 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 // import GameAdmin from "./GameAdmin";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { authenticatedUserIsEmcee } from './graphql/configureAppSync';
 
 configureAmplify();
 
@@ -53,7 +52,7 @@ const IndexPage = () => {
   const [ open, setOpen ] = useState(false);
   const [ user, setUser] = useState({ attributes: { nickname: '' } });
   const [ isEmcee, setEmcee ] = useState(false);
-  const [ theme, setTheme ] = useState('dark');
+  const [ theme, setTheme ] = useState('light');
   const muiTheme = createMuiTheme({
     palette: {
       type: theme,
@@ -76,19 +75,14 @@ const IndexPage = () => {
     const auth = async () => {
       const user = await Auth.currentAuthenticatedUser();
       setUser(user);
+      console.log("thing", user);
+      const groups = user.signInUserSession.idToken.payload['cognito:groups'] || [];
+      setEmcee(groups.includes('emcee'));
     };
     auth();
     return () => {
       Auth.signOut()
     };
-  }, []);
-
-  useEffect(() => {
-    const getGroups = async () => {
-      const isEmcee = await authenticatedUserIsEmcee();
-      setEmcee(isEmcee);
-    };
-    getGroups();
   }, []);
 
   const EmceeOnlyRoute = ({ component: Component, ...rest }) => (
@@ -101,7 +95,7 @@ const IndexPage = () => {
     <ThemeProvider theme={muiTheme}>
       <BrowserRouter id="BrowserRouter" >
           <CssBaseline />
-          <SideNav {...{ open, toggleDrawer, toggleTheme, user }} />
+          <SideNav {...{ open, toggleDrawer, toggleTheme, user, isEmcee }} />
           <FlashMessage />
           <Container id="Container" className={classes.container} >
               <Masthead {...{ user, toggleDrawer }} />

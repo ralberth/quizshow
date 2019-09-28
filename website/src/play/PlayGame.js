@@ -38,7 +38,7 @@ class PlayGame extends React.Component {
       this.setState({ contestants: Array.from(new Set([...this.state.contestants, newContestant])) });
     }
 
-    componentDidMount = async () => {
+    componentDidMount = () => {
         appSyncClient.joinGame(this.gameId, () => {});
         appSyncClient.getGameById(this.gameId, game => this.setState({ game: game, contestants: game.contestants }));
         this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
