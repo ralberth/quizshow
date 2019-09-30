@@ -4,7 +4,7 @@ const dynamoBatchWriteChunks = require('./batchwrite').dynamoBatchWriteChunks;
 const deleteItems = (ddb, tableName, items) => {
     items = items.map(item => { return { Key: item }});
     batchUpdates = items.map(item => { return { DeleteRequest: item }});
-   dynamoBatchWriteChunks(ddb, tableName, batchUpdates);
+    dynamoBatchWriteChunks(ddb, tableName, batchUpdates);
 }
 
 const handleCleanTable = (ddb, tableName, filterExp) => {
@@ -17,7 +17,7 @@ const handleCleanTable = (ddb, tableName, filterExp) => {
 }
 
 exports.cleanTables = (argv) => {
-    const ddb = new DynamoDB({ region: process.env.REACT_APP_QUIZSHOW_REGION });
+    const ddb = new DynamoDB({ region: process.env.QUIZSHOW_REGION });
     handleCleanTable(ddb, 'QuizGames', {
         TableName: "QuizGames",
         ExpressionAttributeNames: { "#gameId": "gameId" },

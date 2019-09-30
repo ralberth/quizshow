@@ -16,11 +16,12 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "1.8.0",
-    "@aws-cdk/aws-cognito": "1.8.0",
-    "@aws-cdk/aws-dynamodb": "1.8.0",
-    "@aws-cdk/aws-iam": "1.8.0",
-    "@aws-cdk/core": "^1.8.0",
+    "@aws-cdk/aws-appsync": "1.9.0",
+    "@aws-cdk/aws-cloudfront": "^1.9.0",
+    "@aws-cdk/aws-cognito": "1.9.0",
+    "@aws-cdk/aws-dynamodb": "1.9.0",
+    "@aws-cdk/aws-iam": "1.9.0",
+    "@aws-cdk/core": "^1.9.0",
     "js-yaml": "^3.13.1",
     "source-map-support": "^0.5.13"
   }

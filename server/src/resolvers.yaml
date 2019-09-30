@@ -274,7 +274,7 @@
     }
   responseMapping: $util.toJson($ctx.result)
 
-  - type: Mutation
+- type: Mutation
   field: nominateContestant
   dataSource: EmptyNominees
   requestMapping: |

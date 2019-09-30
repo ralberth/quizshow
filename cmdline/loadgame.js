@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parse/lib/sync');
-// const child_process = require('child_process');
 const DynamoDB = require('aws-sdk/clients/dynamodb');
 const dynamoBatchWriteChunks = require('./batchwrite').dynamoBatchWriteChunks;
 
@@ -63,7 +62,7 @@ exports.loadGame = (argv) => {
         records = csv(contents, { columns: true });
         parseFile(gameTitle, records);
     });
-    const ddb = new DynamoDB({ region: process.env.REACT_APP_QUIZSHOW_REGION });
+    const ddb = new DynamoDB({ region: process.env.QUIZSHOW_REGION });
     dynamoBatchWriteChunks(ddb, "QuizGames", gameItems);
     dynamoBatchWriteChunks(ddb, "QuizCategories", catgItems);
     dynamoBatchWriteChunks(ddb, "QuizQuestions", quesItems);

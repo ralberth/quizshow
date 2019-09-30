@@ -3,6 +3,8 @@ import iam = require('@aws-cdk/aws-iam');
 import appsync = require('@aws-cdk/aws-appsync');
 import cognito = require('@aws-cdk/aws-cognito');
 import dynamo = require('@aws-cdk/aws-dynamodb');
+import s3 = require('@aws-cdk/aws-s3');
+import { CloudFrontWebDistribution, CfnCloudFrontOriginAccessIdentity } from '@aws-cdk/aws-cloudfront';
 import { AuthFlow, CfnUserPool } from '@aws-cdk/aws-cognito';
 import { ServicePrincipal } from '@aws-cdk/aws-iam';
 import { Duration, RemovalPolicy } from '@aws-cdk/core';
@@ -11,12 +13,15 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 
 const DDB_IOPS = 20;
+const REGION = 'us-east-1';
+
 
 /*
  * WARNING: here's a quote from the CDK documentation as of Aug 25, 2019:
  *     "This is a developer preview (public beta) module. Releases might lack
  *      important features and might have future breaking changes."
  */
+
 
 export class QuizShowStack extends cdk.Stack {
     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -73,7 +78,7 @@ export class QuizShowStack extends cdk.Stack {
                     required: false,
                     stringAttributeConstraints: {
                         minLength: "0",
-                        maxLength: "80"
+                        maxLength: "40"
                     }
                 }
             ]
@@ -93,7 +98,7 @@ export class QuizShowStack extends cdk.Stack {
             name: 'QuizShow',
             authenticationType: 'AMAZON_COGNITO_USER_POOLS',
             userPoolConfig: {
-                awsRegion: 'us-east-1',
+                awsRegion: REGION,
                 defaultAction: 'ALLOW',
                 userPoolId: userPool.ref
             },
@@ -154,7 +159,7 @@ export class QuizShowStack extends cdk.Stack {
             serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
-                awsRegion: 'us-east-1',
+                awsRegion: REGION,
                 tableName: ddbCatg.tableName
             }
         });
@@ -179,7 +184,7 @@ export class QuizShowStack extends cdk.Stack {
             serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
-                awsRegion: 'us-east-1',
+                awsRegion: REGION,
                 tableName: ddbQues.tableName
             }
         });
@@ -199,7 +204,7 @@ export class QuizShowStack extends cdk.Stack {
             serviceRoleArn: appSyncRole.roleArn,
             type: 'AMAZON_DYNAMODB',
             dynamoDbConfig: {
-                awsRegion: 'us-east-1',
+                awsRegion: REGION,
                 tableName: ddbCntst.tableName
             }
         });
@@ -233,5 +238,45 @@ export class QuizShowStack extends cdk.Stack {
             r.addDependsOn(cntstDS);
             r.addDependsOn(nomDS);
         });
+
+
+        /***********************************************************************
+         ** Website: S3, CloudFront                                           **
+         ***********************************************************************/
+
+        const bucketName = `quizshow-${process.env.USER}-cloudfront-origin`;
+        const bucket = new s3.Bucket(this, bucketName, {
+            bucketName: bucketName
+        });
+
+        // See AWS-CDK Issue: https://github.com/aws/aws-cdk/issues/941
+        const cloudFrontOai = new CfnCloudFrontOriginAccessIdentity(this, 'OAI', {
+            cloudFrontOriginAccessIdentityConfig: {
+                comment: 'OAI for QuizShow website'
+            }
+        });
+
+        const webDistro = new CloudFrontWebDistribution(this, 'QuizShowDist', {
+            originConfigs: [
+                {
+                    s3OriginSource: {
+                        s3BucketSource: bucket,
+                        originAccessIdentityId: cloudFrontOai.ref
+                    },
+                    behaviors : [
+                        { isDefaultBehavior: true }
+                    ]
+                }
+            ]
+        });
+
+        const policyStatement = new iam.PolicyStatement();
+        policyStatement.addActions('s3:ListBucket');
+        policyStatement.addActions('s3:GetObject');
+        policyStatement.addResources(bucket.bucketArn);
+        policyStatement.addResources(`${bucket.bucketArn}/*`);
+        policyStatement.addCanonicalUserPrincipal(cloudFrontOai.attrS3CanonicalUserId);
+
+        bucket.addToResourcePolicy(policyStatement);
     }
 }

@@ -1,9 +1,9 @@
 const https = require('https');
 const AWS = require("aws-sdk");
 
-const appsyncUrl = process.env.REACT_APP_QUIZSHOW_GRAPHQL_ENDPOINT;
-const region = process.env.REACT_APP_QUIZSHOW_REGION;
-const apiKey = process.env.REACT_APP_QUIZSHOW_APIKEY || process.env.QUIZSHOW_APIKEY;
+const appsyncUrl = process.env.QUIZSHOW_GRAPHQL;
+const region =     process.env.QUIZSHOW_REGION;
+const apiKey =     process.env.QUIZSHOW_APIKEY;
 
 const urlParse = require("url").URL;
 const endpoint = new urlParse(appsyncUrl).hostname.toString();

@@ -1,53 +1,148 @@
-# How To Build
-
-1. Install Node.JS
-1. Copy the ***contents*** of `quizshow_config.sh` into your shell startup and edit it for your own values below.
-1. `cd website && npm start` to startup a dev server that auto-refreshes your browser.
-
-# How To Install
+# How To Build and Install
 
 This uses AWS as the server (AppSync specifically) and stores data in Dynamo DB.  This means you'll need an AWS account and have basic knowledge on how to administer cloud resources.  It's a good skill to have, cloud computing is the new normal.  This assumes you're familiar with Dynamo DB, AppSync, CloudFormation, CloudWatch, S3, CloudFront, and so on.
 
+The static website is built locally, then uploaded to AWS and served via CloudFront and S3.
+
+
 ## Install the Dynamo tables, AppSync stuff, AWS resources
 
+Set environment variables so the `cdk` command below knows where to install everything.  Probably best to put this in a shell startup file.
+
+```bash
+export QUIZSHOW_REGION='us-east-1'
+export QUIZSHOW_ACCOUNT=123456789012
 ```
+
+Build and install the resources (other than website files below) into the AWS account set above:
+
+```bash
 cd server
 npm install
 npm run build
 cdk deploy
 ```
 
-If you see `Unable to resolve AWS account to use. It must be either configured when you define your CDK or through the environment`, you need to read in your `quizshow_config.sh` file: you don't have environment variable `QUIZSHOW_ACCOUNT` set.
-
 If you see `Need to perform AWS calls for account 123456789012, but no credentials found. Tried: default credentials`, you probably are using a plugin or other invalid setup in your `~/.aws/config` file.  Rename it out of the way and try again.
 
 If you run into other issues, make sure you have followed the [CDK getting started guide][1].
 
+You should see a CloudFormation stack named "QuizShow" in your AWS account above.  You now have Dynamo tables and AppSync stuff setup, but the tables are empty and there are no website files.
 
-## Install sample data to play with
+
+## Website
+
+The cdk command above created an S3 bucket based on your shell login name to hold the website files in this step, along with a CloudFront distribution pointing to it.  It's all ready, we just need to upload the actual static website files from the `website/` folder.
+
+When you `git clone`d the repo, file `website/src/config/config.json` contained default values that need editing.  Edit this file and replace values with your specific things in AWS.  Use the AWS console to pull them from AppSync and Cognito and paste them into this file.
+
+Generate the website files and upload them to S3:
+
+```bash
+cd website
+npm install
+npm run build
+cd build
+aws s3 sync . s3://quizshow-$USER-cloudfront-origin
+```
+
+You can double-check that files are where they should be via `aws s3 ls s3://quizshow-$USER-cloudfront-origin`.  You should see `index.html` and a bunch of other things.
+
+The HTTP endpoint serving browser requests for the website are in CloudFormation.  See the generated URL you should use by listing available CloudFront distributions:
+
+```
+aws cloudfront list-distributions
+```
+
+For example:
+
+```
+blah
+```
+
+## QuizShow Command-line Tool
+
+To make it simpler to manage the QuizShow app and data, there is a small command-line tool in the `cmdline/` folder.  It's a Node.JS app you run with arguments to do things.  Build the tool so you can use it below:
+
+```bash
+cd cmdline
+npm install
+```
+
+The cmdline is built so it'll work regardless of what you have in your Cognito User Pool, and if you have any users in the "emcee" group.  It uses the API KEY method of authenticating with AppSync, which was created by the cdk command above.  Login in to the AWS console, go to App Sync > Settings, and scroll down a touch.  You'll find the generated api key there.  It starts with "!!!-".
+
+Like above, set environment variables, probably in your shell startup files:
+
+```bash
+export QUIZSHOW_GRAPHQL="https://blahblah.appsync-api.us-east-1.amazonaws.com/graphql"
+export QUIZSHOW_REGION="us-east-1"   # just in case you forgot above :-)
+export QUIZSHOW_APIKEY="da2-blahblahblah"  # api key from AWS console above
+```
+
+
+Test that it's working:
+
+```bash
+./quizshow --help
+```
+
+
+# Install sample data to play with
 
 To load the sample games into Dynamo so you have something to play with, go get (temporary) IAM user/role access/secret/session keys and set them as environment variables, then:
 
 ```bash
-cd samplegames
-npm install
-npm run convert
-npm run load
+cd cmdline
+./quizshow loadgame ../samplegames/[A-Z]*.csv
 ```
 
-Once sample data is in place, run this to load 70+ records into `QuizContestants` table for the gameId you pass on the command-line.  This makes it simpler to draw leader boards, etc.  For example, each Contestant has a random score between 0 and 1000.
+At this point, there are QuizShow games in the Dynamo tables ready to go.  You can go to the website, create a Cognito account, and go nuts.
 
-Steps:
+If you are interested in simulating a bunch of users so the application looks more "lived-in", use the command below to create a bunch of pretend contestants.  A Contestant belongs to a specific game, so login to the AWS console, and look at the `QuizGames` table.  Column `gameId` is what you're looking for.  You'll use it below.
 
 ```bash
-node add_contestants.js 100
+./quizshow contestants   \
+    --datafile ../samplegames/contestants.csv    # has contestant raw data, like names
+    --quantity 30                                # how many people to create
+    --gameid 123                                 # what you found in Dynamo QuizGames above
 ```
 
-Once you have contestants loaded, you'll want to see the game in action as if there were many people all playing along.  Given a specific quesId from the database, run this script to have between 1 and 20 people "buzz in" in rapid succession.  The argument is the quesId value:
+When done, check out Dynamo table `QuizContestants`.  They'll appear in the game as the leader board on player's screens.
+
+Once you have contestants loaded, you'll want to see the game in action as if there were many people all playing along.  Given a specific quesId from the database, run this script to have a bunch of contestants loaded above all "buzz in" in rapid succession:
 
 ```bash
-node -r esm add_nominees.js 123
+./quizshow nominees --quesid 456 --quantity 10
 ```
+
+# Security
+
+Security setup is simple: all users create accounts via the QuizShow website, which are stored in a Cognito User Pool named `QuizShow`.  Anyone can create an account with no restrictions.  Any user may join any game and play along.
+
+Only emcees may host a game (big screen showing all questions and point values) or run a game.  To be an emcee:
+
+1. Login to the AWS account and select the `QuizShow` Cognito User Pool
+1. Under Users and Groups, select the Groups tab at top
+1. Create a new Group named "emcee"
+1. Add each user who should have emcee ability
+
+
+# For Developers
+
+## Helpful cdk commands
+
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
+
+
+## How to develop
+
+Easy: `cd website && npm start`.  This starts up a browser window and launches the website.  Edit files and save them.  When files change on disk, they are automatically re-bundled and the browser refreshes the page for you.
+
+Keep a console window open on the browser to see messages from the application.
 
 
 ## Multiple devices with "npm start"
@@ -67,14 +162,28 @@ ssh command broken-down:
 * `192.168.1.3` is the remote host to connect to (and the one that will listen on the port from `-R` above)
 
 
-# How to Prepare for Production
+## How to Prepare for Production
 
-* Clear out the Cognito User Pool
-* Change IOPS on the Dynamo tables to support a bunch of users at once
-* Clear out the Dynamo tables
+Clear out the Cognito User Pool, other than your account.
+
+Remove everyone from Cognito group "emcee" other than yourself.
+
+Change IOPS on the Dynamo tables to support a bunch of users at once.
+
+Clear out the Dynamo tables:
+
+```bash
+./quizshow cleantables
+```
+
+Load ony the game(s) you intend to use:
+
+```bash
+./quizshow loadgame ~/mygames/fubar.csv
+```
 
 
-# Cognito User Pool Structure
+## Cognito User Pool Structure
 
 Data on the humans involved in the game are stored in Cognito *only*, as opposed to having a separate table holding users' names, logins, etc.
 
@@ -91,14 +200,25 @@ To be as simple as possible, Cognito is setup with:
 1. Anyone can sign-up for an account
 1. Custom sign-up screen that skips phone number and adds nickname and organiztion fields.
 
-Using `withPlaceholder` in `index.js` makes sure all people have to sign-in (or sign-up and sign-in) before the app is rendered.  Once signed-in, `Auth.currentAuthenticatedUser()` will return (via a promise) an object that looks like this:
+Using `withAuthenticator()` in `index.js` makes sure all people have to sign-in (or sign-up and sign-in) before the app is rendered.  Once signed-in, `Auth.currentAuthenticatedUser()` will return (via a promise) an object that looks like this:
 
 ```json
 {
     "username": "joeuser",
     "attributes": {
-        "nickname" : "Joe",
-        "email": "joeuser@somewhere.com"
+        "nickname": "Joe",
+        "email": "joeuser@somewhere.com",
+        "custom:organization": "Initech"
+    },
+    "signInUserSession": {
+        "idToken": {
+            "jwtToken": "eyJraWQiOiJXWXZvcEFFczZOVDJEb3JJa...",
+            "payload": {
+                "custom:organization": "Initech",
+                "email": "joeuser@somewhere.com",
+                "cognito:groups": [ "emcee" ]
+            }
+        }
     }
 }
 ```
