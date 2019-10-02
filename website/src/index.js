@@ -137,7 +137,7 @@ const signUpArgs = {
                 key: "custom:organization",
                 label: "Organization",
                 type: "string",
-                required: false
+                required: true
             }
         ],
         hiddenDefaults: [ 'phone_number' ]

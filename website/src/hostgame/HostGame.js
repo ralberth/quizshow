@@ -1,5 +1,4 @@
 import Typography from '@material-ui/core/Typography';
-import { styled } from '@material-ui/styles';
 import React from 'react';
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
