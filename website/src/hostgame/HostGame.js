@@ -7,11 +7,6 @@ import QuestionUtils from "../util/QuestionUtils";
 import appSyncClient from '../graphql/AppSyncClient';
 import Loading from "../common/Loading";
 
-const GameTitle = styled(Typography)({
-    margin: "40px",
-    padding: "40px"
-});
-
 class HostGame extends React.Component {
 
     constructor(props) {
@@ -74,12 +69,9 @@ class HostGame extends React.Component {
         } else {
             return (
                 <div>
-                    <GameTitle
-                        variant="h3"
-                        align="center"
-                    >
+                    <Typography variant="h3" align="center">
                         {this.state.game.title}
-                    </GameTitle>
+                    </Typography>
                     <GameBoard game={this.state.game} />
                     <Faceoff
                         question={this.state.question}

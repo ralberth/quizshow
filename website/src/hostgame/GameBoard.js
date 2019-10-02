@@ -62,9 +62,10 @@ const GameBoard = ({ game }) => {
                 {ranks.map((rank, rankNum) => (
                     <TableRow key={`row_${rankNum}`}>
                         {rank.map((ques, quesNum) => (
-                            <TableCell key={`cell_${rankNum}_${quesNum}`}>
+                            <TableCell key={`cell_${rankNum}_${quesNum}`} padding="none">
                                 { ques ? (<GameCell
                                             points={ques.points}
+                                            rank={rankNum}
                                             state={ques.state} />)
                                         : "" }
                             </TableCell>
