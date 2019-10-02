@@ -143,8 +143,8 @@ export const ADD_CONTESTANT_SCORE_GQL = gql`
 `;
 
 export const SUB_ADD_CONTESTANT_SCORE_GQL = gql`
-    subscription sub($gameId: Int!) {
-        addContestantScore(gameId: $gameId) {
+    subscription sub {
+        addContestantScore {
             gameId
             login
             name

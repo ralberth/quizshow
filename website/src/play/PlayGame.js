@@ -39,15 +39,27 @@ class PlayGame extends React.Component {
     }
 
     componentDidMount = () => {
-        appSyncClient.joinGame(this.gameId, () => {});
-        appSyncClient.getGameById(this.gameId, game => this.setState({ game: game, contestants: game.contestants }));
+        appSyncClient.joinGame(this.gameId, () => {
+          // Don't get the game until you join, or you won't be in the contestant list
+          appSyncClient.getGameById(this.gameId, game => {
+            this.setState({ game: game, contestants: game.contestants });
+            this.contestantSub = appSyncClient.subPlayerHasJoinedTheGame(this.handleContestantHasJoinedTheGame);
+          });
+        });
         this.quesSub = appSyncClient.subQuestionStateChange(this.handleQuestionStateChange);
-        this.contestantSub = appSyncClient.subPlayerHasJoinedTheGame(this.handleContestantHasJoinedTheGame);
+        this.addScoreSub = appSyncClient.subAddContestantScore(contestant => {
+          this.state.contestants.forEach(c => {
+            if (c.login === contestant.login)
+              c.score = contestant.score;
+          })
+          this.forceUpdate();
+        });
     }
 
     componentWillUnmount = () => {
         this.quesSub.unsubscribe();
         this.contestantSub.unsubscribe();
+        this.addScoreSub.unsubscribe();
     }
 
     handleBuzzButton = () => {

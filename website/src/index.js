@@ -8,7 +8,7 @@ import Auth from "@aws-amplify/auth";
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import ChooseGame from "./common/choosegame/ChooseGame";
 import EmceeGame from "./emcee/EmceeGame";
 import FlashMessage from "./FlashMessage";
@@ -75,7 +75,6 @@ const IndexPage = () => {
     const auth = async () => {
       const user = await Auth.currentAuthenticatedUser();
       setUser(user);
-      console.log("thing", user);
       const groups = user.signInUserSession.idToken.payload['cognito:groups'] || [];
       setEmcee(groups.includes('emcee'));
     };
@@ -101,7 +100,8 @@ const IndexPage = () => {
               <Masthead {...{ user, toggleDrawer }} />
               <Toolbar id="back-to-top-anchor" />
               <Switch id="Switch">
-                <Route exact path="/"                       component={Homepage} />
+                {/* <Route exact path="/"                       component={Homepage} /> */}
+                <Redirect exact from='/' to='/play' />
                 <Route exact path="/play"                   component={ChooseGameToPlay} />
                 <Route exact path="/play/:gameId"           component={PlayGame} />
                 {/* <Route exact path="/create"               component={CreateGame} /> */}

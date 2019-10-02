@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
   listItemText: {
     margin: `16px 0 16px 16px`
   },
-  points: {
+  score: {
     margin: `16px 0 16px 16px`,
     color: theme.palette.primary.main,
     textAlign: `right`,
@@ -50,9 +50,9 @@ const PlayerCard = ({ player }) => {
         primary={`${player.name} (${player.login})`}
         secondary={player.organization}
       />
-      { player.points ? <LeaderbooardPoints
-                          className={classes.points}
-                          primary={`${player.points.toLocaleString()}`}
+      { player.score ? <LeaderbooardPoints
+                          className={classes.score}
+                          primary={`${player.score.toLocaleString()}`}
                           secondary={`pts`}
                         />
                       : null

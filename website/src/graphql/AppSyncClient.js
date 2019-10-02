@@ -134,8 +134,8 @@ class AppSyncClient {
         this.mutate(ADD_CONTESTANT_SCORE_GQL, args,  callback);
     }
 
-    subAddContestantScore = (gameId, callback) =>
-        this.subscribe(SUB_ADD_CONTESTANT_SCORE_GQL, { gameId: gameId },  callback);
+    subAddContestantScore = (callback) =>
+        this.subscribe(SUB_ADD_CONTESTANT_SCORE_GQL, { },  callback);
 }
 
 export default new AppSyncClient();
