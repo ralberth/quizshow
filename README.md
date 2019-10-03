@@ -115,6 +115,27 @@ Once you have contestants loaded, you'll want to see the game in action as if th
 ./quizshow nominees --quesid 456 --quantity 10
 ```
 
+Lastly, you can load your own users into the Cognito user pool based on an Excel spreadsheet.  Since the code below includes passwords, the Excel sheet isn't included in this Git repo, but you can create one yourself easily.
+
+Sample Excel sheet:
+
+| login    | password | given_name | family_name | organization
+|----------|----------|------------|-------------|---------------
+| jsmith   | pumpkin  | John       | Smith       | Acme
+| sjohnson | bluesky  | Sue        | Johnson     | Federal Gov't
+
+Call via the quizshow command, passing the Cognito User Pool to add users to, and a template email ddress.  The email address field is a normal email address with "LOGIN" appearing somewhere in it, in all capital letters.  The actual email address used substitutes the login column from the csv file into the "LOGIN" text.
+
+```bash
+./quizshow addusers  \
+     -f ~/Documents/myusers.csv   \
+     -u us-east-1_eLgTnTfAQ  \
+     -e 'quizshow+LOGIN@mycompany.com'
+```
+
+If you see error "MissingRequiredParameter: Missing required key 'Username' in params", you probably exported your Excel sheet into a CSV file that includes a Byte Order Mark (BOM) as the first byte of the file.  Remove it.
+
+
 # Security
 
 Security setup is simple: all users create accounts via the QuizShow website, which are stored in a Cognito User Pool named `QuizShow`.  Anyone can create an account with no restrictions.  Any user may join any game and play along.

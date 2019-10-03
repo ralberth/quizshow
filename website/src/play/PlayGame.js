@@ -35,7 +35,9 @@ class PlayGame extends React.Component {
     }
 
     handleContestantHasJoinedTheGame = newContestant => {
-      this.setState({ contestants: Array.from(new Set([...this.state.contestants, newContestant])) });
+      const alreadyThere = this.state.contestants.find(c => c.login === newContestant.login);
+      if (!alreadyThere)
+        this.setState({ contestants: Array.from(new Set([...this.state.contestants, newContestant])) });
     }
 
     componentDidMount = () => {

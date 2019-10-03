@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const loadGame = require('./loadgame').loadGame;
+const addUsers = require('./addusers').addUsers;
 const cleanTables = require('./cleantables').cleanTables;
 const addContestants = require('./addcontestants').addContestants;
 const addNominees = require('./addnominees').addNominees;
@@ -13,6 +14,24 @@ require('yargs') // eslint-disable-line
              'Load game from CSV into Dynamo tables',
              () => {},
              loadGame)
+    .command('addusers',
+             'Add new users to a Cognito user pool, setting their passwords too',
+             (yargs) => yargs.option('csvfile', {
+                                 alias: 'f',
+                                 describe: 'CSV file with users and passwords',
+                                 demandOption: true
+                             })
+                             .option('userpool', {
+                                 alias: 'u',
+                                 describe: 'Cognito User Pool ID to add users to',
+                                 demandOption: true
+                             })
+                             .option('emailtmpl', {
+                                 alias: 'e',
+                                 describe: 'Email template to generate email addresses',
+                                 default: `${process.env.USER}+LOGIN@amazon.com`
+                             }),
+             argv => addUsers(argv.csvfile, argv.userpool, argv.emailtmpl))
     .command('contestants',
              'Add n new contestants via GraphQL joinGame() (end up in QuizContestants)',
              (yargs) => yargs.option('datafile', {
