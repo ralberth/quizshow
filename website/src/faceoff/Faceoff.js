@@ -1,50 +1,144 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
 import Grid from '@material-ui/core/Grid';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
-import { Modal } from '@material-ui/core';
-import QuestionBox from './QuestionBox';
-import { makeStyles } from '@material-ui/core/styles';
-import Leaderboard from '../common/Leaderboard';
+import Leaderboard from '../common/Leaderboard'
+import { grey } from '@material-ui/core/colors';
 
-const useStyles = makeStyles(theme => ({
-    container: {
-      padding: theme.spacing(8)
+const useStyles = makeStyles(theme => {
+  const isDark = theme.palette.type === 'dark';
+  return {
+    appBar: {
+      position: 'relative',
+      minHeight: '86px',
+    },
+    appBarTitles: {
+      lineHeight: `5rem`,
+      fontSize: '2rem',
+      fontWeight: `550`,
+    },
+    category: {
+      marginLeft: theme.spacing(2),
+      flex: 1,
+    },
+    points: {
+      textAlign: `right`,
+      marginRight: theme.spacing(2),
+    },
+    dialogContent: {
+      padding: `0 0 0 0`,
+    },
+    contentContainer: {
+      padding: `2rem`,
+      margin: `0 0 0 0`,
+      height: `100%`,
+    },
+    leftContainer: {
+      padding: `0 1rem 0 0`,
+      margin: `0 0 0 0`,
+      height: `100%`,
+    },
+    rightContainer: {
+      padding: `0 0 0 1rem`,
+      margin: `0 0 0 0`,
+      height: `100%`,
+    },
+    leftPaper: {
+      height: `100%`,
+      padding: `0 4rem 4rem 4rem`,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      textAlign: 'center',
+    },
+    rightPaper: {
+      height: `100%`,
+      width: `100%`,
+      maxHeight: '675px',
+      overflow: 'auto',
+    },
+    questionFont: {
+      fontWeight: `600`,
+      color: isDark ? theme.palette.text.primary : grey[700],
     }
-}));
+  }
+});
+
+const StyledDialog = styled(Dialog)`
+  .MuiDialog-paper {
+      position: absolute;
+      padding: 0 0 0 0;
+      margin: 0 0 0 0;
+      height: 50rem;
+      top: 8rem;
+      left: calc(50% - 640px);
+      background-color: ${({theme}) => theme.palette.type === 'dark' ? `#333` : `#f4f6f8`};
+  }
+`;
 
 const Faceoff = ({ question, nominees }) => {
     const classes = useStyles();
+    const theme = useTheme();
 
     if (question && ['display', 'open'].includes(question.state)) {
         return (
-            <Modal
+            <StyledDialog
+                theme={theme}
                 open={true}
+                fullWidth={true}
+                maxWidth={`lg`}
                 disableBackdropClick={true}
                 disableEscapeKeyDown={true}
             >
-                <Container className={classes.container}>
-                    <Grid
-                        container
-                        direction="row"
-                        justify="space-evenly"
-                        alignItems="flex-start"
-                        spacing={8}
-                    >
-                        <Grid item xs={8}>
-                            <QuestionBox
-                                category={question.categoryName}
-                                points={question.points}
-                                question={question.question} />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Paper>
-                                <Leaderboard people={nominees} />
-                            </Paper>
-                        </Grid>
+
+              <AppBar className={classes.appBar} >
+                <Toolbar>
+                  <Typography variant="h6" className={`${classes.category} ${classes.appBarTitles}`}>
+                    Category: { question.categoryName }
+                  </Typography>
+                  <Typography variant="h6" className={`${classes.points} ${classes.appBarTitles}`}>
+                    Points: { question.points }
+                  </Typography>
+                </Toolbar>
+              </AppBar>
+
+              <DialogContent className={classes.dialogContent} >
+                <Grid container
+                  direction="row"
+                  className={classes.contentContainer} >
+
+                  <Grid item xl={8}>
+                    <Grid container className={classes.leftContainer} >
+                      <Grid item xl={12} >
+                        <Paper className={classes.leftPaper} elevation={4} >
+                          <Typography variant="h2" className={classes.questionFont} >
+                              { question.question }
+                          </Typography>
+                        </Paper>
+                      </Grid>
                     </Grid>
-                </Container>
-            </Modal>
+                  </Grid>
+
+                  <Grid item xl={4}>
+                    <Grid container className={classes.rightContainer}>
+                      <Grid item xl={12} >
+                        <Paper className={classes.rightPaper} elevation={4} >
+                          <Leaderboard header={`Contestants`} people={nominees} />
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                </Grid>
+              </DialogContent>
+
+            </StyledDialog>
         );
     } else {
         return <div/>;

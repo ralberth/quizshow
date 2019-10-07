@@ -37,30 +37,30 @@ type2KeyFields['Question']   = [ 'quesId' ];
 type2KeyFields['Contestant'] = [ 'gameId', 'login' ];
 type2KeyFields['Nominee']    = [ 'quesId', 'login' ];
 
-const dataIdFromObject = (obj) => {
-  // console.log("dataIdFromObject", obj);
-  if (! obj.__typename)
-    throw new Error(`Object to dataIdFromObject doesn't have __typename attribute: ${JSON.stringify(obj, null, 3)}`);
+// const dataIdFromObject = (obj) => {
+//   // console.log("dataIdFromObject", obj);
+//   if (! obj.__typename)
+//     throw new Error(`Object to dataIdFromObject doesn't have __typename attribute: ${JSON.stringify(obj, null, 3)}`);
 
-  const fields = type2KeyFields[obj.__typename];
-  if (!fields)
-    throw new Error("__typename of object passed to dataIdFromObject isn't in type2KeyFields");
+//   const fields = type2KeyFields[obj.__typename];
+//   if (!fields)
+//     throw new Error("__typename of object passed to dataIdFromObject isn't in type2KeyFields");
 
-  const vals = fields.map(fieldName => {
-    if (fieldName in obj) {
-      const val = obj[fieldName];
-      if (val)
-        return val;
-      else
-        throw new Error(`dataIdFromObject: obj.${fieldName} was falsy`);
-    } else
-      throw new Error(`dataIdFromObject: obj doesn't have property ${fieldName}: ${JSON.stringify(obj, null, 2)}`);
-  });
+//   const vals = fields.map(fieldName => {
+//     if (fieldName in obj) {
+//       const val = obj[fieldName];
+//       if (val)
+//         return val;
+//       else
+//         throw new Error(`dataIdFromObject: obj.${fieldName} was falsy`);
+//     } else
+//       throw new Error(`dataIdFromObject: obj doesn't have property ${fieldName}: ${JSON.stringify(obj, null, 2)}`);
+//   });
 
-  const id = `${obj.__typename}:${vals.join(',')}`;
-  console.log('dataIdFromObject:', id);
-  return id;
-}
+//   const id = `${obj.__typename}:${vals.join(',')}`;
+//   console.log('dataIdFromObject:', id);
+//   return id;
+// }
 
 const clearAppSyncLocalStore = () => localForage.clear();
 

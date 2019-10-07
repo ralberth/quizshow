@@ -7,11 +7,10 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core';
 
-const CategoryTableCell = withStyles(theme => ({
-    head: {
-        color: "slateblue",
-        fontSize: 24,
-        textAlign: "center"
+const BorderlessTableCell = withStyles(theme => ({
+    root: {
+      borderBottom: 0,
+      padding: 0,
     }
 }))(TableCell);
 
@@ -52,23 +51,25 @@ const GameBoard = ({ game }) => {
             <TableHead>
                 <TableRow>
                     {game.categories.map(catg => (
-                        <CategoryTableCell key={`catg_${catg.categoryName}`}>
-                            {catg.categoryName}
-                        </CategoryTableCell>
+                        <BorderlessTableCell key={`catg_${catg.categoryName}`}>
+                            <GameCell points={catg.categoryName}
+                              rank={'Catg'}
+                              state={'open'} />
+                        </BorderlessTableCell>
                     ))}
                 </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody >
                 {ranks.map((rank, rankNum) => (
-                    <TableRow key={`row_${rankNum}`}>
+                    <TableRow key={`row_${rankNum}`} >
                         {rank.map((ques, quesNum) => (
-                            <TableCell key={`cell_${rankNum}_${quesNum}`} padding="none">
+                            <BorderlessTableCell key={`cell_${rankNum}_${quesNum}`} padding="none">
                                 { ques ? (<GameCell
                                             points={ques.points}
                                             rank={rankNum}
                                             state={ques.state} />)
                                         : "" }
-                            </TableCell>
+                            </BorderlessTableCell>
                         ))}
                     </TableRow>
                 ))}

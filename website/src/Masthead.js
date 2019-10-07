@@ -4,8 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import appSyncClient from './graphql/AppSyncClient';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,8 +50,16 @@ const roles = [
 
 const Masthead = ({ user, toggleDrawer, location }) => {
     const classes = useStyles();
-    const myroles = roles.filter(r => location.pathname.split('/')[1] === r.pathname);
-    const role = myroles.length === 0 ? '?' : roles[0];
+    const roleMatches = roles.filter(r => location.pathname.split('/')[1] === r.pathname);
+    const role = roleMatches.length === 0 ? roles[0] : roleMatches[0];
+    const [game, setGame] = useState({ title: '' })
+    const gameId = location.pathname.split('/')[2];
+
+    if (role.pathname === 'host' && gameId) {
+      appSyncClient.getGameById(gameId, (game) => {
+        setGame(game)
+      });
+    }
 
     return (
         <div className={classes.root} >
@@ -70,7 +79,12 @@ const Masthead = ({ user, toggleDrawer, location }) => {
                   >
                       { role.title }
                   </Typography>
-                  <Typography variant="h6">{ user.attributes.nickname }</Typography>
+                  <Typography variant="h6">
+                    {
+                      role.pathname === 'host' && gameId ?
+                        game.title : (role.pathname === 'host' ? '' : user.attributes.nickname)
+                    }
+                  </Typography>
               </Toolbar>
           </AppBar>
 

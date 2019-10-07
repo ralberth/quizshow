@@ -16,13 +16,15 @@ const useStyles = makeStyles(theme => {
     },
     tippyTopGrid: {
       position: `fixed`,
+      top: `4.5rem`,
       height: `2rem`,
       width: `100%`,
       maxWidth: `1280px`,
     },
     topGrid: {
       position: `fixed`,
-      height: `55%`,
+      top: '6.75rem',
+      height: `50%`,
       width: `100%`,
       maxWidth: `1280px`,
     },
@@ -53,13 +55,13 @@ const Buzzer = withStyles(({ palette }) => {
       root: {
       width: `10rem`,
       height: `10rem`,
-      // backgroundColor: `#cf2a27`,
       backgroundColor: palette.secondary.main,
       color: `#fff`,
       fontSize: `2rem`,
       fontWeight: `bold`,
       "&:hover": {
-        color: palette.secondary.main,
+        color: '#fff',
+        backgroundColor: palette.secondary.dark,
       },
     }
   }

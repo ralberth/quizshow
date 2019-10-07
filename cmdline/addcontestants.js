@@ -2,14 +2,14 @@ const fs = require('fs');
 const csv = require('csv-parse/lib/sync');
 const callAppSync = require('./callappsync').callAppSync;
 
-const JOIN_GAME = `
-  mutation JoinGame(
+const ADMIN_JOIN_GAME = `
+  mutation AdminJoinGame(
     $gameId: Int!
     $login: String!
     $name: String!
     $organization: String!
   ) {
-    joinGame(
+    adminJoinGame(
       gameId: $gameId
       login: $login
       name: $name
@@ -39,7 +39,7 @@ exports.addContestants = (datafile, qty, gameId) => {
             organization: person.organization,
         };
         try {
-          callAppSync(JOIN_GAME, args, 'JoinGame', () => {});
+          callAppSync(ADMIN_JOIN_GAME, args, 'adminJoinGame', () => {});
         } catch(e) {
           console.log('error:', e);//JSON.stringify(e));
           console.log('   person:', JSON.stringify(person));

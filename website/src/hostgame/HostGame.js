@@ -1,4 +1,3 @@
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
@@ -63,14 +62,12 @@ class HostGame extends React.Component {
     }
 
     render() {
+
         if (!this.state.game) {
             return <Loading />
         } else {
             return (
                 <div>
-                    <Typography variant="h3" align="center">
-                        {this.state.game.title}
-                    </Typography>
                     <GameBoard game={this.state.game} />
                     <Faceoff
                         question={this.state.question}

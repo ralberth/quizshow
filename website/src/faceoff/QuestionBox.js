@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import CardHeader from '@material-ui/core/CardHeader';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -18,14 +19,14 @@ const QuestionBox = ({ category, points, question }) => {
     return (
         <Paper
             className={classes.root}
-            elevation={3}
+            elevation={0}
         >
-            <Typography variant="h4" className={classes.catgAndPoints}>
-                {category} for {points} points
-            </Typography>
-            <Typography variant="h2">
-                {question}
-            </Typography>
+          <CardHeader
+            title={`Category: ${category}`}
+            subheader={`${points} points`} />
+          <Typography variant="h2">
+              {question}
+          </Typography>
         </Paper>
     );
 }

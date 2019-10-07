@@ -11,11 +11,16 @@ import RandomColorAvatar from './RandomColorAvatar'
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    maxWidth: 400,
+    [theme.breakpoints.down('md')]: {
+      maxWidth: 400,
+    },
   },
   listSubheader: {
+    minHeight: '64px',
+    lineHeight: '64px',
     color: `#fff`,
-    fontWeight: `bold`,
+    fontSize: '1.2rem',
+    fontWeight: `550`,
     padding: `0 0 0 2rem`,
     backgroundColor: theme.palette.primary.main,
   },
@@ -24,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
   score: {
     margin: `16px 0 16px 16px`,
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.light,
     textAlign: `right`,
   }
 }));
@@ -77,7 +82,7 @@ const Leaderboard = ({ header, people }) => {
           component="div"
           id="nested-list-subheader"
         >
-          { header }
+          { header === undefined ? `Contestants` : header }
         </ListSubheader>
       }
       className={classes.root}

@@ -1,6 +1,14 @@
 {
   "name": "server",
   "version": "0.1.0",
+  "author": "Rich Alberth <richalberth@gmail.com>",
+  "contributors": [
+    {
+      "name": "Tyler Austin",
+      "email": "tyler.e.austin@gmail.com",
+      "url": "https://github.com/tyler-austin"
+    }
+  ],
   "bin": {
     "server": "bin/server.js"
   },
@@ -11,17 +19,17 @@
   },
   "devDependencies": {
     "@types/node": "^8.10.54",
-    "aws-cdk": "^1.8.0",
-    "ts-node": "^8.3.0",
+    "aws-cdk": "^1.11.0",
+    "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "@aws-cdk/aws-appsync": "1.9.0",
-    "@aws-cdk/aws-cloudfront": "^1.9.0",
-    "@aws-cdk/aws-cognito": "1.9.0",
-    "@aws-cdk/aws-dynamodb": "1.9.0",
-    "@aws-cdk/aws-iam": "1.9.0",
-    "@aws-cdk/core": "^1.9.0",
+    "@aws-cdk/aws-appsync": "1.11.0",
+    "@aws-cdk/aws-cloudfront": "^1.11.0",
+    "@aws-cdk/aws-cognito": "1.11.0",
+    "@aws-cdk/aws-dynamodb": "1.11.0",
+    "@aws-cdk/aws-iam": "1.11.0",
+    "@aws-cdk/core": "^1.11.0",
     "js-yaml": "^3.13.1",
     "source-map-support": "^0.5.13"
   }

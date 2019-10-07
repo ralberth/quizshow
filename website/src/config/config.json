@@ -1,6 +1,6 @@
 {
     "region": "us-east-1",
-    "graphql": "https://fq7fxuoelrhk3n5fydxv2rnon4.appsync-api.us-east-1.amazonaws.com/graphql",
-    "userPoolId": "us-east-1_eLSIpTfZO",
-    "userPoolWebClientId": "1ld8ugal0rlp6pvo2c1brk3pev"
+    "graphql": "https://g6iuharhdjbjzh66vvlve4xrvq.appsync-api.us-east-1.amazonaws.com/graphql",
+    "userPoolId": "us-east-1_WI41Rwdqg",
+    "userPoolWebClientId": "17j4947f7qg6kk3mtv41n0rrgt"
 }

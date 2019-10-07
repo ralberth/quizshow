@@ -57,9 +57,9 @@ type Query {
 }
 
 type Mutation {
-  addContestantScore(gameId: Int!, increment: Int!, login: String!): Contestant!
+  addContestantScore(gameId: Int!, increment: Int!, login: String!): Contestant! @aws_api_key
   joinGame(gameId: Int!): Contestant!
-  adminJoinGame(gameId: Int!, login: String!, name: String!, organization: String!): Contestant!
+  adminJoinGame(gameId: Int!, login: String!, name: String!, organization: String!): Contestant! @aws_api_key
   leaveGame(gameId: Int!, login: String!): Contestant!  @aws_api_key
   nominateSelf(quesId: Int!): Nominee!
   nominateContestant(
@@ -70,8 +70,8 @@ type Mutation {
   ): Nominee!
     @aws_api_key
     @aws_cognito_user_pools
-  removeNominee(login: String!, quesId: Int!): Nominee!
-  setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question!
+  removeNominee(login: String!, quesId: Int!): Nominee! @aws_api_key
+  setQuestionState(catgId: Int!, quesId: Int!, state: StateEnum!): Question! @aws_api_key
 }
 
 type Subscription {
