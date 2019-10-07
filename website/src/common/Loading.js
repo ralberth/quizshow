@@ -7,9 +7,10 @@ import { grey } from '@material-ui/core/colors';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(theme => {
+  const isDark = theme.palette.type === 'dark';
+  return {
     root: {
-      position: `absolute`,
       height: `100%`,
       width: `100%`,
       margin: `0`,
@@ -19,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(4)
     },
     text: {
-      color: grey[800],
+      color: isDark ? theme.palette.text.primary : grey[700],
       fontWeight: `bold`,
       margin: `10rem 0 0 0`,
       textAlign: `center`,
@@ -29,7 +30,8 @@ const useStyles = makeStyles(theme => ({
       bottom: `0`,
       width: `100%`,
     }
-}));
+  }
+});
 
 const Loading = () => {
     const classes = useStyles();

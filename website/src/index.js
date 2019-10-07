@@ -120,10 +120,11 @@ const IndexPage = () => {
       <BrowserRouter id="BrowserRouter" >
           <CssBaseline />
           <SideNav {...{ open, toggleDrawer, toggleTheme, user, isEmcee }} />
+          <Masthead {...{ user, toggleDrawer }} />
           <FlashMessage className={classes.flashMessage} />
           <Container id="Container" className={classes.container} >
-              <Masthead {...{ user, toggleDrawer }} />
               <Toolbar id="back-to-top-anchor" />
+
               <Switch id="Switch">
                 {/* <Route exact path="/"                       component={Homepage} /> */}
                 {/* <Route exact path="/create"                 component={CreateGame} /> */}
@@ -137,11 +138,13 @@ const IndexPage = () => {
                 <EmceeOnlyRoute exact path="/emcee/:gameId" component={EmceeGame} />
                 <Route path='*' exact={true}                component={RouteNotFound}/>
               </Switch>
+
               <ScrollTop threshold={100} selector={'#back-to-top-anchor'} >
                 <Fab color="secondary" size="large" aria-label="scroll back to top">
                   <KeyboardArrowUpIcon />
                 </Fab>
               </ScrollTop>
+
           </Container>
       </BrowserRouter>
     </ThemeProvider>

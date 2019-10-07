@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Faceoff from "../faceoff/Faceoff";
 import GameBoard from "./GameBoard";
 import QuestionUtils from "../util/QuestionUtils";
@@ -67,13 +67,13 @@ class HostGame extends React.Component {
             return <Loading />
         } else {
             return (
-                <div>
+                <Fragment>
                     <GameBoard game={this.state.game} />
                     <Faceoff
                         question={this.state.question}
                         nominees={this.state.nominees}
                     />
-                </div>
+                </Fragment>
             );
         }
     }

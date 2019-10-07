@@ -7,12 +7,21 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { withStyles } from '@material-ui/core';
 
-const BorderlessTableCell = withStyles(theme => ({
+const BorderlessTableCell = withStyles({
     root: {
       borderBottom: 0,
       padding: 0,
     }
-}))(TableCell);
+})(TableCell);
+
+const PositionedTable = withStyles({
+    root: {
+      position: `fixed`,
+      top: `6em`,
+      maxWidth: `1280px`,
+      height: `calc(100% - 6em)`,
+    }
+})(Table);
 
 /*
  * Matrix (2D array): rows are rows to display, columns are cols (one col per category).
@@ -47,7 +56,7 @@ const createMatrixFromGame = (game) => {
 const GameBoard = ({ game }) => {
     const ranks = createMatrixFromGame(game);
     return (
-        <Table style={{ tableLayout: "fixed" }}>
+        <PositionedTable style={{ tableLayout: "fixed" }}>
             <TableHead>
                 <TableRow>
                     {game.categories.map(catg => (
@@ -74,7 +83,7 @@ const GameBoard = ({ game }) => {
                     </TableRow>
                 ))}
             </TableBody>
-        </Table>
+        </PositionedTable>
     );
 }
 

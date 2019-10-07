@@ -6,7 +6,7 @@ import { grey } from '@material-ui/core/colors';
 
 const MAR =  8;
 const PAD = 18;
-const HGT = `7rem`;
+const HGT = `85%`;
 
 
 const useStyles = makeStyles(theme => {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => {
     },
     rankCatg: {
       color: isDark ? theme.palette.text.primary : grey[700],
-      height: `9rem`,
+      height: `7rem`,
     },
     rank0:  { backgroundColor: '#5680E9' },
     rank1:  { backgroundColor: '#84CEEB' },
@@ -33,7 +33,7 @@ const useStyles = makeStyles(theme => {
     rank4:  { backgroundColor: '#8860D0' },
     rank5:  { backgroundColor: '#88BDBC' },
     rank6:  { backgroundColor: '#5680E9' },
-    closed: { backgroundColor: '#fafafa' },
+    closed: { display: 'table-column' },
     typography: {
       fontWeight: 550,
     }
