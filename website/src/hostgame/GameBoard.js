@@ -19,9 +19,15 @@ const PositionedTable = withStyles({
       position: `fixed`,
       top: `6em`,
       maxWidth: `1280px`,
-      height: `calc(100% - 6em)`,
+      height: `calc(100% - 8em)`,
     }
 })(Table);
+
+const SizedTableHead = withStyles({
+    root: {
+      boxSizing: `inherit`,
+    }
+})(TableHead);
 
 /*
  * Matrix (2D array): rows are rows to display, columns are cols (one col per category).
@@ -57,7 +63,7 @@ const GameBoard = ({ game }) => {
     const ranks = createMatrixFromGame(game);
     return (
         <PositionedTable style={{ tableLayout: "fixed" }}>
-            <TableHead>
+            <SizedTableHead>
                 <TableRow>
                     {game.categories.map(catg => (
                         <BorderlessTableCell key={`catg_${catg.categoryName}`}>
@@ -67,7 +73,7 @@ const GameBoard = ({ game }) => {
                         </BorderlessTableCell>
                     ))}
                 </TableRow>
-            </TableHead>
+            </SizedTableHead>
             <TableBody >
                 {ranks.map((rank, rankNum) => (
                     <TableRow key={`row_${rankNum}`} >

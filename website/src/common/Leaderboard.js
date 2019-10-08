@@ -15,6 +15,10 @@ const useStyles = makeStyles(theme => ({
       maxWidth: 400,
     },
   },
+  listItem: {
+    paddingLeft: `8px`,
+    paddingRight: `8px`,
+  },
   listSubheader: {
     minHeight: '64px',
     lineHeight: '64px',
@@ -28,29 +32,45 @@ const useStyles = makeStyles(theme => ({
     margin: `16px 0 16px 16px`
   },
   score: {
-    margin: `16px 0 16px 16px`,
+    margin: `16px 0 16px 0`,
     color: theme.palette.primary.light,
-    textAlign: `right`,
+    textAlign: `left`,
+    minWidth: `3rem`,
   }
 }));
 
 const LeaderbooardPoints = withStyles({
   primary: {
-    fontWeight: `bold`
+    fontWeight: `bold`,
   },
   secondary: {
-    fontWeight: `500`
+    fontWeight: `500`,
+  }
+})(ListItemText);
+
+const TruncatedListItemText = withStyles({
+  primary: {
+    display: 'block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
+  secondary: {
+    display: 'block',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   }
 })(ListItemText);
 
 const PlayerCard = ({ player }) => {
   const classes = useStyles();
   return (
-    <ListItem alignItems="flex-start">
+    <ListItem className={classes.listItem} alignItems="flex-start">
       <ListItemAvatar>
         <RandomColorAvatar name={player.name} />
       </ListItemAvatar>
-      <ListItemText
+      <TruncatedListItemText
         className={classes.listItemText}
         primary={`${player.name} (${player.login})`}
         secondary={player.organization}

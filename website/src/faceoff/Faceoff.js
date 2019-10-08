@@ -39,6 +39,12 @@ const useStyles = makeStyles(theme => {
       margin: `0 0 0 0`,
       height: `100%`,
     },
+    rightItem: {
+      maxHeight: `100%`,
+      maxHeight: `-moz-available`,
+      maxHeight: `-webkit-fill-available`,
+      maxHeight: `fill-available`,
+    },
     leftContainer: {
       padding: `0 1rem 0 0`,
       margin: `0 0 0 0`,
@@ -48,10 +54,14 @@ const useStyles = makeStyles(theme => {
       padding: `0 0 0 1rem`,
       margin: `0 0 0 0`,
       height: `100%`,
+      maxHeight: `inherit`,
+    },
+    rightSubitem: {
+      maxHeight: `inherit`,
     },
     leftPaper: {
       height: `100%`,
-      padding: `0 4rem 4rem 4rem`,
+      padding: `2rem 4rem 4rem 4rem`,
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -60,8 +70,7 @@ const useStyles = makeStyles(theme => {
     rightPaper: {
       height: `100%`,
       width: `100%`,
-      maxHeight: '675px',
-      overflow: 'auto',
+      overflow: 'hidden',
     },
     questionFont: {
       fontWeight: `600`,
@@ -75,9 +84,8 @@ const StyledDialog = styled(Dialog)`
       position: absolute;
       padding: 0 0 0 0;
       margin: 0 0 0 0;
-      height: 50rem;
-      top: 8rem;
-      left: calc(50% - 640px);
+      height: calc(100% - 10rem);
+      top: 5.5rem;
       background-color: ${({theme}) => theme.palette.type === 'dark' ? `#333` : `#f4f6f8`};
   }
 `;
@@ -113,11 +121,11 @@ const Faceoff = ({ question, nominees }) => {
                   direction="row"
                   className={classes.contentContainer} >
 
-                  <Grid item xl={8}>
+                  <Grid item md={8} lg={8} xl={8}>
                     <Grid container className={classes.leftContainer} >
-                      <Grid item xl={12} >
+                      <Grid item md={12} lg={12} xl={12} >
                         <Paper className={classes.leftPaper} elevation={4} >
-                          <Typography variant="h2" className={classes.questionFont} >
+                          <Typography variant="h3" className={classes.questionFont} >
                               { question.question }
                           </Typography>
                         </Paper>
@@ -125,9 +133,9 @@ const Faceoff = ({ question, nominees }) => {
                     </Grid>
                   </Grid>
 
-                  <Grid item xl={4}>
+                  <Grid item md={4} lg={4} xl={4} className={classes.rightItem} >
                     <Grid container className={classes.rightContainer}>
-                      <Grid item xl={12} >
+                      <Grid item md={12} lg={12} xl={12} className={classes.rightSubitem} >
                         <Paper className={classes.rightPaper} elevation={4} >
                           <Leaderboard header={`Contestants`} people={nominees} />
                         </Paper>
