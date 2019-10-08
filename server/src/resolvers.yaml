@@ -168,32 +168,23 @@
   field: setQuestionState
   dataSource: questions
   requestMapping: |
-    #foreach($group in $context.identity.claims.get("cognito:groups"))
-      #if($group == "emcee")
-        #set($isEmcee = true)
-      #end
-    #end
-    #if($isEmcee)
-      {
-        "version" : "2017-02-28",
-        "operation" : "UpdateItem",
-        "key" : {
-          "catgId": $util.dynamodb.toDynamoDBJson($ctx.args.catgId),
-          "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
+    {
+      "version" : "2017-02-28",
+      "operation" : "UpdateItem",
+      "key" : {
+        "catgId": $util.dynamodb.toDynamoDBJson($ctx.args.catgId),
+        "quesId": $util.dynamodb.toDynamoDBJson($ctx.args.quesId)
+      },
+      "update" : {
+        "expression" : "SET #state = :state",
+        "expressionNames" : {
+          "#state" : "state"
         },
-        "update" : {
-          "expression" : "SET #state = :state",
-          "expressionNames" : {
-            "#state" : "state"
-          },
-          "expressionValues" : {
-            ":state" : $util.dynamodb.toDynamoDBJson($ctx.args.state)
-          }
+        "expressionValues" : {
+          ":state" : $util.dynamodb.toDynamoDBJson($ctx.args.state)
         }
       }
-    #else
-      $utils.unauthorized()
-    #end
+    }
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
@@ -219,28 +210,19 @@
   field: adminJoinGame
   dataSource: contestants
   requestMapping: |
-    #foreach($group in $context.identity.claims.get("cognito:groups"))
-      #if($group == "emcee")
-        #set($isEmcee = true)
-      #end
-    #end
-    #if($isEmcee)
-      {
-        "version" : "2017-02-28",
-        "operation" : "PutItem",
-        "key" : {
-          "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
-          "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
-        },
-        "attributeValues" : {
-          "name":  $util.dynamodb.toDynamoDBJson($ctx.args.name),
-          "organization":  $util.dynamodb.toDynamoDBJson($ctx.args.organization),
-          "score": { "N": "0" }
-        }
+    {
+      "version" : "2017-02-28",
+      "operation" : "PutItem",
+      "key" : {
+        "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+      },
+      "attributeValues" : {
+        "name":  $util.dynamodb.toDynamoDBJson($ctx.args.name),
+        "organization":  $util.dynamodb.toDynamoDBJson($ctx.args.organization),
+        "score": { "N": "0" }
       }
-    #else
-      $util.error("Only Emcees can call adminJoinGame()")
-    #end
+    }
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
@@ -278,78 +260,50 @@
   field: nominateContestant
   dataSource: EmptyNominees
   requestMapping: |
-    #set($ts = $util.time.nowEpochMilliSeconds() - 1569453900341)
-    #foreach($group in $context.identity.claims.get("cognito:groups"))
-      #if($group == "emcee")
-        #set($isEmcee = true)
-      #end
-    #end
-    #if($isEmcee)
-      {
-        "version": "2017-02-28",
-        "payload": {
-          "quesId": $ctx.args.quesId,
-          "login": "${ctx.args.login}",
-          "name": "${ctx.args.name}",
-          "organization": "${ctx.args.organization}",
-          "timebuzzed": $ts
-        }
+    {
+      "version": "2017-02-28",
+      "payload": {
+        "quesId": $ctx.args.quesId,
+        "login": "${ctx.args.login}",
+        "name": "${ctx.args.name}",
+        "organization": "${ctx.args.organization}",
+        "timebuzzed": $ts
       }
-    #else
-      $utils.unauthorized()
-    #end
+    }
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
   field: removeNominee
   dataSource: EmptyNominees
   requestMapping: |
-    #foreach($group in $context.identity.claims.get("cognito:groups"))
-      #if($group == "emcee")
-        #set($isEmcee = true)
-      #end
-    #end
-    #if($isEmcee)
-      {
-        "version" : "2017-02-28",
-        "payload" : {
-          "quesId": $ctx.args.quesId,
-          "login": "${ctx.args.login}"
-        }
+    {
+      "version" : "2017-02-28",
+      "payload" : {
+        "quesId": $ctx.args.quesId,
+        "login": "${ctx.args.login}"
       }
-    #else
-      $utils.unauthorized()
-    #end
+    }
   responseMapping: $util.toJson($ctx.result)
 
 - type: Mutation
   field: addContestantScore
   dataSource: contestants
   requestMapping: |
-    #foreach($group in $context.identity.claims.get("cognito:groups"))
-      #if($group == "emcee")
-        #set($isEmcee = true)
-      #end
-    #end
-    #if($isEmcee)
-      {
-        "version" : "2017-02-28",
-        "operation" : "UpdateItem",
-        "key" : {
-          "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
-          "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+    {
+      "version" : "2017-02-28",
+      "operation" : "UpdateItem",
+      "key" : {
+        "gameId": $util.dynamodb.toDynamoDBJson($ctx.args.gameId),
+        "login": $util.dynamodb.toDynamoDBJson($ctx.args.login)
+      },
+      "update" : {
+        "expression" : "ADD #score :score",
+        "expressionNames" : {
+          "#score" : "score"
         },
-        "update" : {
-          "expression" : "ADD #score :score",
-          "expressionNames" : {
-            "#score" : "score"
-          },
-          "expressionValues" : {
-            ":score" : $util.dynamodb.toDynamoDBJson($ctx.args.increment)
-          }
+        "expressionValues" : {
+          ":score" : $util.dynamodb.toDynamoDBJson($ctx.args.increment)
         }
       }
-    #else
-      $utils.unauthorized()
-    #end
+    }
   responseMapping: $util.toJson($ctx.result)

@@ -43,6 +43,7 @@ class HostGame extends React.Component {
     }
 
     populateGameBoard = (game) => {
+        console.log("game", game);
         this.quesXref = QuestionUtils.buildQuesXref(game);
         this.setState({ game: game });
     }

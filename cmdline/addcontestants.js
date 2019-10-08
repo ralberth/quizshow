@@ -3,7 +3,7 @@ const csv = require('csv-parse/lib/sync');
 const callAppSync = require('./callappsync').callAppSync;
 
 const ADMIN_JOIN_GAME = `
-  mutation AdminJoinGame(
+  mutation adminJoinGame(
     $gameId: Int!
     $login: String!
     $name: String!

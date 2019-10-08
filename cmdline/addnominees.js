@@ -27,7 +27,6 @@ exports.addNominees = (quesId, qty) =>
         for(var count = 0; count < qty; count++) {
             const i = Math.floor(Math.random() * contestants.length);
             const person = contestants.splice(i, 1)[0]; // remove 1 element at index i
-            // console.log("Person:", person);
             const args = {
                 quesId: quesId,
                 login: person.login,
