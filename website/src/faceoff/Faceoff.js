@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import Paper from '@material-ui/core/Paper';
 import Leaderboard from '../common/Leaderboard'
 import { grey } from '@material-ui/core/colors';
+import Zoom from '@material-ui/core/Zoom';
+
 
 const useStyles = makeStyles(theme => {
   const isDark = theme.palette.type === 'dark';
@@ -90,6 +92,13 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Zoom in={true} timeout={1000}
+            ref={ref}
+            {...props}
+            />;
+});
+
 const Faceoff = ({ question, nominees }) => {
     const classes = useStyles();
     const theme = useTheme();
@@ -101,6 +110,7 @@ const Faceoff = ({ question, nominees }) => {
                 open={true}
                 fullWidth={true}
                 maxWidth={`lg`}
+                TransitionComponent={Transition}
                 disableBackdropClick={true}
                 disableEscapeKeyDown={true}
             >
