@@ -1,6 +1,5 @@
 import Amplify, { Auth } from "aws-amplify"
 import AWSAppSyncClient, { AUTH_TYPE } from 'aws-appsync';
-import * as localForage from "localforage";
 import awsconfig from "../config/config.json";
 
 // eslint-disable-next-line no-undef
@@ -62,7 +61,11 @@ type2KeyFields['Nominee']    = [ 'quesId', 'login' ];
 //   return id;
 // }
 
-const clearAppSyncLocalStore = () => localForage.clear();
+
+// Clears redux and other Amplify/AppSync stuff stored locally.   There were sync and stale
+// data problems, so "log out and log back in" is now a true RESET that should sort out any
+// problems with stale data.
+const clearAppSyncLocalStore = () => localStorage.clear();
 
 
 const appSyncConnection = new AWSAppSyncClient({
@@ -72,9 +75,10 @@ const appSyncConnection = new AWSAppSyncClient({
     type: AUTH_TYPE.AMAZON_COGNITO_USER_POOLS,
     jwtToken: async () => (await Auth.currentSession()).getIdToken().getJwtToken()
   },
-  offlineConfig: {
-    storage: localForage
-  },
+  disableOffline: true
+  // offlineConfig: {   // offline disabled for now
+  //   storage: localForage
+  // },
   // cacheOptions: {
   //   dataIdFromObject: dataIdFromObject
   // }
