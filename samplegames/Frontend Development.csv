@@ -1,0 +1,26 @@
+category,points,question,answer
+HTML,100,HTML attribute name for specifying a tooltip,title
+HTML,200,How do you put literal "<" in HTML text?,&lt;
+HTML,300,Element used to embed search engine keywords?,<meta>
+HTML,400,HTML element that can play an MP3 resource,<audio>
+HTML,500,Tells browser where to break/wrap text,<wbr>
+CSS,100,What color is "#00FF00"?,Green
+CSS,200,What does "table-layout: fixed;" do?,All table cells same width
+CSS,300,Difference between "padding" and "margin"?,Padding inside border, margin outside
+CSS,400,What does "!important" do?,Overrides other CSS elsewhere
+CSS,500,What does ">" in "div > a { color: blue; }" mean?,Direct child
+JavaScript Horrors,100,typeof NaN,number
+JavaScript Horrors,200,"72-""1""",71
+JavaScript Horrors,300,Boolean(new Boolen(false)),true
+JavaScript Horrors,400,true+true+true,3
+JavaScript Horrors,500,[]+[],empty Scripting
+Web security,100,Why is HTTP without HTTPS bad?,Network evesdropping
+Web Security,200,Why can't JavaScript access the filesystem?,Expose personal files to web server
+Web Security,300,Cross-Site Scripting?,Inject bad script into other users' browsers
+Web Security,400,Cross-Site Request Forgery?,Trick user to click link to do your bidding
+Web Security,500,Restriction on cookie marked 'httpOnly'?,Not accessible to JavaScript
+AWS Web Products,100,Manages your users' logins and passwords,Cognito
+AWS Web Products,200,"Manages SOR, A, CNAME records",Route 53
+AWS Web Products,300,Global cache of web content,CloudFront
+AWS Web Products,400,Holds server PKI certs,Certificate Manager
+AWS Web Products,500,Web firewall as a service,WAF

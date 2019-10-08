@@ -22,6 +22,9 @@ class PlayGame extends React.Component {
         leaderboard: false,
     }
 
+    // always show most points at top
+    sortByScore = (arry) => arry.sort((a,b) => b.score - a.score);
+
     handleQuestionStateChange = (ques) => {
         console.debug("Question change: ", ques);
         if (ques.state === "ready")
@@ -44,7 +47,7 @@ class PlayGame extends React.Component {
         appSyncClient.joinGame(this.gameId, () => {
           // Don't get the game until you join, or you won't be in the contestant list
           appSyncClient.getGameById(this.gameId, game => {
-            this.setState({ game: game, contestants: game.contestants });
+            this.setState({ game: game, contestants: this.sortByScore(game.contestants) });
             this.contestantSub = appSyncClient.subPlayerHasJoinedTheGame(this.handleContestantHasJoinedTheGame);
           });
         });
@@ -53,15 +56,15 @@ class PlayGame extends React.Component {
           this.state.contestants.forEach(c => {
             if (c.login === contestant.login)
               c.score = contestant.score;
-          })
-          this.forceUpdate();
+          });
+          this.setState({ contestants: this.sortByScore(this.state.contestants) });
         });
     }
 
     componentWillUnmount = () => {
-        this.quesSub.unsubscribe();
-        this.contestantSub.unsubscribe();
-        this.addScoreSub.unsubscribe();
+        if (this.quesSub) this.quesSub.unsubscribe();
+        if (this.contestantSub) this.contestantSub.unsubscribe();
+        if (this.addScoreSub) this.addScoreSub.unsubscribe();
     }
 
     handleBuzzButton = () => {
