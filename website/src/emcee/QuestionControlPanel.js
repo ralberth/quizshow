@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     button: {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
-      fontSize: theme.typography.pxToRem(18)
+      fontSize: theme.typography.pxToRem(22)
     }
 }));
 
@@ -75,7 +75,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
                         <Grid
                             container
                             direction="row"
-                            justify="center"
+                            justify="space-evenly"
                             alignItems="flex-start"
                         >
                             {catg.questions.map(ques => (
