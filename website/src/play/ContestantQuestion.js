@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => {
       maxWidth: `420px`,
     },
     categoryGrid: {
-      maxWidth: `420px`,
+      textAlign: 'center',
       margin: theme.spacing(1, 2),
     },
     subtitle: {
