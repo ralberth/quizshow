@@ -42,10 +42,10 @@ const useStyles = makeStyles(theme => {
       height: `100%`,
     },
     rightItem: {
-      maxHeight: `100%`,
-      maxHeight: `-moz-available`,
-      maxHeight: `-webkit-fill-available`,
-      maxHeight: `fill-available`,
+      maxHeight: `100%`, // eslint-disable-line
+      maxHeight: `-moz-available`, // eslint-disable-line
+      maxHeight: `-webkit-fill-available`, // eslint-disable-line
+      maxHeight: `fill-available`, // eslint-disable-line
     },
     leftContainer: {
       padding: `0 1rem 0 0`,
@@ -76,6 +76,7 @@ const useStyles = makeStyles(theme => {
     },
     questionFont: {
       fontWeight: `600`,
+      letterSpacing: `3px`,
       color: isDark ? theme.palette.text.primary : grey[700],
     }
   }

@@ -42,7 +42,7 @@ const EmceeGame = ({ match: { params: { gameId } } }) => {
     case ScreenMode.choose:
         return (
             <Grid container direction="column" justify="center" alignItems="center">
-                <HeroText title={`Categories`} />
+                <HeroText title={game.title} subtitle={`Categories`} />
                 <QuestionControlPanel
                     game={game}
                     onClick={showQues} />

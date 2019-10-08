@@ -12,18 +12,19 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles(theme => ({
     root: {
         margin: theme.spacing(2),
+        width: `calc(100% - 32px)`,
     },
     heading: {
-        fontSize: theme.typography.pxToRem(15),
-        fontWeight: `bold`
+        fontWeight: `bold`,
+        fontSize: `1.35rem`,
     },
     panelSummary: {
-      height: theme.typography.pxToRem(70)
+      height: `6rem`,
     },
     button: {
-        margin: theme.spacing(1),
-        padding: theme.spacing(1),
-        fontSize: theme.typography.pxToRem(18)
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      fontSize: theme.typography.pxToRem(18)
     }
 }));
 
@@ -56,6 +57,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
 
     return (
         <Box className={classes.root}>
+
             {game.categories.map(catg => (
                 <ExpansionPanel
                     key={catg.categoryName}
@@ -91,6 +93,7 @@ const QuestionControlPanel = ({ game, onClick }) => {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             ))}
+
         </Box>
     );
 }

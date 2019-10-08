@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
       paddingTop: `48px`,
     },
     heading: {
-      fontWeight: "500"
+      fontWeight: "550"
     },
     button: {
         fontSize: "large"
@@ -29,7 +29,7 @@ const HeroText = ({ title, subtitle }) => {
             >
                 {title}
             </Typography>
-            <p style={{ textAlign: 'center' }}>
+            <p style={{ textAlign: 'center', fontSize: `2rem` }}>
                 {subtitle}
             </p>
         </div>
