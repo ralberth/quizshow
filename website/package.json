@@ -29,7 +29,7 @@
     "eslint-plugin-graphql": "^3.1.0",
     "graphql-tag": "^2.10.1",
     "localforage": "^1.7.3",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "material-ui-dropzone": "^2.4.1",
     "moment": "^2.24.0",
     "polished": "^3.4.1",
