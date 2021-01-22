@@ -12,6 +12,7 @@ import { AttributeType, ProjectionType } from '@aws-cdk/aws-dynamodb';
 var fs = require('fs');
 var yaml = require('js-yaml');
 
+// Read this value from ENV likely... then codedeploy can trigger it on stage
 const DDB_IOPS = 20;
 const REGION = 'us-east-1';
 
@@ -130,6 +131,8 @@ export class QuizShowStack extends cdk.Stack {
             indexName: 'EmceeByGameId',
             partitionKey: { name: 'emcee', type: AttributeType.STRING },
             sortKey: { name: 'gameId', type: AttributeType.NUMBER },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
             projectionType: ProjectionType.ALL
         });
 
@@ -175,6 +178,8 @@ export class QuizShowStack extends cdk.Stack {
         ddbQues.addGlobalSecondaryIndex({
             indexName: 'QuesId',
             partitionKey: { name: 'quesId', type: AttributeType.NUMBER },
+            readCapacity: DDB_IOPS,
+            writeCapacity: DDB_IOPS,
             projectionType: ProjectionType.ALL
         });
 
