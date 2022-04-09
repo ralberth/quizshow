@@ -31,7 +31,7 @@
     "localforage": "^1.7.3",
     "lodash": "4.17.21",
     "material-ui-dropzone": "^2.4.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
