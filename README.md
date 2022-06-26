@@ -1,3 +1,10 @@
+# Archived
+
+Archived this project in June 2022: we haven't touched it in years.  Be warned, parts don't work, we don't remember the code, and the libraries are probably old and out of date.
+
+
+-------------------------------
+
 # How To Build and Install
 
 This uses AWS as the server (AppSync specifically) and stores data in Dynamo DB.  This means you'll need an AWS account and have basic knowledge on how to administer cloud resources.  It's a good skill to have, cloud computing is the new normal.  This assumes you're familiar with Dynamo DB, AppSync, CloudFormation, CloudWatch, S3, CloudFront, and so on.
